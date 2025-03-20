@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Navigation from "./navigation";
 import { Button } from "../ui/button";
+import { ModeToggle } from "../mode-toggle";
 
 export default function Header() {
   return (
@@ -14,9 +15,12 @@ export default function Header() {
           </Link>
           <Navigation />
         </div>
-        <Button size="lg">
-          <Link href="/login">Login</Link>
-        </Button>
+        <div className="flex items-center gap-4">
+          <ModeToggle />
+          <Button size="lg">
+            <Link href="/login">Login</Link>
+          </Button>
+        </div>
       </div>
     </header>
   );
