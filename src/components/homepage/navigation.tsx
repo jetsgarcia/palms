@@ -13,7 +13,7 @@ export default function Navigation() {
         <Link
           key={link.href}
           href={link.href}
-          className="flex items-center text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+          className="flex items-center text-sm font-medium text-muted-foreground transition-colors hover:text-primary dark:hover:text-white"
         >
           {link.label}
         </Link>
