@@ -17,7 +17,7 @@ export default function Header() {
         </div>
         <div className="flex items-center gap-4">
           <ModeToggle />
-          <Button size="lg">
+          <Button size="lg" asChild>
             <Link href="/login">Login</Link>
           </Button>
         </div>
