@@ -3,7 +3,7 @@ import { Button } from "../ui/button";
 
 export default function ContactSection() {
   return (
-    <section id="contact" className="w-full py-12 md:py-24 lg:py-32 bg-muted">
+    <section id="contact" className="w-full py-12 md:py-24 lg:py-40 bg-muted">
       <div className="container mx-auto px-4 md:px-6">
         <div className="grid gap-10 px-10 md:gap-16 lg:grid-cols-2">
           <div className="space-y-4">

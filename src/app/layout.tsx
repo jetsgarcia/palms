@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Nunito_Sans } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
 
 const myFont = Nunito_Sans({
   variable: "--font-nunito-sans",
@@ -19,17 +18,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className="scroll-smooth">
-      <body className={`${myFont.className} antialiased`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-        </ThemeProvider>
-      </body>
+    <html lang="en" className="scroll-smooth">
+      <body className={`${myFont.className} antialiased`}>{children}</body>
     </html>
   );
 }
