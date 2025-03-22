@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/form";
 import { loginSchema } from "@/schemas/loginSchema";
 import { z } from "zod";
-import { login } from "@/app/login/_actions/login";
+import { login } from "@/app/(routes)/login/_actions/login";
 
 export default function LoginForm() {
   const [loginError, setLoginError] = useState("");
