@@ -1,6 +1,6 @@
 import Image from "next/image";
 import PhilippineArmyLogo from "@/assets/images/army_logo_3000x3000.png";
-import LoginForm from "@/components/loginpage/login-form";
+import LoginForm from "@/app/login/_components/login-form";
 
 export default function LoginPage() {
   return (

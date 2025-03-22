@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Navigation from "./navigation";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 
 export default function Header() {
   return (
