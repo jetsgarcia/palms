@@ -1,9 +1,9 @@
-import Header from "./_components/header";
-import HeroSection from "./_components/hero-section";
-import FeaturesSection from "./_components/feature-section";
-import HowItWorksSection from "./_components/how-it-works-section";
-import ContactSection from "./_components/contact-section";
-import Footer from "./_components/footer";
+import Header from "./_components/landingPage/header";
+import HeroSection from "./_components/landingPage/hero-section";
+import FeaturesSection from "./_components/landingPage/feature-section";
+import HowItWorksSection from "./_components/landingPage/how-it-works-section";
+import ContactSection from "./_components/landingPage/contact-section";
+import Footer from "./_components/landingPage/footer";
 import { auth } from "@/lib/auth";
 
 export default async function HomePage() {
