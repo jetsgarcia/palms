@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
 import { signOut } from "@/lib/auth";
+import { LogOut } from "lucide-react";
 
 export default function LogoutButton() {
   return (
@@ -8,10 +8,15 @@ export default function LogoutButton() {
         "use server";
         await signOut();
       }}
+      className="w-full"
     >
-      <Button type="submit" className="cursor-pointer">
+      <button
+        type="submit"
+        className="cursor-pointer flex items-center gap-2 w-full"
+      >
+        <LogOut />
         Logout
-      </Button>
+      </button>
     </form>
   );
 }
