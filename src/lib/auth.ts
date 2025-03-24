@@ -10,6 +10,7 @@ declare module "next-auth" {
     lastName?: string;
     middleInitial?: string;
     role?: string;
+    firstLogin?: boolean;
   }
 
   interface Session {
@@ -18,6 +19,7 @@ declare module "next-auth" {
       lastName?: string;
       middleInitial?: string;
       role?: string;
+      firstLogin?: boolean;
     } & DefaultSession["user"];
   }
 }
@@ -60,11 +62,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           firstName: user.firstName,
           lastName: user.lastName,
           middleInitial: user.middleInitial || undefined,
+          firstLogin: user.firstLogin,
         };
       },
     }),
   ],
   callbacks: {
+    authorized: async ({ auth }) => {
+      return !!auth;
+    },
     jwt({ token, user }) {
       if (user) {
         token.id = user.id;
@@ -72,6 +78,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.middleInitial = user.middleInitial;
         token.lastName = user.lastName;
         token.role = user.role;
+        token.firstLogin = user.firstLogin;
       }
       return token;
     },
@@ -82,6 +89,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.middleInitial = token.middleInitial as string;
         session.user.lastName = token.lastName as string;
         session.user.role = token.role as string | undefined;
+        session.user.firstLogin = token.firstLogin as boolean;
       }
       return session;
     },
