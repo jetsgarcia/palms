@@ -15,6 +15,7 @@ export default async function ChangePasswordPage() {
       <ChangePasswordForm
         firstTimeLogin={true}
         firstName={session.user.firstName}
+        withCloseButton={false}
       />
     );
   }

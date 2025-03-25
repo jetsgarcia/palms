@@ -20,11 +20,13 @@ import { useRouter } from "next/navigation";
 interface ChangePasswordProps {
   firstName?: string;
   firstTimeLogin: boolean;
+  withCloseButton: boolean;
 }
 
 export default function ChangePasswordForm({
   firstName,
   firstTimeLogin,
+  withCloseButton,
 }: ChangePasswordProps) {
   const router = useRouter();
   const [password, setPassword] = useState("");
@@ -86,15 +88,17 @@ export default function ChangePasswordForm({
           <CardTitle className="text-2xl font-bold">
             <div className="flex justify-between items-center">
               <span>Change Password</span>
-              <Button
-                variant="ghost"
-                className="cursor-pointer"
-                onClick={() => {
-                  router.back();
-                }}
-              >
-                <X />
-              </Button>
+              {withCloseButton && (
+                <Button
+                  variant="ghost"
+                  className="cursor-pointer"
+                  onClick={() => {
+                    router.back();
+                  }}
+                >
+                  <X />
+                </Button>
+              )}
             </div>
           </CardTitle>
           {firstTimeLogin && (
