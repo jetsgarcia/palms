@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { useRouter } from "next/navigation";
+import { changePassword } from "../_actions/change-password";
 
 interface ChangePasswordProps {
   firstName?: string;
@@ -77,8 +78,13 @@ export default function ChangePasswordForm({
 
     setIsSubmitting(true);
 
-    // TODO: Implement password change logic here
-    setIsSubmitting(false);
+    changePassword({ newPassword: password }).then((response) => {
+      if (response?.success) {
+        router.push("/");
+      } else {
+        alert(response?.error);
+      }
+    });
   };
 
   return (
