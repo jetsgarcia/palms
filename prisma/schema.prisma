@@ -7,7 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
+model users {
   id            String   @id @default(cuid())
   lastName      String
   firstName     String
@@ -21,7 +21,7 @@ model User {
   updatedAt     DateTime @updatedAt
 }
 
-model OTP {
+model otp {
   id        String   @id @default(cuid())
   userEmail String
   otp       String   @db.VarChar(6)

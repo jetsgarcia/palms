@@ -14,7 +14,7 @@ export async function changePassword({ newPassword }: { newPassword: string }) {
   try {
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-    await prisma.user.update({
+    await prisma.users.update({
       where: { id: session?.user.id },
       data: { password: hashedPassword, firstLogin: false },
     });

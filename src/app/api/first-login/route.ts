@@ -5,7 +5,7 @@ export async function POST(req: NextRequest) {
   try {
     const { userId } = await req.json();
 
-    const user = await prisma.user.findFirst({
+    const user = await prisma.users.findFirst({
       where: { id: userId },
       select: { firstLogin: true },
     });
