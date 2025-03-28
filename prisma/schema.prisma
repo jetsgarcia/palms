@@ -21,6 +21,14 @@ model User {
   updatedAt     DateTime @updatedAt
 }
 
+model OTP {
+  id        String   @id @default(cuid())
+  userEmail String
+  otp       String   @db.VarChar(6)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
 enum Role {
   ADMIN
   INSTRUCTOR
