@@ -10,6 +10,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import LogoutButton from "@/components/logout-button";
+import { KeyRound } from "lucide-react";
+import Link from "next/link";
 
 export default async function Layout({
   children,
@@ -28,7 +30,7 @@ export default async function Layout({
           <main className="flex-1 flex flex-col w-full">
             <header className="flex items-center justify-between p-2 border-b border-primary w-full sticky bg-background top-0">
               <div>
-                <SidebarTrigger />
+                <SidebarTrigger className="cursor-pointer" />
               </div>
               <DropdownMenu>
                 <DropdownMenuTrigger className="focus:outline-none cursor-pointer text-sm">
@@ -37,6 +39,14 @@ export default async function Layout({
                   {session?.user.lastName?.toUpperCase()}
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
+                  <DropdownMenuItem className="cursor-pointer">
+                    <Link
+                      href="/change-password"
+                      className="flex items-center gap-2"
+                    >
+                      <KeyRound /> Change Password
+                    </Link>
+                  </DropdownMenuItem>
                   <DropdownMenuItem className="cursor-pointer">
                     <LogoutButton />
                   </DropdownMenuItem>

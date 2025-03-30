@@ -17,17 +17,16 @@ import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { useRouter } from "next/navigation";
 import { changePassword } from "../_actions/change-password";
+import { toast } from "sonner";
 
 interface ChangePasswordProps {
   firstName?: string;
   firstTimeLogin: boolean;
-  withCloseButton: boolean;
 }
 
 export default function ChangePasswordForm({
   firstName,
   firstTimeLogin,
-  withCloseButton,
 }: ChangePasswordProps) {
   const router = useRouter();
   const [password, setPassword] = useState("");
@@ -80,36 +79,28 @@ export default function ChangePasswordForm({
 
     changePassword({ newPassword: password }).then((response) => {
       if (response?.success) {
+        toast.success("Password changed successfully!");
         router.push("/");
-      } else {
-        alert(response?.error);
+        setIsSubmitting(false);
+      }
+
+      if (response?.error) {
+        alert(response.error);
+        setIsSubmitting(false);
       }
     });
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <Card className="w-full max-w-md bg-white">
+    <div className="flex items-center justify-center w-120">
+      <Card className="w-full bg-white">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold">
-            <div className="flex justify-between items-center">
-              <span>Change Password</span>
-              {withCloseButton && (
-                <Button
-                  variant="ghost"
-                  className="cursor-pointer"
-                  onClick={() => {
-                    router.back();
-                  }}
-                >
-                  <X />
-                </Button>
-              )}
-            </div>
+          <CardTitle className="text-xl">
+            <span>Change Password</span>
           </CardTitle>
           {firstTimeLogin && (
             <CardDescription>
-              Welcome {firstName}! For security reasons, please set a new
+              Welcome, {firstName}! For security reasons, please set a new
               password before continuing.
             </CardDescription>
           )}
@@ -136,7 +127,7 @@ export default function ChangePasswordForm({
                   type="button"
                   variant="ghost"
                   size="icon"
-                  className="absolute right-0 top-0 h-full px-3 py-2 text-muted-foreground"
+                  className="absolute right-0 top-0 h-full px-3 py-2 text-muted-foreground cursor-pointer"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? <Eye size={16} /> : <EyeOff size={16} />}
@@ -219,7 +210,7 @@ export default function ChangePasswordForm({
                   type="button"
                   variant="ghost"
                   size="icon"
-                  className="absolute right-0 top-0 h-full px-3 py-2 text-muted-foreground"
+                  className="absolute right-0 top-0 h-full px-3 py-2 text-muted-foreground cursor-pointer"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 >
                   {showConfirmPassword ? (

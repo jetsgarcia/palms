@@ -1,5 +1,39 @@
 import { auth } from "@/lib/auth";
 import ChangePasswordForm from "./_components/change-password-form";
+import OTPForm from "./_components/otp-form";
+import AuthBackButton from "./_components/back-button";
+
+export default async function ChangePasswordPage() {
+  const session = await auth();
+  const firstLogin = await fetchFirstLogin(session?.user.id as string);
+
+  // Change password for authenticated users through email
+  if (!session) {
+    return <div></div>;
+  }
+
+  // Change password for first time login
+  if (firstLogin) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <ChangePasswordForm
+          firstTimeLogin={true}
+          firstName={session.user.firstName}
+        />
+      </div>
+    );
+  }
+
+  // Change password for authenticated users through login
+  return (
+    <div className="grid gap-4">
+      <div className="p-4">
+        <AuthBackButton />
+      </div>
+      <OTPForm />
+    </div>
+  );
+}
 
 async function fetchFirstLogin(userId: string) {
   try {
@@ -17,29 +51,4 @@ async function fetchFirstLogin(userId: string) {
     console.error("Error fetching first login status:", error);
     return false;
   }
-}
-
-export default async function ChangePasswordPage() {
-  const session = await auth();
-
-  const firstLogin = await fetchFirstLogin(session?.user.id as string);
-
-  // Change password authenticated users through email
-  if (!session) {
-    return <div></div>;
-  }
-
-  // Change password for first time login
-  if (firstLogin) {
-    return (
-      <ChangePasswordForm
-        firstTimeLogin={true}
-        firstName={session.user.firstName}
-        withCloseButton={false}
-      />
-    );
-  }
-
-  // Change password for authenticated users through login
-  return <div></div>;
 }

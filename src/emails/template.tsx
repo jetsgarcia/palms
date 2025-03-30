@@ -104,24 +104,21 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
                     display: "flex",
                   }}
                 >
-                  {otpDigits.map((digit, index) => (
-                    <div
-                      key={index}
-                      style={{
-                        backgroundColor: "#ffffff",
-                        border: "1px solid #d1d5db",
-                        borderRadius: "4px",
-                        padding: "8px 12px",
-                        fontSize: "24px",
-                        fontWeight: "bold",
-                        color: "#093a12",
-                        minWidth: "24px",
-                        textAlign: "center",
-                      }}
-                    >
-                      {digit}
-                    </div>
-                  ))}
+                  <div
+                    style={{
+                      backgroundColor: "#ffffff",
+                      border: "1px solid #d1d5db",
+                      borderRadius: "4px",
+                      padding: "8px 12px",
+                      fontSize: "24px",
+                      fontWeight: "bold",
+                      color: "#093a12",
+                      minWidth: "24px",
+                      textAlign: "center",
+                    }}
+                  >
+                    {otpDigits}
+                  </div>
                 </div>
               </div>
               <p
