@@ -9,17 +9,19 @@ export default function AuthBackButton() {
   const { data: session } = useSession();
   const router = useRouter();
 
+  function handleBackButtonClick() {
+    router.back();
+    navigator.sendBeacon(
+      "/api/delete-otp",
+      JSON.stringify({ email: session?.user.email })
+    );
+  }
+
   return (
     <Button
       variant="ghost"
       className="cursor-pointer"
-      onClick={() => {
-        router.back();
-        navigator.sendBeacon(
-          "/api/delete-otp",
-          JSON.stringify({ email: session?.user.email })
-        );
-      }}
+      onClick={handleBackButtonClick}
     >
       <ChevronLeft />
       <span>Go back</span>
