@@ -54,21 +54,21 @@ export default function ChangePasswordForm({
     return strength;
   };
 
-  const getStrengthLabel = () => {
+  function getStrengthLabel() {
     const strength = getPasswordStrength();
     if (strength < 40) return "Weak";
     if (strength < 80) return "Medium";
     return "Strong";
-  };
+  }
 
-  const getStrengthColor = () => {
+  function getStrengthColor() {
     const strength = getPasswordStrength();
     if (strength < 40) return "bg-red-500";
     if (strength < 80) return "bg-yellow-500";
     return "bg-green-500";
-  };
+  }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
     if (!passwordsMatch || getPasswordStrength() < 60) {
@@ -89,7 +89,7 @@ export default function ChangePasswordForm({
         setIsSubmitting(false);
       }
     });
-  };
+  }
 
   return (
     <div className="flex items-center justify-center w-120">
