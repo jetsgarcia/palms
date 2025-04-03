@@ -37,7 +37,7 @@ export default async function middleware(request: NextRequest) {
   }
 
   if (token) {
-    // Redirect authenticated users from login page to home
+    // Prevent authenticated users from accessing the login page
     if (pathname === "/login") {
       return NextResponse.redirect(new URL("/", request.url));
     }
