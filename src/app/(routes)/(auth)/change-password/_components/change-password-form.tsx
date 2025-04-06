@@ -22,11 +22,13 @@ import { toast } from "sonner";
 interface ChangePasswordProps {
   firstName?: string;
   firstTimeLogin: boolean;
+  withoutHeader?: boolean;
 }
 
 export default function ChangePasswordForm({
   firstName,
   firstTimeLogin,
+  withoutHeader,
 }: ChangePasswordProps) {
   const router = useRouter();
   const [password, setPassword] = useState("");
@@ -91,8 +93,146 @@ export default function ChangePasswordForm({
     });
   }
 
+  if (withoutHeader) {
+    return (
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="new-password">New Password</Label>
+          <div className="relative">
+            <Input
+              id="new-password"
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="pr-10"
+              placeholder="Enter your new password"
+            />
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="absolute right-0 top-0 h-full px-3 py-2 text-muted-foreground cursor-pointer"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <Eye size={16} /> : <EyeOff size={16} />}
+            </Button>
+          </div>
+
+          {password && (
+            <>
+              <div className="mt-2 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm">
+                    Password strength: {getStrengthLabel()}
+                  </span>
+                  <span className="text-sm">{getPasswordStrength()}%</span>
+                </div>
+                <Progress
+                  value={getPasswordStrength()}
+                  className={getStrengthColor()}
+                />
+              </div>
+
+              <div className="mt-3 space-y-1">
+                <div className="flex items-center gap-2 text-sm">
+                  {hasMinLength ? (
+                    <Check size={16} className="text-green-500" />
+                  ) : (
+                    <X size={16} className="text-red-500" />
+                  )}
+                  <span>At least 8 characters</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  {hasUppercase ? (
+                    <Check size={16} className="text-green-500" />
+                  ) : (
+                    <X size={16} className="text-red-500" />
+                  )}
+                  <span>At least one uppercase letter</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  {hasLowercase ? (
+                    <Check size={16} className="text-green-500" />
+                  ) : (
+                    <X size={16} className="text-red-500" />
+                  )}
+                  <span>At least one lowercase letter</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  {hasNumber ? (
+                    <Check size={16} className="text-green-500" />
+                  ) : (
+                    <X size={16} className="text-red-500" />
+                  )}
+                  <span>At least one number</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  {hasSpecialChar ? (
+                    <Check size={16} className="text-green-500" />
+                  ) : (
+                    <X size={16} className="text-red-500" />
+                  )}
+                  <span>At least one special character</span>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="confirm-password">Confirm Password</Label>
+          <div className="relative">
+            <Input
+              id="confirm-password"
+              type={showConfirmPassword ? "text" : "password"}
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="pr-10"
+              placeholder="Confirm your new password"
+            />
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="absolute right-0 top-0 h-full px-3 py-2 text-muted-foreground cursor-pointer"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            >
+              {showConfirmPassword ? <Eye size={16} /> : <EyeOff size={16} />}
+            </Button>
+          </div>
+
+          {confirmPassword && (
+            <div className="mt-1 flex items-center gap-2 text-sm">
+              {passwordsMatch ? (
+                <>
+                  <Check size={16} className="text-green-500" />
+                  <span className="text-green-500">Passwords match</span>
+                </>
+              ) : (
+                <>
+                  <X size={16} className="text-red-500" />
+                  <span className="text-red-500">Passwords do not match</span>
+                </>
+              )}
+            </div>
+          )}
+        </div>
+
+        <Button
+          type="submit"
+          className="w-full cursor-pointer"
+          disabled={
+            !passwordsMatch || getPasswordStrength() < 60 || isSubmitting
+          }
+        >
+          Change Password
+        </Button>
+      </form>
+    );
+  }
+
   return (
-    <div className="flex items-center justify-center w-120">
+    <div className="flex items-center justify-center w-110">
       <Card className="w-full bg-white">
         <CardHeader>
           <CardTitle className="text-xl">

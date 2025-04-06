@@ -1,15 +1,19 @@
 import { auth } from "@/lib/auth";
 import ChangePasswordForm from "./_components/change-password-form";
-import OTPForm from "./_components/otp-form";
-import AuthBackButton from "./_components/back-button";
+import ChangePasswordWithOTPForm from "./_components/change-password-with-otp-form";
 
 export default async function ChangePasswordPage() {
   const session = await auth();
   const firstLogin = await fetchFirstLogin(session?.user.id as string);
 
-  // Change password for authenticated users through email
+  // Change password for unauthenticated users
   if (!session) {
-    return <div></div>;
+    return (
+      <ChangePasswordWithOTPForm
+        steps={["Enter Email", "Verify OTP", "Change Password"]}
+        type="unauthenticated"
+      />
+    );
   }
 
   // Change password for first time login
@@ -24,14 +28,12 @@ export default async function ChangePasswordPage() {
     );
   }
 
-  // Change password for authenticated users through login
+  // Change password for authenticated users
   return (
-    <div className="grid gap-4">
-      <div className="p-4">
-        <AuthBackButton />
-      </div>
-      <OTPForm />
-    </div>
+    <ChangePasswordWithOTPForm
+      steps={["Enter Email", "Verify OTP", "Change Password"]}
+      type="authenticated"
+    />
   );
 }
 
