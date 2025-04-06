@@ -9,6 +9,7 @@ export async function POST(req: Request) {
     }
 
     try {
+      // Delete all OTP of a user from the database
       await prisma.otp.deleteMany({
         where: {
           userEmail: email,
