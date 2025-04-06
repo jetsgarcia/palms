@@ -17,7 +17,8 @@ import {
 } from "@/components/ui/form";
 import { loginSchema } from "@/schemas/loginSchema";
 import { z } from "zod";
-import { login } from "@/app/(routes)/login/_actions/login";
+import { login } from "../_actions/login";
+import Link from "next/link";
 
 export default function LoginForm() {
   const [loginError, setLoginError] = useState("");
@@ -107,6 +108,11 @@ export default function LoginForm() {
                 The email you use for your account.
               </FormDescription>
               <FormMessage>{loginError}</FormMessage>
+              <div className="flex justify-end text-sm">
+                <Button variant="link" size="sm" className="p-0 gap-0 h-min">
+                  <Link href="/change-password">Forgot password?</Link>
+                </Button>
+              </div>
             </FormItem>
           )}
         />

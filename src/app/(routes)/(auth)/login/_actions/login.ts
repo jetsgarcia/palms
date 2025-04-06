@@ -18,7 +18,7 @@ export async function login(values: z.infer<typeof loginSchema>) {
   const lowerCaseEmail = email.toLowerCase();
 
   // Make sure email exists
-  const userExists = await prisma.user.findFirst({
+  const userExists = await prisma.users.findFirst({
     where: { email: lowerCaseEmail },
   });
 

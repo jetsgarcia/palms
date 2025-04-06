@@ -36,7 +36,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           return null;
         }
 
-        const user = await prisma.user.findUnique({
+        const user = await prisma.users.findUnique({
           where: { email: credentials.email as string },
         });
 
@@ -65,6 +65,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   callbacks: {
+    authorized: async ({ auth }) => {
+      return !!auth;
+    },
     jwt({ token, user }) {
       if (user) {
         token.id = user.id;
