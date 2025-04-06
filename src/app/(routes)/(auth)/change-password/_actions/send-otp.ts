@@ -1,11 +1,8 @@
 "use server";
 
-import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 export async function sendOTP({ email }: { email: string }) {
-  const session = await auth();
-
   if (!email) {
     return { error: "Email required" };
   }
@@ -19,6 +16,15 @@ export async function sendOTP({ email }: { email: string }) {
       },
     });
 
+    const user = await prisma.users.findUnique({
+      where: {
+        email: email,
+      },
+      select: {
+        firstName: true,
+      },
+    });
+
     try {
       const response = await fetch(`${process.env.APP_API_BASE_URL}/api/send`, {
         method: "POST",
@@ -26,7 +32,7 @@ export async function sendOTP({ email }: { email: string }) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name: session?.user.firstName,
+          name: user?.firstName,
           otp: otp,
           email: email,
         }),
