@@ -16,9 +16,10 @@ export async function POST(req: Request) {
       });
     } catch (error) {
       if (error instanceof Error) {
-        return { error: error.message };
+        return NextResponse.json({ error: error.message }, { status: 500 });
       }
     }
+
     return NextResponse.json({ success: true });
   } catch (error) {
     return NextResponse.json(
