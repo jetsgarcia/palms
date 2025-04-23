@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import LogoutButton from "@/components/logout-button";
-import { KeyRound } from "lucide-react";
+import { ChevronDown, KeyRound } from "lucide-react";
 import Link from "next/link";
 
 export default async function Layout({
@@ -33,10 +33,15 @@ export default async function Layout({
                 <SidebarTrigger className="cursor-pointer" />
               </div>
               <DropdownMenu>
-                <DropdownMenuTrigger className="focus:outline-none cursor-pointer text-sm">
-                  {session?.user.firstName?.toUpperCase()}{" "}
-                  {session?.user.middleInitial?.toUpperCase()}.{" "}
-                  {session?.user.lastName?.toUpperCase()}
+                <DropdownMenuTrigger className="focus:outline-none cursor-pointer text-sm hover:bg-accent hover:text-accent-foreground rounded-md pl-2 pr-1 py-1 transition-colors duration-200 ease-in-out">
+                  <div className="flex items-center gap-1">
+                    <span>
+                      {session?.user.firstName?.toUpperCase()}{" "}
+                      {session?.user.middleInitial?.toUpperCase()}.{" "}
+                      {session?.user.lastName?.toUpperCase()}
+                    </span>
+                    <ChevronDown size={16} />
+                  </div>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                   <DropdownMenuItem className="cursor-pointer">
