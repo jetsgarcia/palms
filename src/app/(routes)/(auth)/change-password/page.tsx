@@ -12,6 +12,7 @@ export default async function ChangePasswordPage() {
       <ChangePasswordWithOTPForm
         steps={["Enter Email", "Verify OTP", "Change Password"]}
         type="unauthenticated"
+        logoutAfterChangePassword={false}
       />
     );
   }
@@ -33,6 +34,7 @@ export default async function ChangePasswordPage() {
     <ChangePasswordWithOTPForm
       steps={["Enter Email", "Verify OTP", "Change Password"]}
       type="authenticated"
+      logoutAfterChangePassword={true}
     />
   );
 }

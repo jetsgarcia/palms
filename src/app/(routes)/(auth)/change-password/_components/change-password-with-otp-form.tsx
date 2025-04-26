@@ -27,11 +27,13 @@ import { emailChecker } from "../_actions/email-checker";
 interface ChangePasswordWithOTPFormProps {
   steps: string[];
   type: "unauthenticated" | "authenticated";
+  logoutAfterChangePassword: boolean;
 }
 
 export default function ChangePasswordWithOTPForm({
   steps,
   type,
+  logoutAfterChangePassword,
 }: ChangePasswordWithOTPFormProps) {
   const { data: session } = useSession();
   const [currentStep, setCurrentStep] = useState(0);
@@ -349,7 +351,12 @@ export default function ChangePasswordWithOTPForm({
           )}
 
           {currentStep === 2 && (
-            <ChangePasswordForm firstTimeLogin={false} withoutHeader={true} />
+            <ChangePasswordForm
+              firstTimeLogin={false}
+              withoutHeader
+              logoutAfterChangePassword={logoutAfterChangePassword}
+              email={email}
+            />
           )}
         </CardContent>
       </Card>
