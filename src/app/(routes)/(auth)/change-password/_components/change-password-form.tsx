@@ -18,19 +18,26 @@ import { Progress } from "@/components/ui/progress";
 import { useRouter } from "next/navigation";
 import { changePassword } from "../_actions/change-password";
 import { toast } from "sonner";
+import { signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 interface ChangePasswordProps {
   firstName?: string;
   firstTimeLogin: boolean;
   withoutHeader?: boolean;
+  logoutAfterChangePassword?: boolean;
+  email?: string;
 }
 
 export default function ChangePasswordForm({
   firstName,
   firstTimeLogin,
   withoutHeader,
+  logoutAfterChangePassword,
+  email,
 }: ChangePasswordProps) {
   const router = useRouter();
+  const { data: session } = useSession();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -79,15 +86,34 @@ export default function ChangePasswordForm({
 
     setIsSubmitting(true);
 
-    changePassword({ newPassword: password }).then((response) => {
+    changePassword({ newPassword: password, email: email }).then((response) => {
       if (response?.success) {
-        toast.success("Password changed successfully!");
-        router.push("/");
+        if (logoutAfterChangePassword) {
+          toast.success("Password changed successfully. Please log in again.");
+          if (session) {
+            signOut({ redirectTo: "/login" });
+          }
+        } else {
+          toast.success("Password changed successfully.");
+          if (session?.user.role === "STUDENT") {
+            router.push("/student");
+          }
+          if (session?.user.role === "INSTRUCTOR") {
+            router.push("/instructor");
+          }
+          if (session?.user.role === "ADMIN") {
+            router.push("/admin");
+          }
+          if (!session) {
+            router.push("/login");
+          }
+        }
+
         setIsSubmitting(false);
       }
 
       if (response?.error) {
-        alert(response.error);
+        console.log(response.error);
         setIsSubmitting(false);
       }
     });
