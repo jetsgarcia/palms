@@ -4,7 +4,15 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 
-export async function changePassword({ newPassword }: { newPassword: string }) {
+interface ChangePasswordProps {
+  newPassword: string;
+  email?: string;
+}
+
+export async function changePassword({
+  newPassword,
+  email,
+}: ChangePasswordProps) {
   const session = await auth();
 
   if (!newPassword) {
@@ -13,9 +21,12 @@ export async function changePassword({ newPassword }: { newPassword: string }) {
 
   try {
     const hashedPassword = await bcrypt.hash(newPassword, 10);
+    const userId =
+      session?.user.id ??
+      (await prisma.users.findFirst({ where: { email } }))?.id;
 
     await prisma.users.update({
-      where: { id: session?.user.id },
+      where: { id: userId },
       data: { password: hashedPassword, firstLogin: false },
     });
 
