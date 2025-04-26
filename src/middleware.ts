@@ -36,18 +36,37 @@ export default async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  if (token) {
-    // Prevent authenticated users from accessing the login page
-    if (pathname === "/login") {
-      return NextResponse.redirect(new URL("/", request.url));
+  // Prevent authenticated users from accessing the login and landing page
+  if (pathname === "/login" || pathname === "/") {
+    if (token?.role === "STUDENT") {
+      return NextResponse.redirect(new URL("/student", request.url));
     }
 
-    const firstLogin = await fetchFirstLogin(token.id as string);
-
-    // Redirect users to change password if it's their first login
-    if (firstLogin && pathname !== "/change-password") {
-      return NextResponse.redirect(new URL("/change-password", request.url));
+    if (token?.role === "ADMIN") {
+      return NextResponse.redirect(new URL("/admin", request.url));
     }
+
+    if (token?.role === "INSTRUCTOR") {
+      return NextResponse.redirect(new URL("/instructor", request.url));
+    }
+  }
+
+  // Restrict access based on roles
+  if (pathname.startsWith("/admin") && token?.role !== "ADMIN") {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+  if (pathname.startsWith("/student") && token?.role !== "STUDENT") {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+  if (pathname.startsWith("/instructor") && token?.role !== "INSTRUCTOR") {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
+  const firstLogin = await fetchFirstLogin(token?.id as string);
+
+  // Redirect users to change password if it's their first login
+  if (firstLogin && pathname !== "/change-password") {
+    return NextResponse.redirect(new URL("/change-password", request.url));
   }
 
   return NextResponse.next();
