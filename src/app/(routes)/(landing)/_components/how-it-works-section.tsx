@@ -1,3 +1,7 @@
+"use client";
+
+import { motion } from "motion/react";
+
 export default function HowItWorksSection() {
   const steps = [
     {
@@ -42,7 +46,20 @@ export default function HowItWorksSection() {
           <div className="flex flex-col justify-center space-y-4 max-w-160">
             <ul className="grid gap-6">
               {steps.map((step) => (
-                <li key={step.number} className="flex items-start gap-4">
+                <motion.li
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{
+                    opacity: 1,
+                    x: 0,
+                    transition: {
+                      duration: 1,
+                      ease: "easeInOut",
+                      delay: step.number * 0.2,
+                    },
+                  }}
+                  key={step.number}
+                  className="flex items-start gap-4"
+                >
                   <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
                     {step.number}
                   </div>
@@ -50,7 +67,7 @@ export default function HowItWorksSection() {
                     <h3 className="font-bold">{step.title}</h3>
                     <p className="text-muted-foreground">{step.description}</p>
                   </div>
-                </li>
+                </motion.li>
               ))}
             </ul>
           </div>

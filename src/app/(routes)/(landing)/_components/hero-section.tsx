@@ -1,6 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
+import { motion } from "motion/react";
 
 export default function HeroSection() {
   return (
@@ -9,27 +12,58 @@ export default function HeroSection() {
         <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
           <div className="flex flex-col justify-center space-y-4">
             <div className="space-y-2">
-              <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
+              <motion.h1
+                initial={{ opacity: 0, x: -20 }}
+                animate={{
+                  opacity: 1,
+                  x: 0,
+                  transition: { duration: 0.3, ease: "easeInOut" },
+                }}
+                className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none"
+              >
                 The Virtual Training Ground
-              </h1>
-              <p className="max-w-[600px] text-muted-foreground md:text-xl">
+              </motion.h1>
+              <motion.p
+                initial={{ opacity: 0, x: -20 }}
+                animate={{
+                  opacity: 1,
+                  x: 0,
+                  transition: { duration: 0.3, ease: "easeInOut", delay: 0.3 },
+                }}
+                className="max-w-[600px] text-muted-foreground md:text-xl"
+              >
                 A dedicated learning platform for Philippine Army, providing
                 video streaming, exams, and performance tracking.
-              </p>
+              </motion.p>
             </div>
-            <div className="flex flex-col gap-2 min-[400px]:flex-row">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{
+                opacity: 1,
+                y: 0,
+                transition: { duration: 0.3, ease: "easeInOut", delay: 0.6 },
+              }}
+              className="flex flex-col gap-2 min-[400px]:flex-row"
+            >
               <Button asChild>
                 <Link href="/login">
                   Access Platform <ChevronRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
               <Button variant="outline" asChild>
-                <Link href="#how-it-works">Learn More</Link>
+                <Link href="#features">Learn More</Link>
               </Button>
-            </div>
+            </motion.div>
           </div>
 
-          <div className="aspect-video overflow-hidden pointer-events-none rounded-xl">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{
+              opacity: 1,
+              transition: { duration: 0.8, ease: "easeInOut" },
+            }}
+            className="aspect-video overflow-hidden pointer-events-none rounded-xl"
+          >
             <iframe
               src="https://www.youtube.com/embed/ZK-rNEhJIDs?si=0bgTaUgxr7hGdMc6&controls=0&autoplay=1&mute=1&loop=1&playlist=ZK-rNEhJIDs"
               allow="autoplay; encrypted-media;"
@@ -40,7 +74,7 @@ export default function HeroSection() {
                 marginLeft: "-100%",
               }}
             />
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
