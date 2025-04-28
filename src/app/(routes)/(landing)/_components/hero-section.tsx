@@ -24,7 +24,7 @@ export default function HeroSection() {
                 </Link>
               </Button>
               <Button variant="outline" asChild>
-                <Link href="#how-it-works">Learn More</Link>
+                <Link href="#features">Learn More</Link>
               </Button>
             </div>
           </div>
