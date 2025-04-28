@@ -1,4 +1,7 @@
+"use client";
+
 import { BookOpen, Pencil, Video } from "lucide-react";
+import { motion } from "motion/react";
 
 export default function FeaturesSection() {
   const features = [
@@ -42,7 +45,14 @@ export default function FeaturesSection() {
 
         <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-3">
           {features.map((feature, index) => (
-            <div
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{
+                opacity: 1,
+                y: 0,
+                transition: { duration: 1, ease: "easeInOut" },
+              }}
+              exit={{ opacity: 0, y: 20 }}
               key={index}
               className="flex flex-col items-center space-y-4 rounded-lg border p-6"
             >
@@ -53,7 +63,7 @@ export default function FeaturesSection() {
               <p className="text-center text-muted-foreground">
                 {feature.description}
               </p>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
