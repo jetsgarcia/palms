@@ -19,6 +19,19 @@ model users {
   firstLogin    Boolean  @default(true)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+
+  student       students?
+}
+
+model students {
+  serialNumber    String  @id
+  trainingPeriod  Int
+  trainingYear    Int
+  rank            String
+  afos            String
+  course          String?
+  remarks         String
+  user            users   @relation(fields: [serialNumber], references: [id])
 }
 
 model otp {
