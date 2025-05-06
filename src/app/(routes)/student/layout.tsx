@@ -26,7 +26,7 @@ export default async function Layout({
     <>
       {session?.user ? (
         <SidebarProvider defaultOpen={defaultOpen}>
-          <AppSidebar role="student" />
+          <AppSidebar role="STUDENT" />
           <main className="flex-1 flex flex-col w-full">
             <header className="flex items-center justify-between p-2 border-b border-primary w-full sticky bg-background top-0">
               <div>
