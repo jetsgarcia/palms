@@ -69,8 +69,31 @@ const registrarTransactionsItems = [
   },
 ];
 
+const adminItems = [
+  {
+    title: "Training Period",
+    url: "#",
+    icon: Calendar,
+  },
+  {
+    title: "Course Management",
+    url: "#",
+    icon: BookOpenCheck,
+  },
+  {
+    title: "User Management",
+    url: "/admin/user-management",
+    icon: ListCheck,
+  },
+  {
+    title: "Evaluation",
+    url: "#",
+    icon: ClipboardList,
+  },
+];
+
 interface AppSidebarProps {
-  role: "student" | "admin" | "instructor";
+  role: "STUDENT" | "ADMIN" | "INSTRUCTOR";
 }
 
 export function AppSidebar({ role }: AppSidebarProps) {
@@ -88,7 +111,7 @@ export function AppSidebar({ role }: AppSidebarProps) {
           </div>
         </Link>
       </SidebarHeader>
-      {role === "student" && (
+      {role === "STUDENT" && (
         <SidebarContent className="bg-darkGreen-500 text-white pt-4">
           <SidebarGroup>
             <SidebarGroupLabel className="text-white text-sm">
@@ -129,6 +152,28 @@ export function AppSidebar({ role }: AppSidebarProps) {
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
+      )}
+      {role === "ADMIN" && (
+        <>
+          <SidebarContent className="bg-darkGreen-500 text-white pt-4">
+            <SidebarGroup>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {adminItems.map((item) => (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton asChild>
+                        <a href={item.url} className="text-gray-300">
+                          <item.icon />
+                          <span>{item.title}</span>
+                        </a>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          </SidebarContent>
+        </>
       )}
     </Sidebar>
   );
