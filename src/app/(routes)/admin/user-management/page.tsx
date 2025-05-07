@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { allUserColumns } from "./_components/all-user-columns";
 import { AllUserDataTable } from "./_components/all-user-data-table";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StudentsDataTable } from "./_components/students-data-table";
 import { studentsColumns } from "./_components/students-columns";
 import { InstructorsDataTable } from "./_components/instructors-data-table";
@@ -11,206 +11,41 @@ import { instructorsColumns } from "./_components/instructors-columns";
 import { adminsColumns } from "./_components/admins-columns";
 import { AdminsDataTable } from "./_components/admins-data-table";
 import { Plus } from "lucide-react";
+import { fetchStudents, fetchUsers } from "./_actions/fetchUsers";
+import { User } from "@/types/user";
+import { DotPulse } from "ldrs/react";
+import "ldrs/react/DotPulse.css";
+import { Student } from "@/types/student";
 
 export default function UserManagementPage() {
-  const allUsersData = [
-    {
-      id: "728ed52f",
-      name: "Mary Grace",
-      email: "m@example.com",
-      role: "Student",
-    },
-    {
-      id: "728ed52f",
-      name: "John Doe",
-      email: "m@example.com",
-      role: "Admin",
-    },
-    {
-      id: "728ed52f",
-      name: "John Doe",
-      email: "m@example.com",
-      role: "Student",
-    },
-    {
-      id: "728ed52f",
-      name: "John Doe",
-      email: "m@example.com",
-      role: "Instructor",
-    },
-    {
-      id: "728ed52f",
-      name: "John Doe",
-      email: "m@example.com",
-      role: "Student",
-    },
-    {
-      id: "728ed52f",
-      name: "John Doe",
-      email: "m@example.com",
-      role: "Instructor",
-    },
-  ];
-  const studentsData = [
-    {
-      serialNumber: "O-12375",
-      name: "John Doe",
-      email: "johndoe@sample.com",
-      trainingPeriod: 1,
-      trainingYear: 2024,
-      rank: "1LT",
-      afos: "Signal",
-      course: "Signal Advanced Course",
-    },
-    {
-      serialNumber: "O-12978",
-      name: "John Doe",
-      email: "johndoe@sample.com",
-      trainingPeriod: 1,
-      trainingYear: 2024,
-      rank: "1LT",
-      afos: "Infantry",
-      course: "Infantry Basic Course",
-    },
-    {
-      serialNumber: "O-12978",
-      name: "John Doe",
-      email: "johndoe@sample.com",
-      trainingPeriod: 1,
-      trainingYear: 2024,
-      rank: "1LT",
-      afos: "Infantry",
-      course: "Infantry Basic Course",
-    },
-    {
-      serialNumber: "O-12978",
-      name: "John Doe",
-      email: "johndoe@sample.com",
-      trainingPeriod: 1,
-      trainingYear: 2024,
-      rank: "1LT",
-      afos: "Infantry",
-      course: "Infantry Basic Course",
-    },
-    {
-      serialNumber: "O-12978",
-      name: "John Doe",
-      email: "johndoe@sample.com",
-      trainingPeriod: 1,
-      trainingYear: 2024,
-      rank: "1LT",
-      afos: "Infantry",
-      course: "Infantry Basic Course",
-    },
-    {
-      serialNumber: "O-12978",
-      name: "John Doe",
-      email: "johndoe@sample.com",
-      trainingPeriod: 1,
-      trainingYear: 2024,
-      rank: "1LT",
-      afos: "Infantry",
-      course: "Infantry Basic Course",
-    },
-    {
-      serialNumber: "O-12978",
-      name: "John Doe",
-      email: "johndoe@sample.com",
-      trainingPeriod: 1,
-      trainingYear: 2024,
-      rank: "1LT",
-      afos: "Infantry",
-      course: "Infantry Basic Course",
-    },
-    {
-      serialNumber: "O-12978",
-      name: "John Doe",
-      email: "johndoe@sample.com",
-      trainingPeriod: 1,
-      trainingYear: 2024,
-      rank: "1LT",
-      afos: "Infantry",
-      course: "Infantry Basic Course",
-    },
-    {
-      serialNumber: "O-12978",
-      name: "John Doe",
-      email: "johndoe@sample.com",
-      trainingPeriod: 1,
-      trainingYear: 2024,
-      rank: "1LT",
-      afos: "Infantry",
-      course: "Infantry Basic Course",
-    },
-    {
-      serialNumber: "O-12978",
-      name: "John Doe",
-      email: "johndoe@sample.com",
-      trainingPeriod: 1,
-      trainingYear: 2024,
-      rank: "1LT",
-      afos: "Infantry",
-      course: "Infantry Basic Course",
-    },
-    {
-      serialNumber: "O-12978",
-      name: "John Doe",
-      email: "johndoe@sample.com",
-      trainingPeriod: 1,
-      trainingYear: 2024,
-      rank: "1LT",
-      afos: "Infantry",
-      course: "Infantry Basic Course",
-    },
-    {
-      serialNumber: "O-12978",
-      name: "John Doe",
-      email: "johndoe@sample.com",
-      trainingPeriod: 1,
-      trainingYear: 2024,
-      rank: "1LT",
-      afos: "Infantry",
-      course: "Infantry Basic Course",
-    },
-    {
-      serialNumber: "O-12978",
-      name: "John Doe",
-      email: "johndoe@sample.com",
-      trainingPeriod: 1,
-      trainingYear: 2024,
-      rank: "1LT",
-      afos: "Infantry",
-      course: "Infantry Basic Course",
-    },
-    {
-      serialNumber: "O-12978",
-      name: "John Doe",
-      email: "johndoe@sample.com",
-      trainingPeriod: 1,
-      trainingYear: 2024,
-      rank: "1LT",
-      afos: "Infantry",
-      course: "Infantry Basic Course",
-    },
-  ];
-  const instructorsData = [
-    {
-      name: "John Doe",
-      email: "sample@email.com",
-      assignedSubject: "Pistols",
-    },
-    {
-      name: "John Doe",
-      email: "sample@email.com",
-      assignedSubject: "Rifles",
-    },
-  ];
-  const adminsData = [
-    {
-      name: "John Doe",
-      email: "lpdjeb@sample.com",
-    },
-  ];
+  const [allUsersData, setAllUsersData] = useState<User[]>([]);
+  const [studentsData, setStudentsData] = useState<Student[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+
+    async function loadUsers() {
+      const data = await fetchUsers();
+      setAllUsersData(data || []);
+      setLoading(false);
+    }
+
+    loadUsers();
+  }, []);
+
+  useEffect(() => {
+    async function loadStudents() {
+      const data = await fetchStudents();
+      const safeData: Student[] = (data ?? []).filter(
+        (item): item is Student => item.student !== null
+      );
+      setStudentsData(safeData);
+    }
+
+    loadStudents();
+  }, []);
+
   const [active, setActive] = useState("all");
 
   function changeUserType(type: string) {
@@ -267,23 +102,67 @@ export default function UserManagementPage() {
           {active === "admins" && " Admin"}
         </Button>
       </div>
-      <div className="container mx-auto">
-        {active === "all" && (
-          <AllUserDataTable columns={allUserColumns} data={allUsersData} />
-        )}
-        {active === "students" && (
-          <StudentsDataTable columns={studentsColumns} data={studentsData} />
-        )}
-        {active === "instructors" && (
-          <InstructorsDataTable
-            columns={instructorsColumns}
-            data={instructorsData}
-          />
-        )}
-        {active === "admins" && (
-          <AdminsDataTable columns={adminsColumns} data={adminsData} />
-        )}
-      </div>
+      {loading ? (
+        <div className="flex items-center justify-center h-140">
+          <DotPulse size="43" speed="1.3" color="black" />
+        </div>
+      ) : (
+        <div className="container mx-auto">
+          {active === "all" && (
+            <AllUserDataTable
+              columns={allUserColumns}
+              data={allUsersData.map((user) => ({
+                name: user.firstName + " " + user.lastName,
+                email: user.email,
+                role: user.role,
+              }))}
+            />
+          )}
+          {active === "students" && (
+            <StudentsDataTable
+              columns={studentsColumns}
+              data={studentsData.map((user) => ({
+                serialNumber: user.student.serialNumber,
+                name:
+                  user.firstName +
+                  " " +
+                  user.middleInitial +
+                  " " +
+                  user.lastName,
+                email: user.email,
+                trainingPeriod: user.student.trainingPeriod,
+                trainingYear: user.student.trainingYear,
+                rank: user.student.rank,
+                afos: user.student.afos,
+                course: user.student.course,
+              }))}
+            />
+          )}
+          {active === "instructors" && (
+            <InstructorsDataTable
+              columns={instructorsColumns}
+              data={allUsersData
+                .filter((user) => user.role === "INSTRUCTOR")
+                .map((user) => ({
+                  name: user.firstName + " " + user.lastName,
+                  email: user.email,
+                  assignedSubject: "",
+                }))}
+            />
+          )}
+          {active === "admins" && (
+            <AdminsDataTable
+              columns={adminsColumns}
+              data={allUsersData
+                .filter((user) => user.role === "ADMIN")
+                .map((user) => ({
+                  name: user.firstName + " " + user.lastName,
+                  email: user.email,
+                }))}
+            />
+          )}
+        </div>
+      )}
     </div>
   );
 }
