@@ -31,7 +31,8 @@ model students {
   afos            String
   course          String?
   remarks         String
-  user            users   @relation(fields: [serialNumber], references: [id])
+  userId          String  @unique
+  user            users   @relation(fields: [userId], references: [id])
 }
 
 model otp {
