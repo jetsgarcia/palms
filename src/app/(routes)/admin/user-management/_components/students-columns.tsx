@@ -18,7 +18,7 @@ export type Student = {
   trainingYear: number;
   rank: string;
   afos: string;
-  course: string;
+  course: string | null;
 };
 
 export const studentsColumns: ColumnDef<Student>[] = [
