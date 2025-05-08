@@ -112,6 +112,7 @@ export default function UserManagementPage() {
             <AllUserDataTable
               columns={allUserColumns}
               data={allUsersData.map((user) => ({
+                id: user.id,
                 name: user.firstName + " " + user.lastName,
                 email: user.email,
                 role: user.role,
@@ -122,6 +123,7 @@ export default function UserManagementPage() {
             <StudentsDataTable
               columns={studentsColumns}
               data={studentsData.map((user) => ({
+                id: user.id,
                 serialNumber: user.student.serialNumber,
                 name:
                   user.firstName +
@@ -144,6 +146,7 @@ export default function UserManagementPage() {
               data={allUsersData
                 .filter((user) => user.role === "INSTRUCTOR")
                 .map((user) => ({
+                  id: user.id,
                   name: user.firstName + " " + user.lastName,
                   email: user.email,
                   assignedSubject: "",
@@ -156,6 +159,7 @@ export default function UserManagementPage() {
               data={allUsersData
                 .filter((user) => user.role === "ADMIN")
                 .map((user) => ({
+                  id: user.id,
                   name: user.firstName + " " + user.lastName,
                   email: user.email,
                 }))}
