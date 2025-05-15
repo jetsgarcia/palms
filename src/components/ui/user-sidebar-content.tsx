@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 
+// Sidebar items for students
 const studentRecordsItems = [
   {
     title: "Registration",
@@ -68,6 +69,7 @@ const registrarTransactionsItems = [
   },
 ];
 
+// Sidebar items for admin
 const adminItems = [
   {
     title: "Training Period",
