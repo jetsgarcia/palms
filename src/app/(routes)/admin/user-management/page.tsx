@@ -24,11 +24,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useRouter } from "next/navigation";
 
 export default function UserManagementPage() {
   const [allUsersData, setAllUsersData] = useState<User[]>([]);
   const [studentsData, setStudentsData] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     setLoading(true);
@@ -58,6 +60,10 @@ export default function UserManagementPage() {
 
   function changeUserType(type: string) {
     setActive(type);
+  }
+
+  function navigateToRegisterAdmin() {
+    router.push("/admin/user-management/add-admin");
   }
 
   return (
@@ -131,6 +137,7 @@ export default function UserManagementPage() {
                 <Button
                   variant="outline"
                   className="cursor-pointer hover:bg-primary hover:text-white"
+                  onClick={navigateToRegisterAdmin}
                 >
                   Admin
                 </Button>
@@ -138,7 +145,14 @@ export default function UserManagementPage() {
             </DialogContent>
           </Dialog>
         ) : (
-          <Button className="cursor-pointer">
+          <Button
+            className="cursor-pointer"
+            onClick={() => {
+              if (active === "admins") {
+                router.push("/admin/user-management/add-admin");
+              }
+            }}
+          >
             <Plus />
             Add
             {active === "students" && " Student"}
