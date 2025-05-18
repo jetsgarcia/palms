@@ -137,7 +137,7 @@ export default function ChangePasswordForm({
               type="button"
               variant="ghost"
               size="icon"
-              className="absolute right-0 top-0 h-full px-3 py-2 text-muted-foreground cursor-pointer"
+              className="absolute right-0 top-0 h-full px-3 py-2 text-muted-foreground"
               onClick={() => setShowPassword(!showPassword)}
             >
               {showPassword ? <Eye size={16} /> : <EyeOff size={16} />}
@@ -220,7 +220,7 @@ export default function ChangePasswordForm({
               type="button"
               variant="ghost"
               size="icon"
-              className="absolute right-0 top-0 h-full px-3 py-2 text-muted-foreground cursor-pointer"
+              className="absolute right-0 top-0 h-full px-3 py-2 text-muted-foreground"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
             >
               {showConfirmPassword ? <Eye size={16} /> : <EyeOff size={16} />}
@@ -246,7 +246,7 @@ export default function ChangePasswordForm({
 
         <Button
           type="submit"
-          className="w-full cursor-pointer"
+          className="w-full"
           disabled={
             !passwordsMatch || getPasswordStrength() < 60 || isSubmitting
           }
@@ -293,7 +293,7 @@ export default function ChangePasswordForm({
                   type="button"
                   variant="ghost"
                   size="icon"
-                  className="absolute right-0 top-0 h-full px-3 py-2 text-muted-foreground cursor-pointer"
+                  className="absolute right-0 top-0 h-full px-3 py-2 text-muted-foreground"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? <Eye size={16} /> : <EyeOff size={16} />}
@@ -376,7 +376,7 @@ export default function ChangePasswordForm({
                   type="button"
                   variant="ghost"
                   size="icon"
-                  className="absolute right-0 top-0 h-full px-3 py-2 text-muted-foreground cursor-pointer"
+                  className="absolute right-0 top-0 h-full px-3 py-2 text-muted-foreground"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 >
                   {showConfirmPassword ? (
@@ -410,7 +410,7 @@ export default function ChangePasswordForm({
           <CardFooter>
             <Button
               type="submit"
-              className="w-full cursor-pointer"
+              className="w-full"
               disabled={
                 !passwordsMatch || getPasswordStrength() < 60 || isSubmitting
               }

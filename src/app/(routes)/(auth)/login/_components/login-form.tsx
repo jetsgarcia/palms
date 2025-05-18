@@ -94,7 +94,7 @@ export default function LoginForm() {
                   <button
                     onClick={() => setPasswordVisibility((current) => !current)}
                     type="button"
-                    className="opacity-50 absolute inset-y-0 right-2 hover:opacity-80 cursor-pointer"
+                    className="opacity-50 absolute inset-y-0 right-2 hover:opacity-80"
                   >
                     {passwordVisibility ? (
                       <Eye className="h-5" />
@@ -118,7 +118,7 @@ export default function LoginForm() {
         />
         <Button
           type="submit"
-          className="w-full font-semibold cursor-pointer"
+          className="w-full font-semibold"
           disabled={isSubmitting}
         >
           Log in

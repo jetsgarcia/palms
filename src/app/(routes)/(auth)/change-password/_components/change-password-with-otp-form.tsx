@@ -252,7 +252,7 @@ export default function ChangePasswordWithOTPForm({
                   <Button
                     onClick={() => handleSendOTP(email)}
                     disabled={loading}
-                    className="w-full cursor-pointer"
+                    className="w-full"
                   >
                     {loading ? (
                       <>
@@ -269,7 +269,7 @@ export default function ChangePasswordWithOTPForm({
                 <Button
                   onClick={() => handleSendOTP(session?.user.email as string)}
                   disabled={loading}
-                  className="w-full cursor-pointer"
+                  className="w-full"
                 >
                   {loading ? (
                     <>
@@ -312,7 +312,7 @@ export default function ChangePasswordWithOTPForm({
                         }
                       }}
                       disabled={loading}
-                      className="h-auto cursor-pointer w-full"
+                      className="h-auto w-full"
                     >
                       Resend code
                     </Button>
@@ -334,7 +334,7 @@ export default function ChangePasswordWithOTPForm({
                     }
                   }}
                   disabled={loading || otp.length !== 6}
-                  className="w-full cursor-pointer"
+                  className="w-full"
                 >
                   {loading ? (
                     <>

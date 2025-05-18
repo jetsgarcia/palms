@@ -71,7 +71,6 @@ export default function UserManagementPage() {
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <Button
-            className="cursor-pointer"
             variant={active === "all" ? "default" : "ghost"}
             onClick={() => {
               changeUserType("all");
@@ -80,7 +79,6 @@ export default function UserManagementPage() {
             All
           </Button>
           <Button
-            className="cursor-pointer"
             variant={active === "students" ? "default" : "ghost"}
             onClick={() => {
               changeUserType("students");
@@ -89,7 +87,6 @@ export default function UserManagementPage() {
             Students
           </Button>
           <Button
-            className="cursor-pointer"
             variant={active === "instructors" ? "default" : "ghost"}
             onClick={() => {
               changeUserType("instructors");
@@ -98,7 +95,6 @@ export default function UserManagementPage() {
             Instructors
           </Button>
           <Button
-            className="cursor-pointer"
             variant={active === "admins" ? "default" : "ghost"}
             onClick={() => {
               changeUserType("admins");
@@ -110,7 +106,7 @@ export default function UserManagementPage() {
         {active === "all" ? (
           <Dialog>
             <DialogTrigger asChild>
-              <Button className="cursor-pointer">
+              <Button>
                 <Plus /> Add User
               </Button>
             </DialogTrigger>
@@ -124,19 +120,19 @@ export default function UserManagementPage() {
               <div className="grid gap-4 py-4">
                 <Button
                   variant="outline"
-                  className="cursor-pointer hover:bg-primary hover:text-white"
+                  className="hover:bg-primary hover:text-white"
                 >
                   Student
                 </Button>
                 <Button
                   variant="outline"
-                  className="cursor-pointer hover:bg-primary hover:text-white"
+                  className="hover:bg-primary hover:text-white"
                 >
                   Instructor
                 </Button>
                 <Button
                   variant="outline"
-                  className="cursor-pointer hover:bg-primary hover:text-white"
+                  className="hover:bg-primary hover:text-white"
                   onClick={navigateToRegisterAdmin}
                 >
                   Admin
@@ -146,7 +142,6 @@ export default function UserManagementPage() {
           </Dialog>
         ) : (
           <Button
-            className="cursor-pointer"
             onClick={() => {
               if (active === "admins") {
                 router.push("/admin/user-management/add-admin");
