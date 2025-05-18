@@ -16,6 +16,14 @@ import { User } from "@/types/user";
 import { DotPulse } from "ldrs/react";
 import "ldrs/react/DotPulse.css";
 import { Student } from "@/types/student";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 export default function UserManagementPage() {
   const [allUsersData, setAllUsersData] = useState<User[]>([]);
@@ -93,14 +101,51 @@ export default function UserManagementPage() {
             Admins
           </Button>
         </div>
-        <Button className="cursor-pointer">
-          <Plus />
-          Add
-          {active === "all" && " User"}
-          {active === "students" && " Student"}
-          {active === "instructors" && " Instructor"}
-          {active === "admins" && " Admin"}
-        </Button>
+        {active === "all" ? (
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button className="cursor-pointer">
+                <Plus /> Add User
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Select User</DialogTitle>
+                <DialogDescription>
+                  Please select the user you want to register.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <Button
+                  variant="outline"
+                  className="cursor-pointer hover:bg-primary hover:text-white"
+                >
+                  Student
+                </Button>
+                <Button
+                  variant="outline"
+                  className="cursor-pointer hover:bg-primary hover:text-white"
+                >
+                  Instructor
+                </Button>
+                <Button
+                  variant="outline"
+                  className="cursor-pointer hover:bg-primary hover:text-white"
+                >
+                  Admin
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+        ) : (
+          <Button className="cursor-pointer">
+            <Plus />
+            Add
+            {active === "students" && " Student"}
+            {active === "instructors" && " Instructor"}
+            {active === "admins" && " Admin"}
+          </Button>
+        )}
       </div>
       {loading ? (
         <div className="flex items-center justify-center h-140">
