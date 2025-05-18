@@ -25,16 +25,15 @@ import ChangePasswordForm from "./change-password-form";
 import { emailChecker } from "../_actions/email-checker";
 
 interface ChangePasswordWithOTPFormProps {
-  steps: string[];
   type: "unauthenticated" | "authenticated";
   logoutAfterChangePassword: boolean;
 }
 
 export default function ChangePasswordWithOTPForm({
-  steps,
   type,
   logoutAfterChangePassword,
 }: ChangePasswordWithOTPFormProps) {
+  const steps = ["Enter Email", "Verify OTP", "Change Password"];
   const { data: session } = useSession();
   const [currentStep, setCurrentStep] = useState(0);
   const [countdown, setCountdown] = useState(600);

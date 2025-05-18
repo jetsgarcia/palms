@@ -1,6 +1,7 @@
 import { auth } from "@/lib/auth";
 import ChangePasswordForm from "./_components/change-password-form";
 import ChangePasswordWithOTPForm from "./_components/change-password-with-otp-form";
+import { fetchFirstLogin } from "./_actions/fetch-first-login";
 
 export default async function ChangePasswordPage() {
   const session = await auth();
@@ -10,7 +11,6 @@ export default async function ChangePasswordPage() {
   if (!session) {
     return (
       <ChangePasswordWithOTPForm
-        steps={["Enter Email", "Verify OTP", "Change Password"]}
         type="unauthenticated"
         logoutAfterChangePassword={false}
       />
@@ -32,27 +32,8 @@ export default async function ChangePasswordPage() {
   // Change password for authenticated users
   return (
     <ChangePasswordWithOTPForm
-      steps={["Enter Email", "Verify OTP", "Change Password"]}
       type="authenticated"
       logoutAfterChangePassword={true}
     />
   );
-}
-
-async function fetchFirstLogin(userId: string) {
-  try {
-    const response = await fetch("http://localhost:3000/api/first-login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId }),
-    });
-
-    if (!response.ok) throw new Error("Failed to fetch first login status");
-
-    const { user } = await response.json();
-    return user?.firstLogin;
-  } catch (error) {
-    console.error("Error fetching first login status:", error);
-    return false;
-  }
 }
