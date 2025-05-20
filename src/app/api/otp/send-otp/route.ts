@@ -1,4 +1,4 @@
-import { EmailTemplate } from "@/emails/template";
+import { OTPEmailTemplate } from "@/emails/otp-template";
 import { type NextRequest } from "next/server";
 import { Resend } from "resend";
 
@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
       from: "PALMS <noreply@jettergarcia.com>",
       to: [email],
       subject: "Change Password OTP",
-      react: await EmailTemplate({ firstName: name, OTP: otp }),
+      react: await OTPEmailTemplate({ firstName: name, OTP: otp }),
     });
 
     if (error) {

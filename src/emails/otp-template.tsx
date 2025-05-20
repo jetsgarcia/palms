@@ -1,11 +1,11 @@
 import type * as React from "react";
 
-interface EmailTemplateProps {
+interface OTPEmailTemplateProps {
   firstName: string;
   OTP: string;
 }
 
-export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
+export const OTPEmailTemplate: React.FC<Readonly<OTPEmailTemplateProps>> = ({
   firstName,
   OTP,
 }) => {
