@@ -21,6 +21,16 @@ export async function registerAdmin(
     return password;
   }
 
+  const existingUser = await prisma.users.findUnique({
+    where: {
+      email: values.email,
+    },
+  });
+
+  if (existingUser) {
+    return { error: "Email already exists" };
+  }
+
   const generatedPassword = generateSecurePassword();
 
   const admin = {
