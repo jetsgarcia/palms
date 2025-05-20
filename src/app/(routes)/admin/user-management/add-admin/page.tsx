@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { UserPlus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { adminRegisterFormSchema } from "./_schemas/adminRegisterForm";
+import { registerAdmin } from "./_actions/registerAdmin";
 
 export default function RegisterAdminPage() {
   const router = useRouter();
@@ -32,9 +33,10 @@ export default function RegisterAdminPage() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof adminRegisterFormSchema>) {
-    // TODO: Do something with the form values.
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof adminRegisterFormSchema>) {
+    const response = await registerAdmin(values);
+    // TODO: Handle response
+    console.log(response);
   }
 
   return (
