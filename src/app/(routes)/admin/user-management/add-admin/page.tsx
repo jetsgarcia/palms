@@ -60,7 +60,20 @@ export default function RegisterAdminPage() {
                     Last name <span className="text-destructive">*</span>
                   </FormLabel>
                   <FormControl>
-                    <Input placeholder="Reyes" {...field} />
+                    <Input
+                      placeholder="Reyes"
+                      {...field}
+                      onChange={(e) => {
+                        // Capitalize every word
+                        const value = e.target.value
+                          .replace(/\b\w/g, (char) => char.toUpperCase())
+                          .replace(/\B\w/g, (char) => char.toLowerCase());
+                        field.onChange(value);
+                      }}
+                      value={(field.value || "")
+                        .replace(/\b\w/g, (char) => char.toUpperCase())
+                        .replace(/\B\w/g, (char) => char.toLowerCase())}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -75,7 +88,20 @@ export default function RegisterAdminPage() {
                     First name <span className="text-destructive">*</span>
                   </FormLabel>
                   <FormControl>
-                    <Input placeholder="Juan" {...field} />
+                    <Input
+                      placeholder="Juan"
+                      {...field}
+                      onChange={(e) => {
+                        // Capitalize every word
+                        const value = e.target.value
+                          .replace(/\b\w/g, (char) => char.toUpperCase())
+                          .replace(/\B\w/g, (char) => char.toLowerCase());
+                        field.onChange(value);
+                      }}
+                      value={(field.value || "")
+                        .replace(/\b\w/g, (char) => char.toUpperCase())
+                        .replace(/\B\w/g, (char) => char.toLowerCase())}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -90,7 +116,19 @@ export default function RegisterAdminPage() {
                 <FormItem className="flex-1">
                   <FormLabel>Middle initial</FormLabel>
                   <FormControl>
-                    <Input placeholder="A" {...field} />
+                    <Input
+                      placeholder="A"
+                      maxLength={1}
+                      {...field}
+                      onChange={(e) => {
+                        const value = e.target.value
+                          .replace(/[^a-zA-Z]/g, "")
+                          .toUpperCase()
+                          .slice(0, 1);
+                        field.onChange(value);
+                      }}
+                      value={field.value?.toUpperCase() || ""}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -110,7 +148,6 @@ export default function RegisterAdminPage() {
               )}
             />
           </div>
-
           <FormField
             control={form.control}
             name="email"
@@ -120,7 +157,15 @@ export default function RegisterAdminPage() {
                   Email <span className="text-destructive">*</span>
                 </FormLabel>
                 <FormControl>
-                  <Input placeholder="example@domain.com" {...field} />
+                  <Input
+                    placeholder="example@domain.com"
+                    {...field}
+                    onChange={(e) => {
+                      const value = e.target.value.toLowerCase();
+                      field.onChange(value);
+                    }}
+                    value={field.value?.toLowerCase() || ""}
+                  />
                 </FormControl>
                 <FormDescription>
                   The password will be sent to this email address.
