@@ -27,7 +27,7 @@ export async function sendOTP({ email }: { email: string }) {
 
     try {
       const response = await fetch(
-        `${process.env.APP_API_BASE_URL}/api/send-otp`,
+        `${process.env.APP_API_BASE_URL}/api/otp/send-otp`,
         {
           method: "POST",
           headers: {

@@ -52,7 +52,7 @@ export default function ChangePasswordWithOTPForm({
     } else if (countdown === 0) {
       if (session?.user.email) {
         navigator.sendBeacon(
-          "/api/delete-otp",
+          "/api/otp/delete-otp",
           JSON.stringify({ email: session?.user.email })
         );
       }
@@ -66,7 +66,7 @@ export default function ChangePasswordWithOTPForm({
       if (!session?.user.email) return;
 
       // Send request before leaving
-      fetch("/api/delete-otp", {
+      fetch("/api/otp/delete-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: session?.user.email }),
