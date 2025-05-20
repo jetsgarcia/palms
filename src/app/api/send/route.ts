@@ -11,6 +11,7 @@ export async function POST(req: NextRequest) {
   if (!name) {
     return Response.json({ error: "Missing name" }, { status: 400 });
   }
+
   if (!otp) {
     return Response.json({ error: "Missing OTP" }, { status: 400 });
   }
@@ -21,7 +22,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const { data, error } = await resend.emails.send({
-      from: "PALMS <palms@resend.dev>",
+      from: "PALMS <noreply@jettergarcia.com>",
       to: [email],
       subject: "Change Password OTP",
       react: await EmailTemplate({ firstName: name, OTP: otp }),
