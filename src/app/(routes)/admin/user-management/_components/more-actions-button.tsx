@@ -25,6 +25,7 @@ export default function MoreActionsButton({ userId }: MoreActionsButtonProps) {
           className="cursor-pointer"
           onClick={() => {
             // TODO: Implement edit user functionality
+            console.log(`Edit user with ID: ${userId}`);
           }}
         >
           Edit user
@@ -33,6 +34,7 @@ export default function MoreActionsButton({ userId }: MoreActionsButtonProps) {
           className="cursor-pointer"
           onClick={() => {
             // TODO: Implement delete user functionality
+            console.log(`Delete user with ID: ${userId}`);
           }}
         >
           Delete user
