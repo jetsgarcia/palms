@@ -1,4 +1,4 @@
-import { EmailTemplate } from "@/emails/template";
+import { PasswordEmailTemplate } from "@/emails/password-template";
 import { type NextRequest } from "next/server";
 import { Resend } from "resend";
 
@@ -6,13 +6,14 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { name, otp, email } = body;
+  const { firstName, password, email } = body;
 
-  if (!name) {
+  if (!firstName) {
     return Response.json({ error: "Missing name" }, { status: 400 });
   }
-  if (!otp) {
-    return Response.json({ error: "Missing OTP" }, { status: 400 });
+
+  if (!password) {
+    return Response.json({ error: "Missing password" }, { status: 400 });
   }
 
   if (!email) {
@@ -21,10 +22,13 @@ export async function POST(req: NextRequest) {
 
   try {
     const { data, error } = await resend.emails.send({
-      from: "PALMS <palms@resend.dev>",
+      from: "PALMS <noreply@jettergarcia.com>",
       to: [email],
-      subject: "Change Password OTP",
-      react: await EmailTemplate({ firstName: name, OTP: otp }),
+      subject: "Your PALMS Account Has Been Created",
+      react: await PasswordEmailTemplate({
+        firstName: firstName,
+        password: password,
+      }),
     });
 
     if (error) {

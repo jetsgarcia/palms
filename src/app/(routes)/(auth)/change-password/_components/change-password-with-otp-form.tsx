@@ -25,16 +25,15 @@ import ChangePasswordForm from "./change-password-form";
 import { emailChecker } from "../_actions/email-checker";
 
 interface ChangePasswordWithOTPFormProps {
-  steps: string[];
   type: "unauthenticated" | "authenticated";
   logoutAfterChangePassword: boolean;
 }
 
 export default function ChangePasswordWithOTPForm({
-  steps,
   type,
   logoutAfterChangePassword,
 }: ChangePasswordWithOTPFormProps) {
+  const steps = ["Enter Email", "Verify OTP", "Change Password"];
   const { data: session } = useSession();
   const [currentStep, setCurrentStep] = useState(0);
   const [countdown, setCountdown] = useState(600);
@@ -53,7 +52,7 @@ export default function ChangePasswordWithOTPForm({
     } else if (countdown === 0) {
       if (session?.user.email) {
         navigator.sendBeacon(
-          "/api/delete-otp",
+          "/api/otp/delete-otp",
           JSON.stringify({ email: session?.user.email })
         );
       }
@@ -67,7 +66,7 @@ export default function ChangePasswordWithOTPForm({
       if (!session?.user.email) return;
 
       // Send request before leaving
-      fetch("/api/delete-otp", {
+      fetch("/api/otp/delete-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: session?.user.email }),
@@ -253,7 +252,7 @@ export default function ChangePasswordWithOTPForm({
                   <Button
                     onClick={() => handleSendOTP(email)}
                     disabled={loading}
-                    className="w-full cursor-pointer"
+                    className="w-full"
                   >
                     {loading ? (
                       <>
@@ -270,7 +269,7 @@ export default function ChangePasswordWithOTPForm({
                 <Button
                   onClick={() => handleSendOTP(session?.user.email as string)}
                   disabled={loading}
-                  className="w-full cursor-pointer"
+                  className="w-full"
                 >
                   {loading ? (
                     <>
@@ -313,7 +312,7 @@ export default function ChangePasswordWithOTPForm({
                         }
                       }}
                       disabled={loading}
-                      className="h-auto cursor-pointer w-full"
+                      className="h-auto w-full"
                     >
                       Resend code
                     </Button>
@@ -335,7 +334,7 @@ export default function ChangePasswordWithOTPForm({
                     }
                   }}
                   disabled={loading || otp.length !== 6}
-                  className="w-full cursor-pointer"
+                  className="w-full"
                 >
                   {loading ? (
                     <>

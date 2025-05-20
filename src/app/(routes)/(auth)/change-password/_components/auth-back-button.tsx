@@ -18,11 +18,7 @@ export default function AuthBackButton() {
   }
 
   return (
-    <Button
-      variant="ghost"
-      className="cursor-pointer"
-      onClick={handleBackButtonClick}
-    >
+    <Button variant="ghost" onClick={handleBackButtonClick}>
       <ChevronLeft />
       <span>Go back</span>
     </Button>

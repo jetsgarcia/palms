@@ -1,5 +1,4 @@
 import { cookies } from "next/headers";
-
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { auth } from "@/lib/auth";
@@ -26,7 +25,7 @@ export default async function Layout({
     <>
       {session?.user ? (
         <SidebarProvider defaultOpen={defaultOpen}>
-          <AppSidebar role="STUDENT" />
+          <AppSidebar role="ADMIN" />
           <main className="flex-1 flex flex-col w-full">
             <header className="flex items-center justify-between p-2 border-b border-primary w-full sticky bg-background top-0">
               <div>
@@ -58,7 +57,7 @@ export default async function Layout({
                 </DropdownMenuContent>
               </DropdownMenu>
             </header>
-            {children}
+            <div className="p-4">{children}</div>
           </main>
         </SidebarProvider>
       ) : (

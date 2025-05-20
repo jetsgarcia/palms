@@ -10,10 +10,7 @@ export default function LogoutButton() {
       }}
       className="w-full"
     >
-      <button
-        type="submit"
-        className="cursor-pointer flex items-center gap-2 w-full"
-      >
+      <button type="submit" className="flex items-center gap-2 w-full">
         <LogOut />
         Logout
       </button>
