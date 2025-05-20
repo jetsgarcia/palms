@@ -26,17 +26,20 @@ export async function sendOTP({ email }: { email: string }) {
     });
 
     try {
-      const response = await fetch(`${process.env.APP_API_BASE_URL}/api/send`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: user?.firstName,
-          otp: otp,
-          email: email,
-        }),
-      });
+      const response = await fetch(
+        `${process.env.APP_API_BASE_URL}/api/send-otp`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: user?.firstName,
+            otp: otp,
+            email: email,
+          }),
+        }
+      );
 
       const data = await response.json();
 
