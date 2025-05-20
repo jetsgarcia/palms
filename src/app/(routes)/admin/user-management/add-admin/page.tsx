@@ -18,6 +18,7 @@ import { UserPlus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { adminRegisterFormSchema } from "./_schemas/adminRegisterForm";
 import { registerAdmin } from "./_actions/registerAdmin";
+import { toast } from "sonner";
 
 export default function RegisterAdminPage() {
   const router = useRouter();
@@ -35,8 +36,18 @@ export default function RegisterAdminPage() {
 
   async function onSubmit(values: z.infer<typeof adminRegisterFormSchema>) {
     const response = await registerAdmin(values);
-    // TODO: Handle response
-    console.log(response);
+
+    if (!response) {
+      throw new Error("No response from server");
+    }
+
+    if (response.error) {
+      toast.error(response.error);
+      return;
+    }
+
+    toast.success("Admin registered successfully");
+    router.push("/admin/user-management");
   }
 
   return (
