@@ -16,23 +16,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { UserPlus } from "lucide-react";
 import { useRouter } from "next/navigation";
-
-const formSchema = z.object({
-  firstName: z.string().min(1, { message: "First name is required" }),
-  lastName: z.string().min(1, { message: "Last name is required" }),
-  middleInitial: z
-    .string()
-    .max(1, { message: "Middle initial should only be 1 letter" })
-    .optional(),
-  suffix: z.string().optional(),
-  email: z.string().email({ message: "Invalid email address" }),
-});
+import { adminRegisterFormSchema } from "./_schemas/adminRegisterForm";
 
 export default function RegisterAdminPage() {
   const router = useRouter();
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof adminRegisterFormSchema>>({
+    resolver: zodResolver(adminRegisterFormSchema),
     defaultValues: {
       firstName: "",
       lastName: "",
@@ -42,7 +32,7 @@ export default function RegisterAdminPage() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: z.infer<typeof adminRegisterFormSchema>) {
     // TODO: Do something with the form values.
     console.log(values);
   }
