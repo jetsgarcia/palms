@@ -11,7 +11,9 @@ interface MoreActionsButtonProps {
   userId: string;
 }
 
-export default function MoreActionsButton({ userId }: MoreActionsButtonProps) {
+export default function UserManagementMoreActionsButton({
+  userId,
+}: MoreActionsButtonProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

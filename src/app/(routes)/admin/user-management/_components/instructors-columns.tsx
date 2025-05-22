@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import MoreActionsButton from "./more-actions-button";
+import UserManagementMoreActionsButton from "./more-actions-button";
 
 export type Instructors = {
   id: string;
@@ -26,7 +26,7 @@ export const instructorsColumns: ColumnDef<Instructors>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      return <MoreActionsButton userId={row.original.id} />;
+      return <UserManagementMoreActionsButton userId={row.original.id} />;
     },
   },
 ];
