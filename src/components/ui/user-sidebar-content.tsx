@@ -73,7 +73,7 @@ const registrarTransactionsItems = [
 const adminItems = [
   {
     title: "Training Period",
-    url: "#",
+    url: "/admin/training-period",
     icon: Calendar,
   },
   {
