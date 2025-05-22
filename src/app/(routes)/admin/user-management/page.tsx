@@ -66,6 +66,10 @@ export default function UserManagementPage() {
     router.push("/admin/user-management/add-admin");
   }
 
+  function navigateToRegisterInstructor() {
+    router.push("/admin/user-management/add-instructor");
+  }
+
   return (
     <div>
       <div className="flex items-center justify-between">
@@ -127,6 +131,7 @@ export default function UserManagementPage() {
                 <Button
                   variant="outline"
                   className="hover:bg-primary hover:text-white"
+                  onClick={navigateToRegisterInstructor}
                 >
                   Instructor
                 </Button>
@@ -145,6 +150,10 @@ export default function UserManagementPage() {
             onClick={() => {
               if (active === "admins") {
                 router.push("/admin/user-management/add-admin");
+              }
+
+              if (active === "instructors") {
+                router.push("/admin/user-management/add-instructor");
               }
             }}
           >

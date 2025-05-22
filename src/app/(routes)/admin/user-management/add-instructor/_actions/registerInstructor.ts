@@ -1,13 +1,13 @@
 "use server";
 
 import { z } from "zod";
-import { adminRegisterFormSchema } from "../../../../../../schemas/adminRegisterForm";
+import { instructorRegisterFormSchema } from "../../../../../../schemas/instructorRegisterForm";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { Role } from "@prisma/client";
 
-export async function registerAdmin(
-  values: z.infer<typeof adminRegisterFormSchema>
+export async function registerInstructor(
+  values: z.infer<typeof instructorRegisterFormSchema>
 ) {
   function generateSecurePassword(length: number = 12): string {
     const charset =
@@ -33,10 +33,10 @@ export async function registerAdmin(
 
   const generatedPassword = generateSecurePassword();
 
-  const admin = {
+  const instructor = {
     ...values,
     password: generatedPassword,
-    role: Role.ADMIN,
+    role: Role.INSTRUCTOR,
     firstLogin: true,
   };
 
@@ -46,9 +46,9 @@ export async function registerAdmin(
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      firstName: admin.firstName,
-      email: admin.email,
-      password: admin.password,
+      firstName: instructor.firstName,
+      email: instructor.email,
+      password: instructor.password,
     }),
   });
 
@@ -56,14 +56,14 @@ export async function registerAdmin(
     const hashedPassword = await bcrypt.hash(generatedPassword, 10);
     await prisma.users.create({
       data: {
-        lastName: admin.lastName,
-        firstName: admin.firstName,
-        middleInitial: admin.middleInitial || null,
-        suffix: admin.suffix || null,
-        email: admin.email,
+        lastName: instructor.lastName,
+        firstName: instructor.firstName,
+        middleInitial: instructor.middleInitial || null,
+        suffix: instructor.suffix || null,
+        email: instructor.email,
         password: hashedPassword,
-        firstLogin: admin.firstLogin,
-        role: admin.role,
+        firstLogin: instructor.firstLogin,
+        role: instructor.role,
       },
     });
 

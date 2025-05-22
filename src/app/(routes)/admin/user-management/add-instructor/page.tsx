@@ -16,15 +16,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { UserPlus } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { adminRegisterFormSchema } from "../../../../../schemas/adminRegisterForm";
-import { registerAdmin } from "./_actions/registerAdmin";
+import { instructorRegisterFormSchema } from "../../../../../schemas/instructorRegisterForm";
+import { registerInstructor } from "./_actions/registerInstructor";
 import { toast } from "sonner";
 
-export default function RegisterAdminPage() {
+export default function RegisterInstructorPage() {
   const router = useRouter();
 
-  const form = useForm<z.infer<typeof adminRegisterFormSchema>>({
-    resolver: zodResolver(adminRegisterFormSchema),
+  const form = useForm<z.infer<typeof instructorRegisterFormSchema>>({
+    resolver: zodResolver(instructorRegisterFormSchema),
     defaultValues: {
       firstName: "",
       lastName: "",
@@ -34,8 +34,10 @@ export default function RegisterAdminPage() {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof adminRegisterFormSchema>) {
-    const response = await registerAdmin(values);
+  async function onSubmit(
+    values: z.infer<typeof instructorRegisterFormSchema>
+  ) {
+    const response = await registerInstructor(values);
 
     if (!response) {
       throw new Error("No response from server");
@@ -46,7 +48,7 @@ export default function RegisterAdminPage() {
       return;
     }
 
-    toast.success("Admin registered successfully");
+    toast.success("Instructor registered successfully");
     router.push("/admin/user-management");
   }
 
@@ -55,9 +57,9 @@ export default function RegisterAdminPage() {
       <div className="flex items-center space-x-4">
         <UserPlus size={40} />
         <div>
-          <h1 className="text-2xl font-bold">Register Admin</h1>
+          <h1 className="text-2xl font-bold">Register Instructor</h1>
           <p className="text-sm text-muted-foreground">
-            Fill in the details below to register a new admin.
+            Fill in the details below to register a new instructor.
           </p>
         </div>
       </div>
