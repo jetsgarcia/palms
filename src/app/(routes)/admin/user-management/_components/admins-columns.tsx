@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import UserManagementMoreActionsButton from "./more-actions-button";
+import UserManagementMoreActionsButton from "./user-management-more-actions-button";
 
 export type Admin = {
   id: string;
