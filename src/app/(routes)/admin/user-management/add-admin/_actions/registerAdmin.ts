@@ -1,7 +1,7 @@
 "use server";
 
 import { z } from "zod";
-import { adminRegisterFormSchema } from "../_schemas/adminRegisterForm";
+import { adminRegisterFormSchema } from "../../../../../../schemas/adminRegisterForm";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { Role } from "@prisma/client";
