@@ -6,9 +6,13 @@ import { useEffect, useState } from "react";
 import { fetchTrainingPeriods } from "./_actions/fetchTrainingPeriods";
 import { TrainingPeriodType } from "@/types/trainingPeriod";
 import TrainingPeriod from "./_components/training-period";
+import { useRouter } from "next/navigation";
+import Loader from "@/components/loader";
 
 export default function TrainingPeriodPage() {
+  const router = useRouter();
   const [active, setActive] = useState("scheduled");
+  const [loading, setLoading] = useState(true);
   const [scheduledTrainingPeriods, setScheduledTrainingPeriods] = useState<
     TrainingPeriodType[]
   >([]);
@@ -39,8 +43,12 @@ export default function TrainingPeriodPage() {
         setScheduledTrainingPeriods(scheduled);
         setInProgressTrainingPeriods(inProgress);
         setCompletedTrainingPeriods(completed);
+
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching training periods:", error);
+
+        setLoading(false);
       }
     }
 
@@ -76,56 +84,58 @@ export default function TrainingPeriodPage() {
             Completed
           </Button>
         </div>
-        <Button>
+        <Button onClick={() => router.push("/admin/training-period/add")}>
           <Plus /> Add training period
         </Button>
       </div>
-
-      {/* List of training periods */}
-      <div className="grid gap-4">
-        {active === "scheduled" && (
-          <>
-            {scheduledTrainingPeriods.map((trainingPeriod) => (
-              <TrainingPeriod
-                key={trainingPeriod.id}
-                name={trainingPeriod.name}
-                id={trainingPeriod.id}
-                startDate={new Date(trainingPeriod.startDate)}
-                endDate={new Date(trainingPeriod.endDate)}
-                weeks={trainingPeriod.weeks}
-              />
-            ))}
-          </>
-        )}
-        {active === "inProgress" && (
-          <>
-            {inProgressTrainingPeriods.map((trainingPeriod) => (
-              <TrainingPeriod
-                key={trainingPeriod.id}
-                name={trainingPeriod.name}
-                id={trainingPeriod.id}
-                startDate={new Date(trainingPeriod.startDate)}
-                endDate={new Date(trainingPeriod.endDate)}
-                weeks={trainingPeriod.weeks}
-              />
-            ))}
-          </>
-        )}
-        {active === "completed" && (
-          <>
-            {completedTrainingPeriods.map((trainingPeriod) => (
-              <TrainingPeriod
-                key={trainingPeriod.id}
-                name={trainingPeriod.name}
-                id={trainingPeriod.id}
-                startDate={new Date(trainingPeriod.startDate)}
-                endDate={new Date(trainingPeriod.endDate)}
-                weeks={trainingPeriod.weeks}
-              />
-            ))}
-          </>
-        )}
-      </div>
+      {loading ? (
+        <Loader />
+      ) : (
+        <div className="grid gap-4">
+          {active === "scheduled" && (
+            <>
+              {scheduledTrainingPeriods.map((trainingPeriod) => (
+                <TrainingPeriod
+                  key={trainingPeriod.id}
+                  name={trainingPeriod.name}
+                  id={trainingPeriod.id}
+                  startDate={new Date(trainingPeriod.startDate)}
+                  endDate={new Date(trainingPeriod.endDate)}
+                  weeks={trainingPeriod.weeks}
+                />
+              ))}
+            </>
+          )}
+          {active === "inProgress" && (
+            <>
+              {inProgressTrainingPeriods.map((trainingPeriod) => (
+                <TrainingPeriod
+                  key={trainingPeriod.id}
+                  name={trainingPeriod.name}
+                  id={trainingPeriod.id}
+                  startDate={new Date(trainingPeriod.startDate)}
+                  endDate={new Date(trainingPeriod.endDate)}
+                  weeks={trainingPeriod.weeks}
+                />
+              ))}
+            </>
+          )}
+          {active === "completed" && (
+            <>
+              {completedTrainingPeriods.map((trainingPeriod) => (
+                <TrainingPeriod
+                  key={trainingPeriod.id}
+                  name={trainingPeriod.name}
+                  id={trainingPeriod.id}
+                  startDate={new Date(trainingPeriod.startDate)}
+                  endDate={new Date(trainingPeriod.endDate)}
+                  weeks={trainingPeriod.weeks}
+                />
+              ))}
+            </>
+          )}
+        </div>
+      )}
     </div>
   );
 }
