@@ -15,7 +15,7 @@ import { fetchStudents, fetchUsers } from "./_actions/fetchUsers";
 import { User } from "@/types/user";
 import { DotPulse } from "ldrs/react";
 import "ldrs/react/DotPulse.css";
-import { Student } from "@/types/student";
+import { StudentType } from "@/types/student";
 import {
   Dialog,
   DialogContent,
@@ -28,7 +28,7 @@ import { useRouter } from "next/navigation";
 
 export default function UserManagementPage() {
   const [allUsersData, setAllUsersData] = useState<User[]>([]);
-  const [studentsData, setStudentsData] = useState<Student[]>([]);
+  const [studentsData, setStudentsData] = useState<StudentType[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -47,8 +47,8 @@ export default function UserManagementPage() {
   useEffect(() => {
     async function loadStudents() {
       const data = await fetchStudents();
-      const safeData: Student[] = (data ?? []).filter(
-        (item): item is Student => item.student !== null
+      const safeData: StudentType[] = (data ?? []).filter(
+        (item): item is StudentType => item.student !== null
       );
       setStudentsData(safeData);
     }
