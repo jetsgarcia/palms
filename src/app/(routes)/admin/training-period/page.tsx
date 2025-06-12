@@ -88,7 +88,7 @@ export default function TrainingPeriodPage() {
             {scheduledTrainingPeriods.map((trainingPeriod) => (
               <TrainingPeriod
                 key={trainingPeriod.id}
-                name={`Training Period ${trainingPeriod.id}`}
+                name={trainingPeriod.name}
                 id={trainingPeriod.id}
                 startDate={new Date(trainingPeriod.startDate)}
                 endDate={new Date(trainingPeriod.endDate)}
@@ -102,7 +102,7 @@ export default function TrainingPeriodPage() {
             {inProgressTrainingPeriods.map((trainingPeriod) => (
               <TrainingPeriod
                 key={trainingPeriod.id}
-                name={`Training Period ${trainingPeriod.id}`}
+                name={trainingPeriod.name}
                 id={trainingPeriod.id}
                 startDate={new Date(trainingPeriod.startDate)}
                 endDate={new Date(trainingPeriod.endDate)}
@@ -116,7 +116,7 @@ export default function TrainingPeriodPage() {
             {completedTrainingPeriods.map((trainingPeriod) => (
               <TrainingPeriod
                 key={trainingPeriod.id}
-                name={`Training Period ${trainingPeriod.id}`}
+                name={trainingPeriod.name}
                 id={trainingPeriod.id}
                 startDate={new Date(trainingPeriod.startDate)}
                 endDate={new Date(trainingPeriod.endDate)}
