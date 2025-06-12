@@ -8,37 +8,44 @@ datasource db {
 }
 
 model users {
-  id            String   @id @default(cuid())
+  id            String    @id @default(cuid())
   lastName      String
   firstName     String
   middleInitial String?
   suffix        String?
-  email         String   @unique
+  email         String    @unique
   password      String
   role          Role
-  firstLogin    Boolean  @default(true)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
+  firstLogin    Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
   student       students?
 }
 
 model students {
-  serialNumber    String  @id
-  trainingPeriod  Int
-  trainingYear    Int
-  rank            String
-  afos            String
-  course          String?
-  remarks         String
-  userId          String  @unique
-  user            users   @relation(fields: [userId], references: [id])
+  serialNumber   String  @id
+  trainingPeriod Int
+  trainingYear   Int
+  rank           String
+  afos           String
+  course         String?
+  remarks        String
+  userId         String  @unique
+  user           users   @relation(fields: [userId], references: [id])
 }
 
 model otp {
-  id        String   @id @default(cuid())
+  id        String @id @default(cuid())
   userEmail String
-  otp       String   @db.VarChar(6)
+  otp       String @db.VarChar(6)
+}
+
+model training_periods {
+  id        String   @id @db.VarChar
+  name      String   @db.VarChar
+  startDate DateTime @db.Date
+  endDate   DateTime @db.Date
+  weeks     Int
 }
 
 enum Role {
