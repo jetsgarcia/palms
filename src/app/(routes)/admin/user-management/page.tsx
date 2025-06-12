@@ -12,7 +12,7 @@ import { adminsColumns } from "./_components/admins-columns";
 import { AdminsDataTable } from "./_components/admins-data-table";
 import { Plus } from "lucide-react";
 import { fetchStudents, fetchUsers } from "./_actions/fetchUsers";
-import { User } from "@/types/user";
+import { UserType } from "@/types/user";
 import { DotPulse } from "ldrs/react";
 import "ldrs/react/DotPulse.css";
 import { StudentType } from "@/types/student";
@@ -27,7 +27,7 @@ import {
 import { useRouter } from "next/navigation";
 
 export default function UserManagementPage() {
-  const [allUsersData, setAllUsersData] = useState<User[]>([]);
+  const [allUsersData, setAllUsersData] = useState<UserType[]>([]);
   const [studentsData, setStudentsData] = useState<StudentType[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
