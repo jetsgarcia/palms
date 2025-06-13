@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 interface MoreActionsButtonProps {
-  trainingPeriodId: string;
+  trainingPeriodId: number;
 }
 
 export default function TrainingPeriodMoreActionsButton({

@@ -1,8 +1,8 @@
 import TrainingPeriodMoreActionsButton from "./training-period-more-actions-button";
 
 interface TrainingPeriodProps {
+  id: number;
   name: string;
-  id: string;
   startDate: Date;
   endDate: Date;
   weeks: number;

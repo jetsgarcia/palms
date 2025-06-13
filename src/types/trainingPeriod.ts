@@ -1,5 +1,5 @@
 export interface TrainingPeriodType {
-  id: string;
+  id: number;
   name: string;
   startDate: Date;
   endDate: Date;
