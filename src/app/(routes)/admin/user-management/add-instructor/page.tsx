@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { UserPlus } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { instructorRegisterFormSchema } from "../../../../../schemas/instructorRegisterForm";
+import { instructorRegisterFormSchema } from "@/schemas/instructorRegisterForm";
 import { registerInstructor } from "./_actions/registerInstructor";
 import { toast } from "sonner";
 
