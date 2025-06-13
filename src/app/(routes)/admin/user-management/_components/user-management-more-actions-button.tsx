@@ -1,4 +1,4 @@
-import { MoreHorizontal } from "lucide-react";
+import { Edit, MoreHorizontal, Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -11,7 +11,9 @@ interface MoreActionsButtonProps {
   userId: string;
 }
 
-export default function MoreActionsButton({ userId }: MoreActionsButtonProps) {
+export default function UserManagementMoreActionsButton({
+  userId,
+}: MoreActionsButtonProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -28,16 +30,17 @@ export default function MoreActionsButton({ userId }: MoreActionsButtonProps) {
             console.log(`Edit user with ID: ${userId}`);
           }}
         >
-          Edit user
+          <Edit /> Edit user
         </DropdownMenuItem>
         <DropdownMenuItem
           className="cursor-pointer"
+          variant="destructive"
           onClick={() => {
             // TODO: Implement delete user functionality
             console.log(`Delete user with ID: ${userId}`);
           }}
         >
-          Delete user
+          <Trash /> Delete user
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

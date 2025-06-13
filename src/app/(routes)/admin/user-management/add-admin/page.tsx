@@ -77,7 +77,7 @@ export default function RegisterAdminPage() {
                       placeholder="Reyes"
                       {...field}
                       onChange={(e) => {
-                        // Capitalize every word
+                        // Capitalize every first letter in word
                         const value = e.target.value
                           .replace(/\b\w/g, (char) => char.toUpperCase())
                           .replace(/\B\w/g, (char) => char.toLowerCase());
@@ -105,7 +105,7 @@ export default function RegisterAdminPage() {
                       placeholder="Juan"
                       {...field}
                       onChange={(e) => {
-                        // Capitalize every word
+                        // Capitalize every first letter in word
                         const value = e.target.value
                           .replace(/\b\w/g, (char) => char.toUpperCase())
                           .replace(/\B\w/g, (char) => char.toLowerCase());

@@ -12,10 +12,8 @@ import { adminsColumns } from "./_components/admins-columns";
 import { AdminsDataTable } from "./_components/admins-data-table";
 import { Plus } from "lucide-react";
 import { fetchStudents, fetchUsers } from "./_actions/fetchUsers";
-import { User } from "@/types/user";
-import { DotPulse } from "ldrs/react";
-import "ldrs/react/DotPulse.css";
-import { Student } from "@/types/student";
+import { UserType } from "@/types/user";
+import { StudentType } from "@/types/student";
 import {
   Dialog,
   DialogContent,
@@ -25,10 +23,11 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useRouter } from "next/navigation";
+import Loader from "@/components/loader";
 
 export default function UserManagementPage() {
-  const [allUsersData, setAllUsersData] = useState<User[]>([]);
-  const [studentsData, setStudentsData] = useState<Student[]>([]);
+  const [allUsersData, setAllUsersData] = useState<UserType[]>([]);
+  const [studentsData, setStudentsData] = useState<StudentType[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -47,8 +46,8 @@ export default function UserManagementPage() {
   useEffect(() => {
     async function loadStudents() {
       const data = await fetchStudents();
-      const safeData: Student[] = (data ?? []).filter(
-        (item): item is Student => item.student !== null
+      const safeData: StudentType[] = (data ?? []).filter(
+        (item): item is StudentType => item.student !== null
       );
       setStudentsData(safeData);
     }
@@ -166,9 +165,7 @@ export default function UserManagementPage() {
         )}
       </div>
       {loading ? (
-        <div className="flex items-center justify-center h-140">
-          <DotPulse size="43" speed="1.3" color="black" />
-        </div>
+        <Loader />
       ) : (
         <div className="container mx-auto">
           {active === "all" && (

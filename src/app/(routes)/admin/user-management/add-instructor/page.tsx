@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { UserPlus } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { instructorRegisterFormSchema } from "../../../../../schemas/instructorRegisterForm";
+import { instructorRegisterFormSchema } from "@/schemas/instructorRegisterForm";
 import { registerInstructor } from "./_actions/registerInstructor";
 import { toast } from "sonner";
 
@@ -79,7 +79,7 @@ export default function RegisterInstructorPage() {
                       placeholder="Reyes"
                       {...field}
                       onChange={(e) => {
-                        // Capitalize every word
+                        // Capitalize every first letter in word
                         const value = e.target.value
                           .replace(/\b\w/g, (char) => char.toUpperCase())
                           .replace(/\B\w/g, (char) => char.toLowerCase());
@@ -107,7 +107,7 @@ export default function RegisterInstructorPage() {
                       placeholder="Juan"
                       {...field}
                       onChange={(e) => {
-                        // Capitalize every word
+                        // Capitalize every first letter in word
                         const value = e.target.value
                           .replace(/\b\w/g, (char) => char.toUpperCase())
                           .replace(/\B\w/g, (char) => char.toLowerCase());
