@@ -34,11 +34,16 @@ export default function TrainingPeriodPage() {
         }
 
         const now = new Date();
-        const scheduled = trainingPeriods.filter((tp) => tp.startDate > now);
-        const inProgress = trainingPeriods.filter(
-          (tp) => tp.startDate <= now && tp.endDate >= now
+
+        const scheduled: TrainingPeriodType[] = trainingPeriods.filter(
+          (tp: TrainingPeriodType) => tp.startDate > now
         );
-        const completed = trainingPeriods.filter((tp) => tp.endDate < now);
+        const inProgress: TrainingPeriodType[] = trainingPeriods.filter(
+          (tp: TrainingPeriodType) => tp.startDate <= now && tp.endDate >= now
+        );
+        const completed: TrainingPeriodType[] = trainingPeriods.filter(
+          (tp: TrainingPeriodType) => tp.endDate < now
+        );
 
         setScheduledTrainingPeriods(scheduled);
         setInProgressTrainingPeriods(inProgress);
