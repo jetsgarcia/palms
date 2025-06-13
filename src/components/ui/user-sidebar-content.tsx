@@ -18,6 +18,7 @@ import {
   ClipboardSignature,
   FileCheck,
   HeartPulse,
+  LayoutDashboard,
   ListCheck,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
@@ -72,13 +73,18 @@ const registrarTransactionsItems = [
 // Sidebar items for admin
 const adminItems = [
   {
+    title: "Dashboard",
+    url: "/admin",
+    icon: LayoutDashboard,
+  },
+  {
     title: "Training Period",
     url: "/admin/training-period",
     icon: Calendar,
   },
   {
     title: "Course Management",
-    url: "#",
+    url: "/admin/course-management",
     icon: BookOpenCheck,
   },
   {
