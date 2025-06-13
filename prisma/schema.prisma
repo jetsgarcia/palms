@@ -41,7 +41,7 @@ model otp {
 }
 
 model training_periods {
-  id        String   @id @db.VarChar
+  id        Int      @id(map: "training_period_pkey") @default(autoincrement())
   name      String   @db.VarChar
   startDate DateTime @db.Date
   endDate   DateTime @db.Date
