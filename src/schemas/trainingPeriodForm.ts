@@ -11,10 +11,18 @@ export const trainingPeriodFormSchema = z
     message: "End date must not be earlier than start date",
     path: ["endDate"],
   })
-  .refine((data) => data.startDate >= new Date(), {
-    message: "Start date must not be in the past",
-    path: ["startDate"],
-  })
+  .refine(
+    (data) => {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const inputDate = new Date(data.startDate);
+      return inputDate >= today;
+    },
+    {
+      message: "Start date must not be in the past",
+      path: ["startDate"],
+    }
+  )
   .refine(
     (data) => {
       const oneYearLater = new Date(data.startDate);
