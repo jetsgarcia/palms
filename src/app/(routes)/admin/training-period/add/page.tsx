@@ -23,6 +23,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { toast } from "sonner";
+import { addTrainingPeriod } from "./_actions/addTrainingPeriod";
 
 export default function AddTrainingPeriodPage() {
   const router = useRouter();
@@ -39,8 +41,20 @@ export default function AddTrainingPeriodPage() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof trainingPeriodFormSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof trainingPeriodFormSchema>) {
+    const response = await addTrainingPeriod(values);
+
+    if (!response) {
+      throw new Error("No response from server");
+    }
+
+    if (response.error) {
+      toast.error(response.error);
+      return;
+    }
+
+    toast.success("Training period added successfully");
+    router.push("/admin/training-period");
   }
 
   return (
@@ -128,6 +142,7 @@ export default function AddTrainingPeriodPage() {
                             field.value ? new Date(field.value) : undefined
                           }
                           captionLayout="dropdown"
+                          endMonth={new Date(new Date().getFullYear() + 1, 11)}
                           disabled={(date) => {
                             const today = new Date();
                             today.setHours(0, 0, 0, 0);
@@ -177,6 +192,7 @@ export default function AddTrainingPeriodPage() {
                           selected={
                             field.value ? new Date(field.value) : undefined
                           }
+                          endMonth={new Date(new Date().getFullYear() + 1, 11)}
                           captionLayout="dropdown"
                           disabled={(date) => {
                             const startDate = form.getValues("startDate");
