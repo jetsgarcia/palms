@@ -6,7 +6,7 @@ export default function LogoutButton() {
     <form
       action={async () => {
         "use server";
-        await signOut();
+        await signOut({ redirectTo: "/login" });
       }}
       className="w-full"
     >
