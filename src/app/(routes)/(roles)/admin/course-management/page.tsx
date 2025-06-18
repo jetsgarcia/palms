@@ -14,8 +14,10 @@ import { columns, afos } from "./_components/columns";
 import { useEffect, useState } from "react";
 import { fetchAFOS } from "./actions/fetchAFOS";
 import Loader from "@/components/loader";
+import { useRouter } from "next/navigation";
 
 export default function CourseManagementPage() {
+  const router = useRouter();
   const [AFOS, setAFOS] = useState<afos[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -47,8 +49,12 @@ export default function CourseManagementPage() {
           </SelectContent>
         </Select>
 
-        <Button>
-          Add AFOS <Plus />
+        <Button
+          onClick={() => {
+            router.push("/admin/course-management/add-afos");
+          }}
+        >
+          <Plus /> Add AFOS
         </Button>
       </div>
       {loading ? <Loader /> : <DataTable columns={columns} data={AFOS} />}
