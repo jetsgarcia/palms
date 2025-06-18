@@ -5,7 +5,14 @@ export const trainingPeriodFormSchema = z
     name: z.string().min(1, { message: "Name is required" }),
     startDate: z.date({ required_error: "Start date is required" }),
     endDate: z.date({ required_error: "End date is required" }),
-    weeks: z.number().min(1, { message: "Weeks must be at least 1" }),
+    weeks: z.preprocess((val) => {
+      if (typeof val === "string" && val.trim() === "") return undefined;
+      if (typeof val === "string" || typeof val === "number") {
+        const num = Number(val);
+        return isNaN(num) ? undefined : num;
+      }
+      return undefined;
+    }, z.number({ required_error: "Number of weeks is required" })),
   })
   .refine((data) => data.endDate >= data.startDate, {
     message: "End date must not be earlier than start date",
