@@ -8,5 +8,8 @@ export const instructorRegisterFormSchema = z.object({
     .max(1, { message: "Middle initial should only be 1 letter" })
     .optional(),
   suffix: z.string().optional(),
-  email: z.string().email({ message: "Invalid email address" }),
+  email: z
+    .string()
+    .min(1, { message: "Email is required" })
+    .email({ message: "Invalid email address" }),
 });
