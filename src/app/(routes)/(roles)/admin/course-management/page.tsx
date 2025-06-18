@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -9,15 +11,24 @@ import {
 import { Plus } from "lucide-react";
 import { DataTable } from "./_components/data-table";
 import { columns, afos } from "./_components/columns";
+import { useEffect, useState } from "react";
+import { fetchAFOS } from "./actions/fetchAFOS";
+import Loader from "@/components/loader";
 
 export default function CourseManagementPage() {
-  const data: afos[] = [
-    {
-      code: "INF",
-      name: "Infantry",
-      level: "Basic",
-    },
-  ];
+  const [AFOS, setAFOS] = useState<afos[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadAFOS() {
+      const afos = await fetchAFOS();
+
+      setAFOS(afos || []);
+      setLoading(false);
+    }
+
+    loadAFOS();
+  }, []);
 
   return (
     <div className="space-y-4">
@@ -40,7 +51,7 @@ export default function CourseManagementPage() {
           Add AFOS <Plus />
         </Button>
       </div>
-      <DataTable columns={columns} data={data} />
+      {loading ? <Loader /> : <DataTable columns={columns} data={AFOS} />}
     </div>
   );
 }
