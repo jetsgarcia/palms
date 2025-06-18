@@ -1,5 +1,4 @@
 import { cookies } from "next/headers";
-
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { auth } from "@/lib/auth";
@@ -36,9 +35,9 @@ export default async function Layout({
                 <DropdownMenuTrigger className="focus:outline-none cursor-pointer text-sm hover:bg-accent hover:text-accent-foreground rounded-md pl-2 pr-1 py-1 transition-colors duration-200 ease-in-out">
                   <div className="flex items-center gap-1">
                     <span>
-                      {session?.user.firstName?.toUpperCase()}{" "}
-                      {session?.user.middleInitial?.toUpperCase()}.{" "}
-                      {session?.user.lastName?.toUpperCase()}
+                      {session.user.firstName?.toUpperCase()}{" "}
+                      {session.user.middleInitial?.toUpperCase()}.{" "}
+                      {session.user.lastName?.toUpperCase()}
                     </span>
                     <ChevronDown size={16} />
                   </div>
