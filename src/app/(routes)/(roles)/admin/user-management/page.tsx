@@ -29,45 +29,27 @@ export default function UserManagementPage() {
   const [allUsersData, setAllUsersData] = useState<UserType[]>([]);
   const [studentsData, setStudentsData] = useState<StudentType[]>([]);
   const [loading, setLoading] = useState(true);
+  const [active, setActive] = useState("all");
   const router = useRouter();
 
   useEffect(() => {
-    setLoading(true);
+    async function loadData() {
+      setLoading(true);
+      const [users, students] = await Promise.all([
+        fetchUsers(),
+        fetchStudents(),
+      ]);
 
-    async function loadUsers() {
-      const data = await fetchUsers();
-      setAllUsersData(data || []);
-      setLoading(false);
-    }
-
-    loadUsers();
-  }, []);
-
-  useEffect(() => {
-    async function loadStudents() {
-      const data = await fetchStudents();
-      const safeData: StudentType[] = (data ?? []).filter(
+      setAllUsersData(users || []);
+      const safeData: StudentType[] = (students ?? []).filter(
         (item): item is StudentType => item.student !== null
       );
       setStudentsData(safeData);
+      setLoading(false);
     }
 
-    loadStudents();
+    loadData();
   }, []);
-
-  const [active, setActive] = useState("all");
-
-  function changeUserType(type: string) {
-    setActive(type);
-  }
-
-  function navigateToRegisterAdmin() {
-    router.push("/admin/user-management/add-admin");
-  }
-
-  function navigateToRegisterInstructor() {
-    router.push("/admin/user-management/add-instructor");
-  }
 
   return (
     <div>
@@ -76,7 +58,7 @@ export default function UserManagementPage() {
           <Button
             variant={active === "all" ? "default" : "ghost"}
             onClick={() => {
-              changeUserType("all");
+              setActive("all");
             }}
           >
             All
@@ -84,7 +66,7 @@ export default function UserManagementPage() {
           <Button
             variant={active === "students" ? "default" : "ghost"}
             onClick={() => {
-              changeUserType("students");
+              setActive("students");
             }}
           >
             Students
@@ -92,7 +74,7 @@ export default function UserManagementPage() {
           <Button
             variant={active === "instructors" ? "default" : "ghost"}
             onClick={() => {
-              changeUserType("instructors");
+              setActive("instructors");
             }}
           >
             Instructors
@@ -100,7 +82,7 @@ export default function UserManagementPage() {
           <Button
             variant={active === "admins" ? "default" : "ghost"}
             onClick={() => {
-              changeUserType("admins");
+              setActive("admins");
             }}
           >
             Admins
@@ -130,14 +112,18 @@ export default function UserManagementPage() {
                 <Button
                   variant="outline"
                   className="hover:bg-primary hover:text-white"
-                  onClick={navigateToRegisterInstructor}
+                  onClick={() => {
+                    router.push("/admin/user-management/add-instructor");
+                  }}
                 >
                   Instructor
                 </Button>
                 <Button
                   variant="outline"
                   className="hover:bg-primary hover:text-white"
-                  onClick={navigateToRegisterAdmin}
+                  onClick={() => {
+                    router.push("/admin/user-management/add-admin");
+                  }}
                 >
                   Admin
                 </Button>
