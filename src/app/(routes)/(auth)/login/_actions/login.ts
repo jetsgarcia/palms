@@ -18,19 +18,28 @@ export async function login(values: z.infer<typeof loginSchema>) {
   const lowerCaseEmail = email.toLowerCase();
 
   // Make sure email exists
-  const userExists = await prisma.users.findFirst({
+  const user = await prisma.users.findFirst({
     where: { email: lowerCaseEmail },
   });
 
-  if (!userExists) {
+  if (!user) {
     return { error: "Email does not exist" };
   }
 
   try {
+    let redirectTo = "/";
+    if (user.role === "ADMIN") {
+      redirectTo = "/admin";
+    } else if (user.role === "STUDENT") {
+      redirectTo = "/student";
+    } else if (user.role === "INSTRUCTOR") {
+      redirectTo = "/instructor";
+    }
+
     await signIn("credentials", {
       email,
       password,
-      redirectTo: "/",
+      redirectTo,
     });
   } catch (error) {
     if (error instanceof AuthError) {
