@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/form";
 import { toast } from "sonner";
 import { addTrainingPeriod } from "./_actions/addTrainingPeriod";
+import { cn } from "@/lib/utils";
 
 export default function AddTrainingPeriodPage() {
   const router = useRouter();
@@ -123,7 +124,12 @@ export default function AddTrainingPeriodPage() {
                         <Button
                           variant="outline"
                           id="startDate"
-                          className="justify-between font-normal"
+                          className={cn(
+                            "justify-between font-normal",
+                            form.formState.errors.startDate
+                              ? "border-destructive"
+                              : ""
+                          )}
                           type="button"
                         >
                           {field.value
@@ -174,7 +180,12 @@ export default function AddTrainingPeriodPage() {
                         <Button
                           variant="outline"
                           id="endDate"
-                          className="justify-between font-normal"
+                          className={cn(
+                            "justify-between font-normal",
+                            form.formState.errors.startDate
+                              ? "border-destructive"
+                              : ""
+                          )}
                           type="button"
                         >
                           {field.value
