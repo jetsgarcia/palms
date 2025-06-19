@@ -1,6 +1,6 @@
 import Image from "next/image";
 import PhilippineArmyLogo from "@/assets/images/army_logo_3000x3000.png";
-import LoginForm from "./_components/login-form";
+import LoginForm from "@/components/login-form";
 import { BackgroundBeams } from "@/components/ui/background-beams";
 import { X } from "lucide-react";
 import Link from "next/link";

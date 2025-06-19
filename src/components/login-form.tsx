@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/form";
 import { loginSchema } from "@/schemas/loginSchema";
 import { z } from "zod";
-import { login } from "../_actions/login";
+import { login } from "@/actions/login";
 import Link from "next/link";
 
 export default function LoginForm() {
