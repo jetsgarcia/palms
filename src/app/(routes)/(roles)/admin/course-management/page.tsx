@@ -8,13 +8,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Plus } from "lucide-react";
-import { DataTable } from "./_components/data-table";
-import { columns, afos } from "./_components/columns";
+import { DataTable } from "@/components/data-table";
+import { columns, afos } from "@/components/columns";
 import { useEffect, useState } from "react";
-import { fetchAFOS } from "./actions/fetchAFOS";
+import { fetchAFOS } from "@/actions/fetchAFOS";
 import Loader from "@/components/loader";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import AddAFOSDialogContent from "./_components/add-afos-dialog-content";
+import AddAFOSDialogContent from "@/components/add-afos-dialog-content";
 import { Button } from "@/components/ui/button";
 
 export default function CourseManagementPage() {
