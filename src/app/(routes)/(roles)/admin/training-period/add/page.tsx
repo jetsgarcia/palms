@@ -24,7 +24,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { toast } from "sonner";
-import { addTrainingPeriod } from "./_actions/addTrainingPeriod";
+import { addTrainingPeriod } from "../../../../../../actions/addTrainingPeriod";
 import { cn } from "@/lib/utils";
 
 export default function AddTrainingPeriodPage() {

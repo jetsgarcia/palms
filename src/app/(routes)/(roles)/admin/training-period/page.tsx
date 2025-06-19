@@ -3,9 +3,9 @@
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
-import { fetchTrainingPeriods } from "./_actions/fetchTrainingPeriods";
+import { fetchTrainingPeriods } from "../../../../../actions/fetchTrainingPeriods";
 import { TrainingPeriodType } from "@/types/trainingPeriod";
-import TrainingPeriod from "./_components/training-period";
+import TrainingPeriod from "../../../../../components/training-period";
 import { useRouter } from "next/navigation";
 import Loader from "@/components/loader";
 
