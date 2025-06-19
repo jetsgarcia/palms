@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -14,12 +13,15 @@ import { columns, afos } from "./_components/columns";
 import { useEffect, useState } from "react";
 import { fetchAFOS } from "./actions/fetchAFOS";
 import Loader from "@/components/loader";
-import { useRouter } from "next/navigation";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import AddAFOSDialogContent from "./_components/add-afos-dialog-content";
+import { Button } from "@/components/ui/button";
 
 export default function CourseManagementPage() {
-  const router = useRouter();
   const [AFOS, setAFOS] = useState<afos[]>([]);
   const [loading, setLoading] = useState(true);
+  // const [selectedTrainingPeriod, setSelectedTrainingPeriod] =
+  useState<number>();
 
   useEffect(() => {
     async function loadAFOS() {
@@ -32,12 +34,16 @@ export default function CourseManagementPage() {
     loadAFOS();
   }, []);
 
+  useEffect(() => {}, []);
+
+  // TODO: Connect training period
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <Select defaultValue="Training Period 3 | 2025">
           <SelectTrigger>
-            <SelectValue placeholder="Select a fruit" />
+            <SelectValue />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="Training Period 3 | 2025">
@@ -48,14 +54,14 @@ export default function CourseManagementPage() {
             </SelectItem>
           </SelectContent>
         </Select>
-
-        <Button
-          onClick={() => {
-            router.push("/admin/course-management/add-afos");
-          }}
-        >
-          <Plus /> Add AFOS
-        </Button>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button>
+              <Plus /> Add AFOS
+            </Button>
+          </DialogTrigger>
+          <AddAFOSDialogContent trainingPeriodId={1} />
+        </Dialog>
       </div>
       {loading ? <Loader /> : <DataTable columns={columns} data={AFOS} />}
     </div>
