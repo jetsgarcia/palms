@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth";
-import ChangePasswordForm from "./_components/change-password-form";
-import ChangePasswordWithOTPForm from "./_components/change-password-with-otp-form";
-import { fetchFirstLogin } from "./_actions/fetch-first-login";
+import ChangePasswordForm from "@/components/change-password-form";
+import ChangePasswordWithOTPForm from "@/components/change-password-with-otp-form";
+import { fetchFirstLogin } from "@/actions/fetch-first-login";
 
 export default async function ChangePasswordPage() {
   const session = await auth();
