@@ -1,17 +1,17 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { allUserColumns } from "./_components/all-user-columns";
-import { AllUserDataTable } from "./_components/all-user-data-table";
+import { allUserColumns } from "../../../../../components/all-user-columns";
+import { AllUserDataTable } from "../../../../../components/all-user-data-table";
 import { useEffect, useState } from "react";
-import { StudentsDataTable } from "./_components/students-data-table";
-import { studentsColumns } from "./_components/students-columns";
-import { InstructorsDataTable } from "./_components/instructors-data-table";
-import { instructorsColumns } from "./_components/instructors-columns";
-import { adminsColumns } from "./_components/admins-columns";
-import { AdminsDataTable } from "./_components/admins-data-table";
+import { StudentsDataTable } from "../../../../../components/students-data-table";
+import { studentsColumns } from "../../../../../components/students-columns";
+import { InstructorsDataTable } from "../../../../../components/instructors-data-table";
+import { instructorsColumns } from "../../../../../components/instructors-columns";
+import { adminsColumns } from "../../../../../components/admins-columns";
+import { AdminsDataTable } from "../../../../../components/admins-data-table";
 import { Plus } from "lucide-react";
-import { fetchStudents, fetchUsers } from "./_actions/fetchUsers";
+import { fetchStudents, fetchUsers } from "../../../../../actions/fetchUsers";
 import { UserType } from "@/types/user";
 import { StudentType } from "@/types/student";
 import {
