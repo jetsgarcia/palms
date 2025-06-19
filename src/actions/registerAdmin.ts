@@ -1,13 +1,13 @@
 "use server";
 
 import { z } from "zod";
-import { instructorRegisterFormSchema } from "../../../../../../../schemas/instructorRegisterForm";
+import { adminRegisterFormSchema } from "../schemas/adminRegisterForm";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { Role } from "@prisma/client";
 
-export async function registerInstructor(
-  values: z.infer<typeof instructorRegisterFormSchema>
+export async function registerAdmin(
+  values: z.infer<typeof adminRegisterFormSchema>
 ) {
   function generateSecurePassword(length: number = 12): string {
     const charset =
@@ -33,10 +33,10 @@ export async function registerInstructor(
 
   const generatedPassword = generateSecurePassword();
 
-  const instructor = {
+  const admin = {
     ...values,
     password: generatedPassword,
-    role: Role.INSTRUCTOR,
+    role: Role.ADMIN,
     firstLogin: true,
   };
 
@@ -46,9 +46,9 @@ export async function registerInstructor(
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      firstName: instructor.firstName,
-      email: instructor.email,
-      password: instructor.password,
+      firstName: admin.firstName,
+      email: admin.email,
+      password: admin.password,
     }),
   });
 
@@ -56,14 +56,14 @@ export async function registerInstructor(
     const hashedPassword = await bcrypt.hash(generatedPassword, 10);
     await prisma.users.create({
       data: {
-        lastName: instructor.lastName,
-        firstName: instructor.firstName,
-        middleInitial: instructor.middleInitial || null,
-        suffix: instructor.suffix || null,
-        email: instructor.email,
+        lastName: admin.lastName,
+        firstName: admin.firstName,
+        middleInitial: admin.middleInitial || null,
+        suffix: admin.suffix || null,
+        email: admin.email,
         password: hashedPassword,
-        firstLogin: instructor.firstLogin,
-        role: instructor.role,
+        firstLogin: admin.firstLogin,
+        role: admin.role,
       },
     });
 
