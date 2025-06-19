@@ -97,48 +97,64 @@ export default function TrainingPeriodPage() {
         <Loader />
       ) : (
         <div className="grid gap-4">
-          {active === "scheduled" && (
-            <>
-              {scheduledTrainingPeriods.map((trainingPeriod) => (
-                <TrainingPeriod
-                  key={trainingPeriod.id}
-                  name={trainingPeriod.name}
-                  id={trainingPeriod.id}
-                  startDate={new Date(trainingPeriod.startDate)}
-                  endDate={new Date(trainingPeriod.endDate)}
-                  weeks={trainingPeriod.weeks}
-                />
-              ))}
-            </>
-          )}
-          {active === "inProgress" && (
-            <>
-              {inProgressTrainingPeriods.map((trainingPeriod) => (
-                <TrainingPeriod
-                  key={trainingPeriod.id}
-                  name={trainingPeriod.name}
-                  id={trainingPeriod.id}
-                  startDate={new Date(trainingPeriod.startDate)}
-                  endDate={new Date(trainingPeriod.endDate)}
-                  weeks={trainingPeriod.weeks}
-                />
-              ))}
-            </>
-          )}
-          {active === "completed" && (
-            <>
-              {completedTrainingPeriods.map((trainingPeriod) => (
-                <TrainingPeriod
-                  key={trainingPeriod.id}
-                  name={trainingPeriod.name}
-                  id={trainingPeriod.id}
-                  startDate={new Date(trainingPeriod.startDate)}
-                  endDate={new Date(trainingPeriod.endDate)}
-                  weeks={trainingPeriod.weeks}
-                />
-              ))}
-            </>
-          )}
+          {active === "scheduled" &&
+            (scheduledTrainingPeriods.length === 0 ? (
+              <div className="grid place-items-center text-muted-foreground h-[calc(100dvh-8.1rem)]">
+                No scheduled training periods
+              </div>
+            ) : (
+              <>
+                {scheduledTrainingPeriods.map((trainingPeriod) => (
+                  <TrainingPeriod
+                    key={trainingPeriod.id}
+                    name={trainingPeriod.name}
+                    id={trainingPeriod.id}
+                    startDate={new Date(trainingPeriod.startDate)}
+                    endDate={new Date(trainingPeriod.endDate)}
+                    weeks={trainingPeriod.weeks}
+                  />
+                ))}
+              </>
+            ))}
+
+          {active === "inProgress" &&
+            (inProgressTrainingPeriods.length === 0 ? (
+              <div className="grid place-items-center text-muted-foreground h-[calc(100dvh-8.1rem)]">
+                No training periods in progress
+              </div>
+            ) : (
+              <>
+                {inProgressTrainingPeriods.map((trainingPeriod) => (
+                  <TrainingPeriod
+                    key={trainingPeriod.id}
+                    name={trainingPeriod.name}
+                    id={trainingPeriod.id}
+                    startDate={new Date(trainingPeriod.startDate)}
+                    endDate={new Date(trainingPeriod.endDate)}
+                    weeks={trainingPeriod.weeks}
+                  />
+                ))}
+              </>
+            ))}
+          {active === "completed" &&
+            (completedTrainingPeriods.length === 0 ? (
+              <div className="grid place-items-center text-muted-foreground h-[calc(100dvh-8.1rem)]">
+                No completed training periods
+              </div>
+            ) : (
+              <>
+                {completedTrainingPeriods.map((trainingPeriod) => (
+                  <TrainingPeriod
+                    key={trainingPeriod.id}
+                    name={trainingPeriod.name}
+                    id={trainingPeriod.id}
+                    startDate={new Date(trainingPeriod.startDate)}
+                    endDate={new Date(trainingPeriod.endDate)}
+                    weeks={trainingPeriod.weeks}
+                  />
+                ))}
+              </>
+            ))}
         </div>
       )}
     </div>
