@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
-import AuthBackButton from "./auth-back-button";
+import ChangePasswordBackButton from "./change-password-back-button";
 import {
   Card,
   CardContent,
@@ -14,15 +14,15 @@ import { useSession } from "next-auth/react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
-import { sendOTP } from "../_actions/send-otp";
+import { sendOTP } from "@/actions/send-otp";
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { verifyOTP } from "../_actions/verify-otp";
+import { verifyOTP } from "@/actions/verify-otp";
 import ChangePasswordForm from "./change-password-form";
-import { emailChecker } from "../_actions/email-checker";
+import { emailChecker } from "@/actions/email-checker";
 
 interface ChangePasswordWithOTPFormProps {
   type: "unauthenticated" | "authenticated";
@@ -173,7 +173,7 @@ export default function ChangePasswordWithOTPForm({
 
   return (
     <div className="p-4 mb-8">
-      <AuthBackButton />
+      <ChangePasswordBackButton />
       <div className="flex items-center w-min m-auto mb-8">
         {steps.map((step, index) => (
           <div key={index} className="flex items-center">

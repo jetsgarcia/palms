@@ -5,7 +5,7 @@ import { ChevronLeft } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
-export default function AuthBackButton() {
+export default function ChangePasswordBackButton() {
   const { data: session } = useSession();
   const router = useRouter();
 

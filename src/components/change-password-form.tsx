@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { useRouter } from "next/navigation";
-import { changePassword } from "../_actions/change-password";
+import { changePassword } from "@/actions/change-password";
 import { toast } from "sonner";
 import { signOut } from "next-auth/react";
 import { useSession } from "next-auth/react";
@@ -86,8 +86,22 @@ export default function ChangePasswordForm({
 
     setIsSubmitting(true);
 
-    changePassword({ newPassword: password, email: email }).then((response) => {
-      if (response?.success) {
+    interface ChangePasswordParams {
+      newPassword: string;
+      email?: string;
+    }
+
+    changePassword({
+      newPassword: password,
+      email: email,
+    } as ChangePasswordParams).then((response) => {
+      if (!response) {
+        toast.error("An unexpected error occurred. Please try again.");
+        setIsSubmitting(false);
+        return;
+      }
+
+      if (response.success) {
         if (logoutAfterChangePassword) {
           toast.success("Password changed successfully. Please log in again.");
           if (session) {
@@ -112,7 +126,7 @@ export default function ChangePasswordForm({
         setIsSubmitting(false);
       }
 
-      if (response?.error) {
+      if (response.error) {
         console.log(response.error);
         setIsSubmitting(false);
       }
