@@ -14,15 +14,15 @@ import { useSession } from "next-auth/react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
-import { sendOTP } from "@/actions/send-otp";
+import { sendOTP } from "@/actions/sendOtp";
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { verifyOTP } from "@/actions/verify-otp";
+import { verifyOTP } from "@/actions/verifyOtp";
 import ChangePasswordForm from "./change-password-form";
-import { emailChecker } from "@/actions/email-checker";
+import { emailChecker } from "@/actions/emailChecker";
 
 interface ChangePasswordWithOTPFormProps {
   type: "unauthenticated" | "authenticated";

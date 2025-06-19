@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { useRouter } from "next/navigation";
-import { changePassword } from "@/actions/change-password";
+import { changePassword } from "@/actions/changePassword";
 import { toast } from "sonner";
 import { signOut } from "next-auth/react";
 import { useSession } from "next-auth/react";
