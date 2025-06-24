@@ -16,51 +16,119 @@ import Loader from "@/components/loader";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import AddAFOSDialogContent from "@/components/add-afos-dialog-content";
 import { Button } from "@/components/ui/button";
+import { TrainingPeriodType } from "@/types/trainingPeriod";
+import { fetchTrainingPeriods } from "@/actions/fetchTrainingPeriods";
 
 export default function CourseManagementPage() {
   const [AFOS, setAFOS] = useState<afos[]>([]);
+  const [openDialog, setOpenDialog] = useState(false);
   const [loading, setLoading] = useState(true);
-  // const [selectedTrainingPeriod, setSelectedTrainingPeriod] =
-  useState<number>();
+  const [selectedTrainingPeriod, setSelectedTrainingPeriod] =
+    useState<TrainingPeriodType>();
+  const [trainingPeriods, setTrainingPeriods] = useState<TrainingPeriodType[]>(
+    []
+  );
+
+  async function loadAFOS() {
+    try {
+      const afos = await fetchAFOS();
+      setAFOS(afos || []);
+    } catch (error) {
+      console.error("Error fetching AFOS:", error);
+    }
+  }
 
   useEffect(() => {
-    async function loadAFOS() {
-      const afos = await fetchAFOS();
+    async function loadData() {
+      setLoading(true);
 
-      setAFOS(afos || []);
+      await Promise.all([loadAFOS(), loadTrainingPeriods()]);
+
       setLoading(false);
     }
 
-    loadAFOS();
+    async function loadTrainingPeriods() {
+      try {
+        const trainingPeriods = await fetchTrainingPeriods();
+        if (!trainingPeriods) {
+          console.error("No training periods found");
+          return;
+        }
+
+        const now = new Date();
+
+        const isInProgress = (tp: TrainingPeriodType) =>
+          new Date(tp.startDate) <= now && new Date(tp.endDate) >= now;
+
+        const isUpcoming = (tp: TrainingPeriodType) =>
+          new Date(tp.startDate) > now;
+
+        const isActiveOrUpcoming = (tp: TrainingPeriodType) =>
+          new Date(tp.endDate) >= now;
+
+        const inProgress = trainingPeriods.find(isInProgress);
+        const nextScheduled = trainingPeriods.find(isUpcoming);
+
+        if (inProgress) {
+          setSelectedTrainingPeriod(inProgress);
+        } else if (nextScheduled) {
+          setSelectedTrainingPeriod(nextScheduled);
+        }
+
+        setTrainingPeriods(trainingPeriods.filter(isActiveOrUpcoming));
+      } catch (error) {
+        console.error("Error fetching training periods:", error);
+      }
+    }
+
+    loadData();
   }, []);
-
-  useEffect(() => {}, []);
-
-  // TODO: Connect training period
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <Select defaultValue="Training Period 3 | 2025">
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="Training Period 3 | 2025">
-              Training Period 3 | 2025
-            </SelectItem>
-            <SelectItem value="Training Period 1 | 2026">
-              Training Period 1 | 2026
-            </SelectItem>
-          </SelectContent>
-        </Select>
-        <Dialog>
+        <div className="flex items-center gap-2">
+          {selectedTrainingPeriod && (
+            <>
+              <Select
+                value={selectedTrainingPeriod.name}
+                onValueChange={(value) => {
+                  const tp = trainingPeriods.find((tp) => tp.name === value);
+                  if (tp) setSelectedTrainingPeriod(tp);
+                }}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select training period" />
+                </SelectTrigger>
+                <SelectContent>
+                  {trainingPeriods.map((tp) => (
+                    <SelectItem key={tp.id} value={tp.name}>
+                      {tp.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <div>
+                Duration:{" "}
+                {selectedTrainingPeriod.startDate.toLocaleDateString()} -{" "}
+                {selectedTrainingPeriod.endDate.toLocaleDateString()}
+              </div>
+            </>
+          )}
+        </div>
+        <Dialog open={openDialog} onOpenChange={setOpenDialog}>
           <DialogTrigger asChild>
             <Button>
               <Plus /> Add AFOS
             </Button>
           </DialogTrigger>
-          <AddAFOSDialogContent trainingPeriodId={1} />
+          {selectedTrainingPeriod && (
+            <AddAFOSDialogContent
+              trainingPeriodId={selectedTrainingPeriod.id}
+              setOpenDialog={setOpenDialog}
+              refreshAFOS={loadAFOS}
+            />
+          )}
         </Dialog>
       </div>
       {loading ? <Loader /> : <DataTable columns={columns} data={AFOS} />}

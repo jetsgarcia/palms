@@ -1,3 +1,4 @@
+import { createAFOS } from "@/actions/createAFOS";
 import { Button } from "@/components/ui/button";
 import {
   DialogContent,
@@ -5,61 +6,104 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { createAFOSFormSchema } from "@/schemas/createAFOSForm";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import z from "zod";
+import { useState, FormEvent } from "react";
+import { toast } from "sonner";
+import { Level } from "@prisma/client";
+import { cn } from "@/lib/utils";
 
 interface AddAFOSDialogContentProps {
   trainingPeriodId: number;
+  setOpenDialog: (open: boolean) => void;
+  refreshAFOS: () => Promise<void>;
+}
+
+interface FormErrors {
+  name?: string;
+  code?: string;
+  level?: string;
 }
 
 export default function AddAFOSDialogContent({
   trainingPeriodId,
+  setOpenDialog,
+  refreshAFOS,
 }: AddAFOSDialogContentProps) {
-  const form = useForm<z.infer<typeof createAFOSFormSchema>>({
-    resolver: zodResolver(createAFOSFormSchema),
-    defaultValues: {
-      code: "",
-      name: "",
-      level: "Basic",
-      trainingPeriodId: trainingPeriodId,
-    },
-  });
+  const [name, setName] = useState<string>("");
+  const [code, setCode] = useState<string>("");
+  const [level, setLevel] = useState<string>("");
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
-  async function onSubmit(values: z.infer<typeof createAFOSFormSchema>) {
-    console.log("Form submitted with values:", values);
-    // const response = await createAFOS(values);
+  function validateForm(): boolean {
+    const newErrors: FormErrors = {};
 
-    // if (!response) {
-    //   throw new Error("No response from server");
-    // }
+    if (!name.trim()) {
+      newErrors.name = "Name is required";
+    }
 
-    // if (response.error) {
-    //   toast.error(response.error);
-    //   return;
-    // }
+    if (!code.trim()) {
+      newErrors.code = "Code is required";
+    }
 
-    // toast.success("AFOS added successfully");
-    // router.push("/admin/course-management");
+    if (!level) {
+      newErrors.level = "Level is required";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   }
 
+  const handleCapitalizeWords = (value: string): string => {
+    return value
+      .replace(/\b\w/g, (char: string) => char.toUpperCase())
+      .replace(/\B\w/g, (char: string) => char.toLowerCase());
+  };
+
+  const resetForm = () => {
+    setName("");
+    setCode("");
+    setLevel("");
+    setErrors({});
+  };
+
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const response = await createAFOS({
+        name,
+        code,
+        level: level as Level,
+        trainingPeriodId,
+      });
+
+      if (!response) {
+        throw new Error("No response from server");
+      }
+
+      if (response.error) {
+        toast.error(response.error);
+        return;
+      }
+
+      await refreshAFOS();
+      toast.success("AFOS added successfully");
+      setOpenDialog(false);
+      resetForm();
+    } catch (error) {
+      toast.error("An error occurred while adding AFOS");
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
   return (
     <DialogContent>
       <DialogHeader>
@@ -68,100 +112,90 @@ export default function AddAFOSDialogContent({
           Fill in the details below to add an AFOS.
         </DialogDescription>
       </DialogHeader>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem className="flex-1">
-                <FormLabel>
-                  AFOS name <span className="text-destructive">*</span>
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Infantry"
-                    {...field}
-                    onChange={(e) => {
-                      // Capitalize every first word
-                      const value = e.target.value
-                        .replace(/\b\w/g, (char) => char.toUpperCase())
-                        .replace(/\B\w/g, (char) => char.toLowerCase());
-                      field.onChange(value);
-                    }}
-                    value={(field.value || "")
-                      .replace(/\b\w/g, (char) => char.toUpperCase())
-                      .replace(/\B\w/g, (char) => char.toLowerCase())}
-                    onBlur={(e) => {
-                      const formatted = e.target.value
-                        .replace(/\b\w/g, (char) => char.toUpperCase())
-                        .replace(/\B\w/g, (char) => char.toLowerCase());
-                      field.onChange(formatted);
-                    }}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium">
+              Name <span className="text-destructive">*</span>
+            </label>
+            <Input
+              placeholder="Infantry"
+              value={name}
+              onChange={(e) => {
+                // Capitalize every first word
+                const value = handleCapitalizeWords(e.target.value);
+                setName(value);
+                if (errors.name) {
+                  setErrors((prev) => ({ ...prev, name: undefined }));
+                }
+              }}
+              onBlur={(e) => {
+                const formatted = handleCapitalizeWords(e.target.value);
+                setName(formatted);
+              }}
+            />
+            {errors.name && (
+              <p className="text-sm text-destructive">{errors.name}</p>
             )}
-          />
-          <div className="flex flex-col items-start gap-8 md:flex-row">
-            <FormField
-              control={form.control}
-              name="code"
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormLabel>
-                    AFOS code <span className="text-destructive">*</span>
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="INF"
-                      {...field}
-                      onChange={(e) => {
-                        field.onChange(e.target.value.toUpperCase());
-                      }}
-                      value={field.value?.toUpperCase() || ""}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          </div>
+        </div>
 
-            <FormField
-              control={form.control}
-              name="level"
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormLabel>
-                    Level <span className="text-destructive">*</span>
-                  </FormLabel>
-                  <FormControl>
-                    <Select
-                      defaultValue={field.value}
-                      onValueChange={field.onChange}
-                    >
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select level" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Basic">Basic</SelectItem>
-                        <SelectItem value="Advanced">Advanced</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+        <div className="flex items-start gap-8 flex-row">
+          <div className="space-y-2 flex-1">
+            <label className="text-sm font-medium">
+              Code <span className="text-destructive">*</span>
+            </label>
+            <Input
+              placeholder="INF"
+              value={code}
+              onChange={(e) => {
+                setCode(e.target.value.toUpperCase());
+                if (errors.code) {
+                  setErrors((prev) => ({ ...prev, code: undefined }));
+                }
+              }}
             />
+            {errors.code && (
+              <p className="text-sm text-destructive">{errors.code}</p>
+            )}
           </div>
-          <div className="flex items-center justify-end space-x-4">
-            <div className="flex items-center space-x-4">
-              <Button type="submit">Submit</Button>
-            </div>
+
+          <div className="space-y-2 flex-1">
+            <label className="text-sm font-medium">
+              Level <span className="text-destructive">*</span>
+            </label>
+            <select
+              className={cn(
+                "cursor-pointer w-full border border-gray-950 rounded-md px-3 py-[.39rem]",
+                "focus:outline-none focus:ring-2 focus:ring-primary/50",
+                level ? "text-black" : "text-muted-foreground"
+              )}
+              value={level}
+              onChange={(e) => {
+                setLevel(e.target.value);
+                if (errors.level) {
+                  setErrors((prev) => ({ ...prev, level: undefined }));
+                }
+              }}
+            >
+              <option value="" hidden disabled>
+                Select level
+              </option>
+              <option value="Basic">Basic</option>
+              <option value="Advanced">Advanced</option>
+            </select>
+            {errors.level && (
+              <p className="text-sm text-destructive">{errors.level}</p>
+            )}
           </div>
-        </form>
-      </Form>
+        </div>
+
+        <div className="flex items-center justify-end space-x-4">
+          <Button type="submit" disabled={isSubmitting}>
+            Submit
+          </Button>
+        </div>
+      </form>
     </DialogContent>
   );
 }
