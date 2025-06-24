@@ -2,7 +2,7 @@
 
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { CalendarDays, ChevronDownIcon } from "lucide-react";
+import { CalendarDays, ChevronDownIcon, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -24,7 +24,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { toast } from "sonner";
-import { addTrainingPeriod } from "../../../../../../actions/addTrainingPeriod";
+import { addTrainingPeriod } from "@/actions/addTrainingPeriod";
 import { cn } from "@/lib/utils";
 
 export default function AddTrainingPeriodPage() {
@@ -169,61 +169,78 @@ export default function AddTrainingPeriodPage() {
             <FormField
               control={form.control}
               name="endDate"
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormLabel>
-                    End date <span className="text-destructive">*</span>
-                  </FormLabel>
-                  <FormControl>
-                    <Popover open={openEndDate} onOpenChange={setOpenEndDate}>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          id="endDate"
-                          className={cn(
-                            "justify-between font-normal",
-                            form.formState.errors.startDate
-                              ? "border-destructive"
-                              : ""
-                          )}
-                          type="button"
+              render={({ field }) => {
+                const hasStartDate = !!form.getValues("startDate");
+                return (
+                  <FormItem className="flex-1">
+                    <FormLabel>
+                      End date <span className="text-destructive">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Popover open={openEndDate} onOpenChange={setOpenEndDate}>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant="outline"
+                            id="endDate"
+                            className={cn(
+                              "justify-between font-normal",
+                              form.formState.errors.startDate
+                                ? "border-destructive"
+                                : "",
+                              !hasStartDate
+                                ? "opacity-50 cursor-not-allowed"
+                                : ""
+                            )}
+                            type="button"
+                            disabled={!hasStartDate}
+                          >
+                            {field.value
+                              ? new Date(field.value).toLocaleDateString()
+                              : "Select date"}
+                            <ChevronDownIcon />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent
+                          className="w-auto overflow-hidden p-0"
+                          align="start"
                         >
-                          {field.value
-                            ? new Date(field.value).toLocaleDateString()
-                            : "Select date"}
-                          <ChevronDownIcon />
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent
-                        className="w-auto overflow-hidden p-0"
-                        align="start"
-                      >
-                        <Calendar
-                          mode="single"
-                          selected={
-                            field.value ? new Date(field.value) : undefined
-                          }
-                          endMonth={new Date(new Date().getFullYear() + 1, 11)}
-                          captionLayout="dropdown"
-                          disabled={(date) => {
-                            const startDate = form.getValues("startDate");
-                            if (!startDate) return false;
-                            const start = new Date(startDate);
-                            start.setHours(0, 0, 0, 0);
-                            date.setHours(0, 0, 0, 0);
-                            return date <= start;
-                          }}
-                          onSelect={(date) => {
-                            field.onChange(date);
-                            setOpenEndDate(false);
-                          }}
-                        />
-                      </PopoverContent>
-                    </Popover>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+                          <Calendar
+                            mode="single"
+                            selected={
+                              field.value ? new Date(field.value) : undefined
+                            }
+                            endMonth={
+                              new Date(new Date().getFullYear() + 1, 11)
+                            }
+                            captionLayout="dropdown"
+                            disabled={(date) => {
+                              const startDate = form.getValues("startDate");
+                              if (!startDate) return true;
+                              const start = new Date(startDate);
+                              start.setHours(0, 0, 0, 0);
+                              date.setHours(0, 0, 0, 0);
+                              return date <= start;
+                            }}
+                            onSelect={(date) => {
+                              field.onChange(date);
+                              setOpenEndDate(false);
+                            }}
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    </FormControl>
+                    {!hasStartDate && (
+                      <div className="flex items-center space-x-1">
+                        <Info size={16} color="gray" />
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Pick a start date to enable end date selection.
+                        </p>
+                      </div>
+                    )}
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
             />
             <FormField
               control={form.control}
