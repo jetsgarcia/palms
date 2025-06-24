@@ -131,7 +131,18 @@ export default function CourseManagementPage() {
           )}
         </Dialog>
       </div>
-      {loading ? <Loader /> : <DataTable columns={columns} data={AFOS} />}
+      {loading ? (
+        <Loader />
+      ) : (
+        <DataTable
+          columns={columns}
+          data={AFOS.filter((afos) =>
+            selectedTrainingPeriod
+              ? afos.trainingPeriodId === selectedTrainingPeriod.id
+              : false
+          )}
+        />
+      )}
     </div>
   );
 }

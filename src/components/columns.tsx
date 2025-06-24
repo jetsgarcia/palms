@@ -6,6 +6,7 @@ export type afos = {
   code: string;
   name: string;
   level: "Basic" | "Advanced";
+  trainingPeriodId: number;
 };
 
 export const columns: ColumnDef<afos>[] = [
