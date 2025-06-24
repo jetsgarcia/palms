@@ -9,7 +9,7 @@ export type afos = {
   trainingPeriodId: number;
 };
 
-export const columns: ColumnDef<afos>[] = [
+export const afosColumns: ColumnDef<afos>[] = [
   {
     accessorKey: "code",
     header: "AFOS Code",

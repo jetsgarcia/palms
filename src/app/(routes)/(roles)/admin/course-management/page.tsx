@@ -8,8 +8,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Plus } from "lucide-react";
-import { DataTable } from "@/components/data-table";
-import { columns, afos } from "@/components/columns";
+import { AFOSDataTable } from "@/components/afos-data-table";
+import { afosColumns, afos } from "@/components/afos-columns";
 import { useEffect, useState } from "react";
 import { fetchAFOS } from "@/actions/fetchAFOS";
 import Loader from "@/components/loader";
@@ -134,8 +134,8 @@ export default function CourseManagementPage() {
       {loading ? (
         <Loader />
       ) : (
-        <DataTable
-          columns={columns}
+        <AFOSDataTable
+          columns={afosColumns}
           data={AFOS.filter((afos) =>
             selectedTrainingPeriod
               ? afos.trainingPeriodId === selectedTrainingPeriod.id
