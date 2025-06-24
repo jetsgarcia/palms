@@ -1,6 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
+import AFOSMoreActionsButton from "./afos-more-actions-button";
 
 export type afos = {
   code: string;
@@ -21,5 +22,11 @@ export const afosColumns: ColumnDef<afos>[] = [
   {
     accessorKey: "level",
     header: "AFOS Level",
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      return <AFOSMoreActionsButton code={row.original.code} />;
+    },
   },
 ];
