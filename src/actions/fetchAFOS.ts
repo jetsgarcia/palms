@@ -5,8 +5,8 @@ import { prisma } from "@/lib/prisma";
 export async function fetchAFOS() {
   try {
     const afos = await prisma.afos.findMany();
-    return afos;
+    return { data: afos };
   } catch (error) {
-    console.error("Error fetching users:", error);
+    return { error };
   }
 }

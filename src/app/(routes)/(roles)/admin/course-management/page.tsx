@@ -18,11 +18,13 @@ import AddAFOSDialogContent from "@/components/add-afos-dialog-content";
 import { Button } from "@/components/ui/button";
 import { TrainingPeriodType } from "@/types/trainingPeriod";
 import { fetchTrainingPeriods } from "@/actions/fetchTrainingPeriods";
+import ErrorMessage from "@/components/errorMessage";
 
 export default function CourseManagementPage() {
   const [AFOS, setAFOS] = useState<afos[]>([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [selectedTrainingPeriod, setSelectedTrainingPeriod] =
     useState<TrainingPeriodType>();
   const [trainingPeriods, setTrainingPeriods] = useState<TrainingPeriodType[]>(
@@ -31,10 +33,19 @@ export default function CourseManagementPage() {
 
   async function loadAFOS() {
     try {
-      const afos = await fetchAFOS();
-      setAFOS(afos || []);
+      const response = await fetchAFOS();
+      if (response.data) {
+        setAFOS(response.data);
+      } else {
+        setAFOS([]);
+        if (response.error) {
+          console.error("Error fetching AFOS:", response.error);
+        }
+      }
     } catch (error) {
-      console.error("Error fetching AFOS:", error);
+      if (error instanceof Error) {
+        setError(error.message);
+      }
     }
   }
 
@@ -85,64 +96,72 @@ export default function CourseManagementPage() {
   }, []);
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          {selectedTrainingPeriod && (
-            <>
-              <Select
-                value={selectedTrainingPeriod.name}
-                onValueChange={(value) => {
-                  const tp = trainingPeriods.find((tp) => tp.name === value);
-                  if (tp) setSelectedTrainingPeriod(tp);
-                }}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select training period" />
-                </SelectTrigger>
-                <SelectContent>
-                  {trainingPeriods.map((tp) => (
-                    <SelectItem key={tp.id} value={tp.name}>
-                      {tp.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <div>
-                Duration:{" "}
-                {selectedTrainingPeriod.startDate.toLocaleDateString()} -{" "}
-                {selectedTrainingPeriod.endDate.toLocaleDateString()}
-              </div>
-            </>
-          )}
-        </div>
-        <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus /> Add AFOS
-            </Button>
-          </DialogTrigger>
-          {selectedTrainingPeriod && (
-            <AddAFOSDialogContent
-              trainingPeriodId={selectedTrainingPeriod.id}
-              setOpenDialog={setOpenDialog}
-              refreshAFOS={loadAFOS}
+    <>
+      {error ? (
+        <ErrorMessage error={error} />
+      ) : (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              {selectedTrainingPeriod && (
+                <>
+                  <Select
+                    value={selectedTrainingPeriod.name}
+                    onValueChange={(value) => {
+                      const tp = trainingPeriods.find(
+                        (tp) => tp.name === value
+                      );
+                      if (tp) setSelectedTrainingPeriod(tp);
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select training period" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {trainingPeriods.map((tp) => (
+                        <SelectItem key={tp.id} value={tp.name}>
+                          {tp.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <div>
+                    Duration:{" "}
+                    {selectedTrainingPeriod.startDate.toLocaleDateString()} -{" "}
+                    {selectedTrainingPeriod.endDate.toLocaleDateString()}
+                  </div>
+                </>
+              )}
+            </div>
+            <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+              <DialogTrigger asChild>
+                <Button>
+                  <Plus /> Add AFOS
+                </Button>
+              </DialogTrigger>
+              {selectedTrainingPeriod && (
+                <AddAFOSDialogContent
+                  trainingPeriodId={selectedTrainingPeriod.id}
+                  setOpenDialog={setOpenDialog}
+                  refreshAFOS={loadAFOS}
+                />
+              )}
+            </Dialog>
+          </div>
+          {loading ? (
+            <Loader />
+          ) : (
+            <AFOSDataTable
+              columns={afosColumns}
+              data={AFOS.filter((afos) =>
+                selectedTrainingPeriod
+                  ? afos.trainingPeriodId === selectedTrainingPeriod.id
+                  : false
+              )}
             />
           )}
-        </Dialog>
-      </div>
-      {loading ? (
-        <Loader />
-      ) : (
-        <AFOSDataTable
-          columns={afosColumns}
-          data={AFOS.filter((afos) =>
-            selectedTrainingPeriod
-              ? afos.trainingPeriodId === selectedTrainingPeriod.id
-              : false
-          )}
-        />
+        </div>
       )}
-    </div>
+    </>
   );
 }
