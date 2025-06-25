@@ -25,6 +25,10 @@ export async function changePassword({
       session?.user.id ??
       (await prisma.users.findFirst({ where: { email } }))?.id;
 
+    if (!userId) {
+      return { error: "User not found" };
+    }
+
     await prisma.users.update({
       where: { id: userId },
       data: { password: hashedPassword, firstLogin: false },
