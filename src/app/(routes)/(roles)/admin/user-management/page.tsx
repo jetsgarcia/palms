@@ -10,7 +10,7 @@ import { InstructorsDataTable } from "@/components/instructors-data-table";
 import { instructorsColumns } from "@/components/instructors-columns";
 import { adminsColumns } from "@/components/admins-columns";
 import { AdminsDataTable } from "@/components/admins-data-table";
-import { CircleAlert, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { fetchStudents, fetchUsers } from "@/actions/fetchUsers";
 import { UserType } from "@/types/user";
 import { StudentType } from "@/types/student";
@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/dialog";
 import { useRouter } from "next/navigation";
 import Loader from "@/components/loader";
+import ErrorMessage from "@/components/errorMessage";
 
 export default function UserManagementPage() {
   const [allUsersData, setAllUsersData] = useState<UserType[]>([]);
@@ -60,12 +61,7 @@ export default function UserManagementPage() {
   return (
     <>
       {error ? (
-        <div className="my-4 flex items-center justify-center h-[calc(100dvh-7rem)]">
-          <div className="bg-red-100 border border-red-400 text-red-700 px-6 py-4 rounded-lg shadow-md flex items-center gap-2 animate-fade-in">
-            <CircleAlert />
-            <span className="font-medium">{error}</span>
-          </div>
-        </div>
+        <ErrorMessage error={error} />
       ) : (
         <>
           <div className="flex items-center justify-between">
