@@ -37,14 +37,21 @@ export default function CourseManagementPage() {
       if (response.data) {
         setAFOS(response.data);
       } else {
-        setAFOS([]);
         if (response.error) {
-          console.error("Error fetching AFOS:", response.error);
+          setError(
+            `Failed to fetch AFOS. Error: ${
+              response.error instanceof Error
+                ? response.error.message
+                : "Unknown error"
+            }`
+          );
         }
       }
     } catch (error) {
       if (error instanceof Error) {
-        setError(error.message);
+        setError(
+          `Failed to fetch AFOS. Error: ${error.message ?? "Unknown error"}`
+        );
       }
     }
   }
@@ -60,25 +67,28 @@ export default function CourseManagementPage() {
 
     async function loadTrainingPeriods() {
       try {
-        const trainingPeriods = await fetchTrainingPeriods();
-        if (!trainingPeriods) {
-          console.error("No training periods found");
+        const response = await fetchTrainingPeriods();
+        if (!response.data) {
           return;
         }
 
         const now = new Date();
 
-        const isInProgress = (tp: TrainingPeriodType) =>
-          new Date(tp.startDate) <= now && new Date(tp.endDate) >= now;
+        function isInProgress(tp: TrainingPeriodType) {
+          return new Date(tp.startDate) <= now && new Date(tp.endDate) >= now;
+        }
 
-        const isUpcoming = (tp: TrainingPeriodType) =>
-          new Date(tp.startDate) > now;
+        function isUpcoming(tp: TrainingPeriodType) {
+          return new Date(tp.startDate) > now;
+        }
 
-        const isActiveOrUpcoming = (tp: TrainingPeriodType) =>
-          new Date(tp.endDate) >= now;
+        function isActiveOrUpcoming(tp: TrainingPeriodType) {
+          // For "In progress" and "Upcoming" period to be displayed in dropdown items
+          return new Date(tp.endDate) >= now;
+        }
 
-        const inProgress = trainingPeriods.find(isInProgress);
-        const nextScheduled = trainingPeriods.find(isUpcoming);
+        const inProgress = response.data.find(isInProgress);
+        const nextScheduled = response.data.find(isUpcoming);
 
         if (inProgress) {
           setSelectedTrainingPeriod(inProgress);
@@ -86,9 +96,13 @@ export default function CourseManagementPage() {
           setSelectedTrainingPeriod(nextScheduled);
         }
 
-        setTrainingPeriods(trainingPeriods.filter(isActiveOrUpcoming));
+        setTrainingPeriods(response.data.filter(isActiveOrUpcoming));
       } catch (error) {
-        console.error("Error fetching training periods:", error);
+        setError(
+          `Failed to fetch training periods. Error: ${
+            error instanceof Error ? error.message : "Unknown error"
+          }`
+        );
       }
     }
 
