@@ -7,19 +7,16 @@ import { AuthError } from "next-auth";
 import { prisma } from "@/lib/prisma";
 
 export async function login(values: z.infer<typeof loginSchema>) {
-  const validatedFields = loginSchema.safeParse(values);
+  const parsed = loginSchema.safeParse(values);
 
-  if (!validatedFields.success) {
+  if (parsed.error) {
     return { error: "Invalid fields" };
   }
 
-  const { email, password } = validatedFields.data;
+  const { email, password } = parsed.data;
 
-  const lowerCaseEmail = email.toLowerCase();
-
-  // Make sure email exists
   const user = await prisma.users.findFirst({
-    where: { email: lowerCaseEmail },
+    where: { email: email.toLowerCase() },
   });
 
   if (!user) {
