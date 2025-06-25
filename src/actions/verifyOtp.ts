@@ -10,7 +10,7 @@ export async function verifyOTP({
   otp: string;
 }) {
   if (!email || !otp) {
-    throw new Error("Email and OTP are required.");
+    return { error: "Email and OTP are required." };
   }
 
   try {
@@ -30,5 +30,6 @@ export async function verifyOTP({
     if (error instanceof Error) {
       return { error: error.message };
     }
+    return { error: "An unexpected error occurred" };
   }
 }
