@@ -46,6 +46,7 @@ export default function ContactSection() {
               exit={{ opacity: 0, y: 20 }}
             >
               <Button asChild>
+                {/* // TODO: Change link for contact  */}
                 <Link href="/">Contact Support</Link>
               </Button>
             </motion.div>
