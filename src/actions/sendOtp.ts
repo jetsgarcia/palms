@@ -42,9 +42,9 @@ export async function sendOTP({ email }: { email: string }) {
         }),
       });
     } catch (error) {
-      return { error };
+      console.error("Error sending OTP email:", error);
+      return { error: "Failed to send OTP email" };
     }
-
     return { success: "Email sent" };
   } catch (error) {
     return { error };
