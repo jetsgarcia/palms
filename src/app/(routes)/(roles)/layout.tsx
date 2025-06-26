@@ -37,9 +37,15 @@ export default async function Layout({
                 <DropdownMenuTrigger className="focus:outline-none cursor-pointer text-sm hover:bg-accent hover:text-accent-foreground rounded-md pl-2 pr-1 py-1 transition-colors duration-200 ease-in-out">
                   <div className="flex items-center gap-1">
                     <span>
-                      {session.user.firstName?.toUpperCase()}{" "}
-                      {session.user.middleInitial?.toUpperCase()}.{" "}
-                      {session.user.lastName?.toUpperCase()}
+                      {[
+                        session.user.firstName?.toUpperCase(),
+                        session.user.middleInitial?.toUpperCase()
+                          ? `${session.user.middleInitial.toUpperCase()}.`
+                          : null,
+                        session.user.lastName?.toUpperCase(),
+                      ]
+                        .filter(Boolean)
+                        .join(" ")}
                     </span>
                     <ChevronDown size={16} />
                   </div>
