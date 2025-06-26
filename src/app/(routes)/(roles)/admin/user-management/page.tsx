@@ -38,13 +38,43 @@ export default function UserManagementPage() {
     async function loadData() {
       try {
         setLoading(true);
-        const [users, students] = await Promise.all([
+        setError(null);
+        const [usersResult, studentsResult] = await Promise.all([
           fetchUsers(),
           fetchStudents(),
         ]);
 
-        setAllUsersData(users || []);
-        const safeData: StudentType[] = (students ?? []).filter(
+        if (
+          usersResult &&
+          typeof usersResult === "object" &&
+          "error" in usersResult
+        ) {
+          setError(
+            usersResult.error
+              ? String(usersResult.error)
+              : "Failed to fetch users"
+          );
+          setAllUsersData([]);
+          setStudentsData([]);
+          return;
+        }
+        if (
+          studentsResult &&
+          typeof studentsResult === "object" &&
+          "error" in studentsResult
+        ) {
+          setError(
+            studentsResult.error
+              ? String(studentsResult.error)
+              : "Failed to fetch students"
+          );
+          setAllUsersData(usersResult || []);
+          setStudentsData([]);
+          return;
+        }
+
+        setAllUsersData(usersResult || []);
+        const safeData: StudentType[] = (studentsResult ?? []).filter(
           (item): item is StudentType => item.student !== null
         );
         setStudentsData(safeData);

@@ -7,7 +7,7 @@ export async function fetchUsers() {
     const users = await prisma.users.findMany();
     return users;
   } catch (error) {
-    console.error("Error fetching users:", error);
+    return { error };
   }
 }
 
@@ -23,6 +23,6 @@ export async function fetchStudents() {
     });
     return students;
   } catch (error) {
-    console.error("Error fetching students:", error);
+    return { error };
   }
 }
