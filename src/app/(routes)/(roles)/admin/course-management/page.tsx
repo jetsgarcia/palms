@@ -57,15 +57,11 @@ export default function CourseManagementPage() {
   }
 
   useEffect(() => {
-    async function loadData() {
-      setLoading(true);
-
-      await Promise.all([loadAFOS(), loadTrainingPeriods()]);
-
-      setLoading(false);
-    }
-
-    async function loadTrainingPeriods() {
+    async function loadTrainingPeriods(
+      setSelectedTrainingPeriod: (tp: TrainingPeriodType) => void,
+      setTrainingPeriods: (tp: TrainingPeriodType[]) => void,
+      setError: (err: string | null) => void
+    ) {
       try {
         const response = await fetchTrainingPeriods();
         if (!response.data) {
@@ -83,7 +79,6 @@ export default function CourseManagementPage() {
         }
 
         function isActiveOrUpcoming(tp: TrainingPeriodType) {
-          // For "In progress" and "Upcoming" period to be displayed in dropdown items
           return new Date(tp.endDate) >= now;
         }
 
@@ -105,7 +100,18 @@ export default function CourseManagementPage() {
         );
       }
     }
-
+    async function loadData() {
+      setLoading(true);
+      await Promise.all([
+        loadAFOS(),
+        loadTrainingPeriods(
+          setSelectedTrainingPeriod,
+          setTrainingPeriods,
+          setError
+        ),
+      ]);
+      setLoading(false);
+    }
     loadData();
   }, []);
 
@@ -140,9 +146,16 @@ export default function CourseManagementPage() {
                     </SelectContent>
                   </Select>
                   <div>
-                    Duration:{" "}
-                    {selectedTrainingPeriod.startDate.toLocaleDateString()} -{" "}
-                    {selectedTrainingPeriod.endDate.toLocaleDateString()}
+                    <div>
+                      Duration:{" "}
+                      {new Date(
+                        selectedTrainingPeriod.startDate
+                      ).toLocaleDateString()}{" "}
+                      -{" "}
+                      {new Date(
+                        selectedTrainingPeriod.endDate
+                      ).toLocaleDateString()}
+                    </div>{" "}
                   </div>
                 </>
               )}
