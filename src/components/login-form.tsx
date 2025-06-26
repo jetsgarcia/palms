@@ -102,6 +102,9 @@ export default function LoginForm() {
                     }}
                   />
                   <button
+                    aria-label={
+                      passwordVisibility ? "Hide password" : "Show password"
+                    }
                     onClick={() => setPasswordVisibility((current) => !current)}
                     type="button"
                     className="opacity-50 absolute inset-y-0 right-2 hover:opacity-80"
@@ -112,10 +115,10 @@ export default function LoginForm() {
                       <EyeOff className="h-5" />
                     )}
                   </button>
-                </div>
+                </div>{" "}
               </FormControl>
               <FormDescription className="sr-only">
-                The email you use for your account.
+                The password you use for your account.
               </FormDescription>
               <FormMessage>{loginError}</FormMessage>
               <div className="flex justify-end text-sm">
