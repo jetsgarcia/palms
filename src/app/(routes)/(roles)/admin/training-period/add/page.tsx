@@ -43,19 +43,21 @@ export default function AddTrainingPeriodPage() {
   });
 
   async function onSubmit(values: z.infer<typeof trainingPeriodFormSchema>) {
-    const response = await addTrainingPeriod(values);
+    try {
+      const response = await addTrainingPeriod(values);
 
-    if (!response) {
-      throw new Error("No response from server");
+      if (!response) {
+        toast.error("No response from server");
+      }
+
+      toast.success("Training period added successfully");
+      router.push("/admin/training-period");
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(`Failed to add training period. Error: ${error.message}`);
+        return;
+      }
     }
-
-    if (response.error) {
-      toast.error(response.error);
-      return;
-    }
-
-    toast.success("Training period added successfully");
-    router.push("/admin/training-period");
   }
 
   return (
