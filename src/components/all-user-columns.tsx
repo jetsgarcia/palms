@@ -7,8 +7,8 @@ export type AllUsers = {
   id: string;
   name: string;
   email: string;
+  role: string;
 };
-
 export const allUserColumns: ColumnDef<AllUsers>[] = [
   {
     accessorKey: "name",
