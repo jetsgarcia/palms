@@ -43,6 +43,7 @@ export default function RegisterInstructorPage() {
 
       if (!response) {
         toast.error("No response from server");
+        return;
       }
 
       toast.success("Instructor registered successfully");
