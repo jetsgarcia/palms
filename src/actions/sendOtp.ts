@@ -8,14 +8,6 @@ export async function sendOTP({ email }: { email: string }) {
   }
 
   try {
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    await prisma.otp.create({
-      data: {
-        userEmail: email,
-        otp,
-      },
-    });
-
     const user = await prisma.users.findUnique({
       where: {
         email: email,
@@ -25,37 +17,36 @@ export async function sendOTP({ email }: { email: string }) {
       },
     });
 
+    if (!user) {
+      return { error: "Email used does not exist" };
+    }
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    await prisma.otp.create({
+      data: {
+        userEmail: email,
+        otp,
+      },
+    });
+
     try {
-      const response = await fetch(
-        `${process.env.APP_API_BASE_URL}/api/otp/send-otp`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: user?.firstName,
-            otp: otp,
-            email: email,
-          }),
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error.message || "Failed to send OTP");
-      }
+      await fetch(`${process.env.APP_API_BASE_URL}/api/otp/send-otp`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: user.firstName,
+          otp: otp,
+          email: email,
+        }),
+      });
     } catch (error) {
-      console.error("Error sending OTP:", error);
+      return { error };
     }
 
     return { success: "Email sent" };
   } catch (error) {
-    if (error instanceof Error) {
-      return { error: error.message };
-    }
+    return { error };
   }
-
-  return null;
 }
