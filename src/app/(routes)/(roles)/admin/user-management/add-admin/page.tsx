@@ -16,8 +16,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { UserPlus } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { adminRegisterFormSchema } from "../../../../../../schemas/adminRegisterForm";
-import { registerAdmin } from "../../../../../../actions/registerAdmin";
+import { adminRegisterFormSchema } from "@/schemas/adminRegisterForm";
+import { registerAdmin } from "@/actions/registerAdmin";
 import { toast } from "sonner";
 
 export default function RegisterAdminPage() {
@@ -35,19 +35,21 @@ export default function RegisterAdminPage() {
   });
 
   async function onSubmit(values: z.infer<typeof adminRegisterFormSchema>) {
-    const response = await registerAdmin(values);
+    try {
+      const response = await registerAdmin(values);
 
-    if (!response) {
-      throw new Error("No response from server");
+      if (!response) {
+        toast.error("No response from server");
+      }
+
+      toast.success("Admin registered successfully");
+      router.push("/admin/user-management");
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(`Failed to register admin. Error: ${error.message}`);
+        return;
+      }
     }
-
-    if (response.error) {
-      toast.error(response.error);
-      return;
-    }
-
-    toast.success("Admin registered successfully");
-    router.push("/admin/user-management");
   }
 
   return (

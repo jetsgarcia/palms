@@ -40,17 +40,25 @@ export async function registerAdmin(
     firstLogin: true,
   };
 
-  await fetch(`${process.env.APP_API_BASE_URL}/api/send-password`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      firstName: admin.firstName,
-      email: admin.email,
-      password: admin.password,
-    }),
-  });
+  const emailResponse = await fetch(
+    `${process.env.APP_API_BASE_URL}/api/send-password`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        firstName: admin.firstName,
+        email: admin.email,
+        password: admin.password,
+      }),
+    }
+  );
+
+  if (!emailResponse.ok) {
+    const errorText = await emailResponse.text();
+    return { error: `Failed to send password email. ${errorText}` };
+  }
 
   try {
     const hashedPassword = await bcrypt.hash(generatedPassword, 10);
@@ -69,8 +77,6 @@ export async function registerAdmin(
 
     return { success: true };
   } catch (error) {
-    if (error instanceof Error) {
-      return { error: error.message };
-    }
+    return { error };
   }
 }
