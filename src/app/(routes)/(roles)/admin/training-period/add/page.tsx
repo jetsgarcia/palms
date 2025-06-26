@@ -184,7 +184,7 @@ export default function AddTrainingPeriodPage() {
                             id="endDate"
                             className={cn(
                               "justify-between font-normal",
-                              form.formState.errors.startDate
+                              form.formState.errors.endDate
                                 ? "border-destructive"
                                 : "",
                               !hasStartDate
