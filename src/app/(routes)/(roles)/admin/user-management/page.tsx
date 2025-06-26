@@ -222,8 +222,7 @@ export default function UserManagementPage() {
                     name:
                       user.firstName +
                       " " +
-                      user.middleInitial +
-                      " " +
+                      (user.middleInitial ? user.middleInitial + " " : "") +
                       user.lastName,
                     email: user.email,
                     trainingPeriod: user.student.trainingPeriod,
