@@ -63,13 +63,15 @@ export default function ChangePasswordWithOTPForm({
   // For deleting OTP on page unload
   useEffect(() => {
     const handleBeforeUnload = () => {
-      if (!session?.user.email) return;
+      // Prefer session email, fallback to entered email
+      const targetEmail = session?.user.email || email;
+      if (!targetEmail) return;
 
       // Send request before leaving
       fetch("/api/otp/delete-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: session?.user.email }),
+        body: JSON.stringify({ email: targetEmail }),
         keepalive: true,
       });
     };
@@ -79,7 +81,7 @@ export default function ChangePasswordWithOTPForm({
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, [session?.user.email]);
+  }, [session?.user.email, email]);
 
   function formatTime(seconds: number) {
     const mins = Math.floor(seconds / 60);
