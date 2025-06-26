@@ -1,6 +1,10 @@
 "use server";
 
 export async function fetchFirstLogin(userId: string) {
+  if (typeof userId !== "string" || userId.trim() === "") {
+    console.log("Invalid userId provided");
+    return false;
+  }
   try {
     const response = await fetch(
       `${process.env.APP_API_BASE_URL}/api/first-login`,
