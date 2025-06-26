@@ -93,17 +93,19 @@ export default function ChangePasswordWithOTPForm({
   async function handleSendOTP(email: string) {
     setLoading(true);
 
-    const existingEmail = await emailChecker({ email: email });
-    if (existingEmail?.error) {
-      toast.error(existingEmail.error);
-      setLoading(false);
-      return;
-    }
+    try {
+      const response = await emailChecker({ email: email });
 
-    if (!existingEmail) {
-      toast.error("Email not registered. Please enter a valid email.");
-      setLoading(false);
-      return;
+      if (!response.success) {
+        toast.error("Email not registered. Please enter a valid email.");
+        setLoading(false);
+        return;
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error("Can't check if email exists. Error: " + error.message);
+        setLoading(false);
+      }
     }
 
     try {

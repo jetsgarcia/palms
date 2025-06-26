@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 
 export async function emailChecker({ email }: { email: string }) {
   if (!email) {
-    throw new Error("Email is required.");
+    return { error: "Email is required." };
   }
 
   try {
@@ -20,8 +20,6 @@ export async function emailChecker({ email }: { email: string }) {
 
     return { success: "User exists" };
   } catch (error) {
-    if (error instanceof Error) {
-      return { error: error.message };
-    }
+    return { error };
   }
 }
