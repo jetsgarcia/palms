@@ -51,16 +51,16 @@ export default function ChangePasswordWithOTPForm({
       }, 1000);
       return () => clearTimeout(timer);
     } else if (countdown === 0) {
-      if (session?.user.email) {
+      const targetEmail = session?.user.email || email;
+      if (targetEmail) {
         navigator.sendBeacon(
           "/api/otp/delete-otp",
-          JSON.stringify({ email: session?.user.email })
+          JSON.stringify({ email: targetEmail })
         );
       }
       setCanResend(true);
     }
-  }, [countdown, session?.user.email, currentStep]);
-
+  }, [countdown, session?.user.email, email, currentStep]);
   // For deleting OTP on page unload
   useEffect(() => {
     const handleBeforeUnload = () => {
@@ -276,7 +276,6 @@ export default function ChangePasswordWithOTPForm({
               )}
             </>
           )}
-
           {currentStep === 1 && (
             <div className="space-y-4">
               <div className="flex flex-col items-center space-y-4">
@@ -341,15 +340,14 @@ export default function ChangePasswordWithOTPForm({
               )}
             </div>
           )}
-
           {currentStep === 2 && (
             <ChangePasswordForm
               firstTimeLogin={false}
               withoutHeader
               logoutAfterChangePassword={logoutAfterChangePassword}
-              email={email}
+              email={session?.user.email || email}
             />
-          )}
+          )}{" "}
         </CardContent>
       </Card>
     </div>
