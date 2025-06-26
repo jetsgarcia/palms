@@ -23,6 +23,7 @@ import {
 import { verifyOTP } from "@/actions/verifyOtp";
 import ChangePasswordForm from "./change-password-form";
 import { emailChecker } from "@/actions/emailChecker";
+import { toast } from "sonner";
 
 interface ChangePasswordWithOTPFormProps {
   type: "unauthenticated" | "authenticated";
@@ -94,13 +95,13 @@ export default function ChangePasswordWithOTPForm({
 
     const existingEmail = await emailChecker({ email: email });
     if (existingEmail?.error) {
-      alert(existingEmail.error);
+      toast.error(existingEmail.error);
       setLoading(false);
       return;
     }
 
     if (!existingEmail) {
-      alert("Email not registered. Please enter a valid email.");
+      toast.error("Email not registered. Please enter a valid email.");
       setLoading(false);
       return;
     }
@@ -109,7 +110,7 @@ export default function ChangePasswordWithOTPForm({
       sendOTP({ email: email }).then((response) => {
         if (response) {
           if (response.error) {
-            alert(response.error);
+            toast.error(response.error);
           }
           setLoading(false);
           setCurrentStep(1);
@@ -118,7 +119,7 @@ export default function ChangePasswordWithOTPForm({
         }
       });
     } catch (err) {
-      alert("Failed to send OTP. Error: " + err);
+      toast.error("Failed to send OTP. Error: " + err);
     }
   }
 
@@ -130,7 +131,7 @@ export default function ChangePasswordWithOTPForm({
         sendOTP({ email: email }).then((response) => {
           if (response) {
             if (response.error) {
-              alert(response.error);
+              toast.error(response.error);
               setLoading(false);
             }
             setCountdown(600);
@@ -140,10 +141,10 @@ export default function ChangePasswordWithOTPForm({
           }
         });
       } catch (err) {
-        alert("Failed to send OTP. Error: " + err);
+        toast.error("Failed to send OTP. Error: " + err);
       }
     } catch (err) {
-      alert("Failed to resend OTP. Error: " + err);
+      toast.error("Failed to resend OTP. Error: " + err);
     }
   }
 
@@ -158,7 +159,7 @@ export default function ChangePasswordWithOTPForm({
       verifyOTP({ email: email, otp: otp }).then((response) => {
         if (response) {
           if (response.error) {
-            alert(response.error);
+            toast.error(response.error);
             setLoading(false);
           }
 
@@ -169,7 +170,7 @@ export default function ChangePasswordWithOTPForm({
         }
       });
     } catch (err) {
-      alert("Failed to verify OTP. Error: " + err);
+      toast.error("Failed to verify OTP. Error: " + err);
     }
   }
 
