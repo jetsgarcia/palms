@@ -17,8 +17,9 @@ import { Input } from "@/components/ui/input";
 import { UserPlus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { instructorRegisterFormSchema } from "@/schemas/instructorRegisterForm";
-import { registerInstructor } from "../../../../../../actions/registerInstructor";
+import { registerInstructor } from "@/actions/registerInstructor";
 import { toast } from "sonner";
+import { capitalizeWords } from "@/lib/utils";
 
 export default function RegisterInstructorPage() {
   const router = useRouter();
@@ -79,15 +80,10 @@ export default function RegisterInstructorPage() {
                       placeholder="Reyes"
                       {...field}
                       onChange={(e) => {
-                        // Capitalize every first letter in word
-                        const value = e.target.value
-                          .replace(/\b\w/g, (char) => char.toUpperCase())
-                          .replace(/\B\w/g, (char) => char.toLowerCase());
+                        const value = capitalizeWords(e.target.value);
                         field.onChange(value);
                       }}
-                      value={(field.value || "")
-                        .replace(/\b\w/g, (char) => char.toUpperCase())
-                        .replace(/\B\w/g, (char) => char.toLowerCase())}
+                      value={capitalizeWords(field.value || "")}
                     />
                   </FormControl>
                   <FormMessage />
@@ -107,15 +103,10 @@ export default function RegisterInstructorPage() {
                       placeholder="Juan"
                       {...field}
                       onChange={(e) => {
-                        // Capitalize every first letter in word
-                        const value = e.target.value
-                          .replace(/\b\w/g, (char) => char.toUpperCase())
-                          .replace(/\B\w/g, (char) => char.toLowerCase());
+                        const value = capitalizeWords(e.target.value);
                         field.onChange(value);
                       }}
-                      value={(field.value || "")
-                        .replace(/\b\w/g, (char) => char.toUpperCase())
-                        .replace(/\B\w/g, (char) => char.toLowerCase())}
+                      value={capitalizeWords(field.value || "")}
                     />
                   </FormControl>
                   <FormMessage />
