@@ -38,19 +38,20 @@ export default function RegisterInstructorPage() {
   async function onSubmit(
     values: z.infer<typeof instructorRegisterFormSchema>
   ) {
-    const response = await registerInstructor(values);
+    try {
+      const response = await registerInstructor(values);
 
-    if (!response) {
-      throw new Error("No response from server");
+      if (!response) {
+        toast.error("No response from server");
+      }
+
+      toast.success("Instructor registered successfully");
+      router.push("/admin/user-management");
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(`Failed to register instructor. Error: ${error.message}`);
+      }
     }
-
-    if (response.error) {
-      toast.error(response.error);
-      return;
-    }
-
-    toast.success("Instructor registered successfully");
-    router.push("/admin/user-management");
   }
 
   return (

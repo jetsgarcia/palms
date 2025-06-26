@@ -40,17 +40,29 @@ export async function registerInstructor(
     firstLogin: true,
   };
 
-  await fetch(`${process.env.APP_API_BASE_URL}/api/send-password`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      firstName: instructor.firstName,
-      email: instructor.email,
-      password: instructor.password,
-    }),
-  });
+  try {
+    const response = await fetch(
+      `${process.env.APP_API_BASE_URL}/api/send-password`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          firstName: instructor.firstName,
+          email: instructor.email,
+          password: instructor.password,
+        }),
+      }
+    );
+    if (!response.ok) {
+      return {
+        error: `Failed to send password email. Error: ${response.status} ${response.statusText}`,
+      };
+    }
+  } catch (error) {
+    return { error };
+  }
 
   try {
     const hashedPassword = await bcrypt.hash(generatedPassword, 10);
@@ -69,8 +81,6 @@ export async function registerInstructor(
 
     return { success: true };
   } catch (error) {
-    if (error instanceof Error) {
-      return { error: error.message };
-    }
+    return { error };
   }
 }
