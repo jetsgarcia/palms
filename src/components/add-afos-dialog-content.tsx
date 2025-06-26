@@ -85,12 +85,7 @@ export default function AddAFOSDialogContent({
       });
 
       if (!response) {
-        throw new Error("No response from server");
-      }
-
-      if (response.error) {
-        toast.error(response.error);
-        return;
+        toast.error("No response from server");
       }
 
       await refreshAFOS();
@@ -98,8 +93,7 @@ export default function AddAFOSDialogContent({
       setOpenDialog(false);
       resetForm();
     } catch (error) {
-      toast.error("An error occurred while adding AFOS");
-      console.error(error);
+      toast.error(`An error occurred while adding AFOS. Error: ${error}`);
     } finally {
       setIsSubmitting(false);
     }

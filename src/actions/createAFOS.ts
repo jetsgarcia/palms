@@ -19,8 +19,6 @@ export async function createAFOS(values: z.infer<typeof createAFOSFormSchema>) {
 
     return { success: true };
   } catch (error) {
-    if (error instanceof Error) {
-      return { error: error.message };
-    }
+    return { error };
   }
 }
