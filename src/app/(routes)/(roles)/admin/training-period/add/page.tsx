@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/form";
 import { toast } from "sonner";
 import { addTrainingPeriod } from "@/actions/addTrainingPeriod";
-import { cn } from "@/lib/utils";
+import { capitalizeWords, cn } from "@/lib/utils";
 
 export default function AddTrainingPeriodPage() {
   const router = useRouter();
@@ -85,19 +85,12 @@ export default function AddTrainingPeriodPage() {
                     placeholder="Training Period 1 | 2020"
                     {...field}
                     onChange={(e) => {
-                      // Capitalize every first word
-                      const value = e.target.value
-                        .replace(/\b\w/g, (char) => char.toUpperCase())
-                        .replace(/\B\w/g, (char) => char.toLowerCase());
+                      const value = capitalizeWords(e.target.value);
                       field.onChange(value);
                     }}
-                    value={(field.value || "")
-                      .replace(/\b\w/g, (char) => char.toUpperCase())
-                      .replace(/\B\w/g, (char) => char.toLowerCase())}
+                    value={capitalizeWords(field.value || "")}
                     onBlur={(e) => {
-                      const formatted = e.target.value
-                        .replace(/\b\w/g, (char) => char.toUpperCase())
-                        .replace(/\B\w/g, (char) => char.toLowerCase());
+                      const formatted = capitalizeWords(e.target.value);
                       field.onChange(formatted);
                     }}
                   />
