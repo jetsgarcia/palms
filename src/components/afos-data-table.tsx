@@ -14,16 +14,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useRouter } from "next/navigation";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
-export function AFOSDataTable<TData, TValue>({
+export function AFOSDataTable<TData extends { code: string }, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+  const router = useRouter();
   const table = useReactTable({
     data,
     columns,
@@ -57,6 +59,10 @@ export function AFOSDataTable<TData, TValue>({
               <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
+                className="cursor-pointer hover:bg-primary/20"
+                onClick={() =>
+                  router.push(`/admin/course-management/${row.original.code}`)
+                }
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>
