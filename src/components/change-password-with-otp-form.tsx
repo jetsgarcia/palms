@@ -125,26 +125,22 @@ export default function ChangePasswordWithOTPForm({
 
   async function handleResendOTP(email: string) {
     setLoading(true);
-
     try {
-      try {
-        sendOTP({ email: email }).then((response) => {
-          if (response) {
-            if (response.error) {
-              toast.error(response.error);
-              setLoading(false);
-            }
-            setCountdown(600);
-            setCanResend(false);
-            setOtp("");
-            setLoading(false);
-          }
-        });
-      } catch (err) {
-        toast.error("Failed to send OTP. Error: " + err);
+      const response = await sendOTP({ email: email });
+      if (response) {
+        if (response.error) {
+          toast.error(response.error);
+          setLoading(false);
+          return;
+        }
+        setCountdown(600);
+        setCanResend(false);
+        setOtp("");
+        setLoading(false);
       }
     } catch (err) {
       toast.error("Failed to resend OTP. Error: " + err);
+      setLoading(false);
     }
   }
 
