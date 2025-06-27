@@ -1,18 +1,16 @@
 "use client";
 
-import type React from "react";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { signOut, useSession } from "next-auth/react";
+import { changePassword } from "@/actions/changePassword";
 import {
   Card,
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useRouter } from "next/navigation";
-import { changePassword } from "@/actions/changePassword";
-import { toast } from "sonner";
-import { signOut } from "next-auth/react";
-import { useSession } from "next-auth/react";
 import PasswordFields from "./password-fields";
 
 interface ChangePasswordProps {
@@ -46,8 +44,7 @@ export default function ChangePasswordForm({
   const hasSpecialChar = /[^A-Za-z0-9]/.test(password);
   const passwordsMatch = password === confirmPassword && password !== "";
 
-  // Calculate password strength
-  const getPasswordStrength = () => {
+  function getPasswordStrength() {
     let strength = 0;
     if (hasMinLength) strength += 20;
     if (hasUppercase) strength += 20;
@@ -55,7 +52,7 @@ export default function ChangePasswordForm({
     if (hasNumber) strength += 20;
     if (hasSpecialChar) strength += 20;
     return strength;
-  };
+  }
 
   function getStrengthLabel() {
     const strength = getPasswordStrength();
@@ -80,22 +77,13 @@ export default function ChangePasswordForm({
 
     setIsSubmitting(true);
 
-    interface ChangePasswordParams {
-      newPassword: string;
-      email?: string;
-    }
+    try {
+      const response = await changePassword({
+        newPassword: password,
+        email: email,
+      });
 
-    changePassword({
-      newPassword: password,
-      email: email,
-    } as ChangePasswordParams).then((response) => {
-      if (!response) {
-        toast.error("An unexpected error occurred. Please try again.");
-        setIsSubmitting(false);
-        return;
-      }
-
-      if (response.success) {
+      if (response.ok) {
         if (logoutAfterChangePassword) {
           toast.success("Password changed successfully. Please log in again.");
           if (session) {
@@ -103,28 +91,16 @@ export default function ChangePasswordForm({
           }
         } else {
           toast.success("Password changed successfully.");
-          if (session?.user.role === "STUDENT") {
-            router.push("/student");
-          }
-          if (session?.user.role === "INSTRUCTOR") {
-            router.push("/instructor");
-          }
-          if (session?.user.role === "ADMIN") {
-            router.push("/admin");
-          }
-          if (!session) {
-            router.push("/login");
-          }
+          router.refresh();
         }
 
         setIsSubmitting(false);
       }
-
-      if (response.error) {
-        console.log(response.error);
-        setIsSubmitting(false);
-      }
-    });
+    } catch (error) {
+      console.error(error);
+      setIsSubmitting(false);
+      toast.error("Failed to change password.");
+    }
   }
 
   if (withoutHeader) {
@@ -172,27 +148,29 @@ export default function ChangePasswordForm({
             </CardDescription>
           )}
         </CardHeader>
-        <PasswordFields
-          password={password}
-          setPassword={setPassword}
-          confirmPassword={confirmPassword}
-          setConfirmPassword={setConfirmPassword}
-          showPassword={showPassword}
-          setShowPassword={setShowPassword}
-          showConfirmPassword={showConfirmPassword}
-          setShowConfirmPassword={setShowConfirmPassword}
-          passwordsMatch={passwordsMatch}
-          getPasswordStrength={getPasswordStrength}
-          getStrengthLabel={getStrengthLabel}
-          getStrengthColor={getStrengthColor}
-          hasMinLength={hasMinLength}
-          hasUppercase={hasUppercase}
-          hasLowercase={hasLowercase}
-          hasNumber={hasNumber}
-          hasSpecialChar={hasSpecialChar}
-          isSubmitting={isSubmitting}
-          onSubmit={handleSubmit}
-        />
+        <div className="px-6">
+          <PasswordFields
+            password={password}
+            setPassword={setPassword}
+            confirmPassword={confirmPassword}
+            setConfirmPassword={setConfirmPassword}
+            showPassword={showPassword}
+            setShowPassword={setShowPassword}
+            showConfirmPassword={showConfirmPassword}
+            setShowConfirmPassword={setShowConfirmPassword}
+            passwordsMatch={passwordsMatch}
+            getPasswordStrength={getPasswordStrength}
+            getStrengthLabel={getStrengthLabel}
+            getStrengthColor={getStrengthColor}
+            hasMinLength={hasMinLength}
+            hasUppercase={hasUppercase}
+            hasLowercase={hasLowercase}
+            hasNumber={hasNumber}
+            hasSpecialChar={hasSpecialChar}
+            isSubmitting={isSubmitting}
+            onSubmit={handleSubmit}
+          />
+        </div>
       </Card>
     </div>
   );

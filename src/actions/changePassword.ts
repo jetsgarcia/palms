@@ -4,19 +4,20 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 
-interface ChangePasswordProps {
-  newPassword: string;
-  email?: string;
-}
+type Response = { ok: true } | { ok: false; message: string };
 
 export async function changePassword({
   newPassword,
   email,
-}: ChangePasswordProps) {
+}: {
+  newPassword: string;
+  // Email is used to get the user ID. It's optional because ID can be retrieved from the session. Basically, this is only used when the user is not logged in.
+  email?: string;
+}): Promise<Response> {
   const session = await auth();
 
   if (!newPassword) {
-    return { error: "New password required" };
+    return { ok: false, message: "New password required" };
   }
 
   try {
@@ -26,7 +27,7 @@ export async function changePassword({
       (await prisma.users.findFirst({ where: { email } }))?.id;
 
     if (!userId) {
-      return { error: "User not found" };
+      return { ok: false, message: "User not found" };
     }
 
     await prisma.users.update({
@@ -34,12 +35,9 @@ export async function changePassword({
       data: { password: hashedPassword, firstLogin: false },
     });
 
-    return { success: "Password changed successfully" };
+    return { ok: true };
   } catch (error) {
-    if (error instanceof Error) {
-      return { error: error.message };
-    }
+    console.error("changePassword:", error);
+    return { ok: false, message: "Database error. Please retry later." };
   }
-
-  return null;
 }
