@@ -1,5 +1,7 @@
 "use client";
 
+import { Plus } from "lucide-react";
+import { useEffect, useState } from "react";
 import {
   Select,
   SelectContent,
@@ -7,10 +9,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus } from "lucide-react";
 import { AFOSDataTable } from "@/components/afos-data-table";
 import { afosColumns, afos } from "@/components/afos-columns";
-import { useEffect, useState } from "react";
 import { fetchAFOS } from "@/actions/fetchAFOS";
 import Loader from "@/components/loader";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
@@ -54,42 +54,29 @@ export default function CourseManagementPage() {
     ) {
       try {
         const response = await fetchTrainingPeriods();
-        if (!response.data) {
-          return;
+
+        if (response.ok) {
+          const now = new Date();
+
+          const activeOrUpcoming = response.data
+            .filter((tp: TrainingPeriodType) => new Date(tp.endDate) >= now)
+            .sort(
+              (a: TrainingPeriodType, b: TrainingPeriodType) =>
+                new Date(a.startDate).getTime() -
+                new Date(b.startDate).getTime()
+            );
+
+          if (activeOrUpcoming.length > 0) {
+            setSelectedTrainingPeriod(activeOrUpcoming[0]);
+          }
+          setTrainingPeriods(activeOrUpcoming);
         }
-
-        const now = new Date();
-
-        function isInProgress(tp: TrainingPeriodType) {
-          return new Date(tp.startDate) <= now && new Date(tp.endDate) >= now;
-        }
-
-        function isUpcoming(tp: TrainingPeriodType) {
-          return new Date(tp.startDate) > now;
-        }
-
-        function isActiveOrUpcoming(tp: TrainingPeriodType) {
-          return new Date(tp.endDate) >= now;
-        }
-
-        const inProgress = response.data.find(isInProgress);
-        const nextScheduled = response.data.find(isUpcoming);
-
-        if (inProgress) {
-          setSelectedTrainingPeriod(inProgress);
-        } else if (nextScheduled) {
-          setSelectedTrainingPeriod(nextScheduled);
-        }
-
-        setTrainingPeriods(response.data.filter(isActiveOrUpcoming));
       } catch (error) {
-        setError(
-          `Failed to fetch training periods. Error: ${
-            error instanceof Error ? error.message : "Unknown error"
-          }`
-        );
+        console.error(error);
+        setError("Failed to fetch training periods");
       }
     }
+
     async function loadData() {
       setLoading(true);
       await Promise.all([
