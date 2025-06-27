@@ -2,9 +2,11 @@
 
 import { prisma } from "@/lib/prisma";
 
-export async function sendOTP({ email }: { email: string }) {
+type Response = { ok: true } | { ok: false; message: string };
+
+export async function sendOTP({ email }: { email: string }): Promise<Response> {
   if (!email) {
-    return { error: "Email required" };
+    return { ok: false, message: "Email required" };
   }
 
   try {
@@ -18,7 +20,7 @@ export async function sendOTP({ email }: { email: string }) {
     });
 
     if (!user) {
-      return { error: "Email used does not exist" };
+      return { ok: false, message: "Email does not exist" };
     }
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
@@ -43,10 +45,11 @@ export async function sendOTP({ email }: { email: string }) {
       });
     } catch (error) {
       console.error("Error sending OTP email:", error);
-      return { error: "Failed to send OTP email" };
+      return { ok: false, message: "Failed to send otp" };
     }
-    return { success: "Email sent" };
+    return { ok: true };
   } catch (error) {
-    return { error };
+    console.error("sendOTP:", error);
+    return { ok: false, message: "Database error. Please retry later." };
   }
 }

@@ -1,7 +1,10 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 import ChangePasswordBackButton from "./change-password-back-button";
 import {
   Card,
@@ -10,10 +13,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useSession } from "next-auth/react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
 import { sendOTP } from "@/actions/sendOtp";
 import {
   InputOTP,
@@ -22,8 +23,6 @@ import {
 } from "@/components/ui/input-otp";
 import { verifyOTP } from "@/actions/verifyOtp";
 import ChangePasswordForm from "./change-password-form";
-import { emailChecker } from "@/actions/emailChecker";
-import { toast } from "sonner";
 
 interface ChangePasswordWithOTPFormProps {
   type: "unauthenticated" | "authenticated";
@@ -94,29 +93,14 @@ export default function ChangePasswordWithOTPForm({
     setLoading(true);
 
     try {
-      const response = await emailChecker({ email: email });
+      const response = await sendOTP({ email: email });
 
-      if (!response.success) {
-        toast.error("Email not registered. Please enter a valid email.");
+      if (response.ok) {
         setLoading(false);
-        return;
+        setCurrentStep(1);
+        setCountdown(600);
+        setCanResend(false);
       }
-    } catch (error) {
-      if (error instanceof Error) {
-        toast.error("Can't check if email exists. Error: " + error.message);
-        setLoading(false);
-      }
-    }
-
-    try {
-      sendOTP({ email: email }).then((response) => {
-        if (response) {
-          setLoading(false);
-          setCurrentStep(1);
-          setCountdown(600);
-          setCanResend(false);
-        }
-      });
     } catch (error) {
       toast.error("Failed to send OTP. Error: " + error);
     }
