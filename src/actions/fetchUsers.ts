@@ -11,6 +11,6 @@ export async function fetchUsers(): Promise<Response> {
     return { ok: true, data: users };
   } catch (error) {
     console.error("fetchUsers:", error);
-    return { ok: false, message: "Database error. Please retry later." };
+    return { ok: false, message: "Failed to fetch users list." };
   }
 }

@@ -27,6 +27,6 @@ export async function createAFOS(raw: unknown): Promise<Response> {
     return { ok: true };
   } catch (error) {
     console.error("createAFOS:", error);
-    return { ok: false, message: "Database error. Please retry later." };
+    return { ok: false, message: "Failed to create AFOS." };
   }
 }

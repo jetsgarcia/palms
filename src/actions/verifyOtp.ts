@@ -30,6 +30,6 @@ export async function verifyOTP({
     return { ok: true };
   } catch (error) {
     console.error("Error verifying OTP:", error);
-    return { ok: false, message: "Database error. Please retry later." };
+    return { ok: false, message: "Failed to verify OTP." };
   }
 }

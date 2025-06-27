@@ -13,6 +13,6 @@ export async function fetchTrainingPeriods(): Promise<Response> {
     return { ok: true, data: trainingPeriods };
   } catch (error) {
     console.error("fetchTrainingPeriods:", error);
-    return { ok: false, message: "Database error. Please retry later." };
+    return { ok: false, message: "Failed to fetch training period list." };
   }
 }

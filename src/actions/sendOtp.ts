@@ -50,6 +50,6 @@ export async function sendOTP({ email }: { email: string }): Promise<Response> {
     return { ok: true };
   } catch (error) {
     console.error("sendOTP:", error);
-    return { ok: false, message: "Database error. Please retry later." };
+    return { ok: false, message: "Failed to send OTP." };
   }
 }

@@ -28,6 +28,6 @@ export async function fetchAFOSDetails({
     return { ok: true, data: afos };
   } catch (error) {
     console.error("fetchAFOSDetails:", error);
-    return { ok: false, message: "Database error. Please retry later." };
+    return { ok: false, message: "Failed to fetch AFOS details." };
   }
 }

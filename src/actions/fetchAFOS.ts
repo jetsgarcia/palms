@@ -11,6 +11,6 @@ export async function fetchAFOS(): Promise<Response> {
     return { ok: true, data: afos };
   } catch (error) {
     console.error("fetchAFOS:", error);
-    return { ok: false, message: "Database error. Please retry later." };
+    return { ok: false, message: "Failed to fetch AFOS." };
   }
 }

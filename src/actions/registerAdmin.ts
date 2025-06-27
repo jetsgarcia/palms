@@ -81,6 +81,6 @@ export async function registerAdmin(
     return { ok: true };
   } catch (error) {
     console.error("registerAdmin:", error);
-    return { ok: false, message: "Database error. Please retry later." };
+    return { ok: false, message: "Failed to register admin." };
   }
 }

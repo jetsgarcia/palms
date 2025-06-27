@@ -28,6 +28,6 @@ export async function fetchStudents(): Promise<Response> {
     return { ok: true, data: filteredStudents };
   } catch (error) {
     console.error("fetchStudents:", error);
-    return { ok: false, message: "Database error. Please retry later." };
+    return { ok: false, message: "Failed to fetch students list." };
   }
 }

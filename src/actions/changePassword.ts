@@ -38,6 +38,6 @@ export async function changePassword({
     return { ok: true };
   } catch (error) {
     console.error("changePassword:", error);
-    return { ok: false, message: "Database error. Please retry later." };
+    return { ok: false, message: "Failed to change password." };
   }
 }
