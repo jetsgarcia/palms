@@ -34,25 +34,15 @@ export default function CourseManagementPage() {
   async function loadAFOS() {
     try {
       const response = await fetchAFOS();
-      if (response.data) {
+
+      if (response.ok) {
         setAFOS(response.data);
       } else {
-        if (response.error) {
-          setError(
-            `Failed to fetch AFOS. Error: ${
-              response.error instanceof Error
-                ? response.error.message
-                : "Unknown error"
-            }`
-          );
-        }
+        setError(response.message);
       }
     } catch (error) {
-      if (error instanceof Error) {
-        setError(
-          `Failed to fetch AFOS. Error: ${error.message ?? "Unknown error"}`
-        );
-      }
+      console.error(error);
+      setError("Failed to fetch AFOS");
     }
   }
 
