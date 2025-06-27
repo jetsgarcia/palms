@@ -31,7 +31,7 @@ export default function ModulesAndSubjectsPage({
         }
       } catch (error) {
         console.error("Error loading AFOS details:", error);
-        setError("Failed to load AFOS details. Please try again later.");
+        setError("Failed to load AFOS details.");
       }
     }
 
