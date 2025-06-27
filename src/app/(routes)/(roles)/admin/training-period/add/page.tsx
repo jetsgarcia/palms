@@ -54,7 +54,7 @@ export default function AddTrainingPeriodPage() {
       }
     } catch (error) {
       console.error(error);
-      toast.error("Failed to add training period. Please try again later.");
+      toast.error("Failed to add training period.");
     }
   }
 
