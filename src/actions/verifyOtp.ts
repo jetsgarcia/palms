@@ -2,15 +2,17 @@
 
 import { prisma } from "@/lib/prisma";
 
+type Response = { ok: true } | { ok: false; message: string };
+
 export async function verifyOTP({
   email,
   otp,
 }: {
   email: string;
   otp: string;
-}) {
+}): Promise<Response> {
   if (!email || !otp) {
-    return { error: "Email and OTP are required." };
+    return { ok: false, message: "Email and OTP are required." };
   }
 
   try {
@@ -22,14 +24,12 @@ export async function verifyOTP({
     });
 
     if (!record) {
-      return { error: "Invalid OTP" };
+      return { ok: false, message: "Invalid OTP" };
     }
 
-    return { success: "OTP verified" };
+    return { ok: true };
   } catch (error) {
-    if (error instanceof Error) {
-      return { error: error.message };
-    }
-    return { error: "An unexpected error occurred" };
+    console.error("Error verifying OTP:", error);
+    return { ok: false, message: "Database error. Please retry later." };
   }
 }

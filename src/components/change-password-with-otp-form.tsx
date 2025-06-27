@@ -122,7 +122,7 @@ export default function ChangePasswordWithOTPForm({
     }
   }
 
-  function handleVerifyOTP(email: string) {
+  async function handleVerifyOTP(email: string) {
     setLoading(true);
 
     if (otp.length !== 6) {
@@ -130,21 +130,16 @@ export default function ChangePasswordWithOTPForm({
     }
 
     try {
-      verifyOTP({ email: email, otp: otp }).then((response) => {
-        if (response) {
-          if (response.error) {
-            toast.error(response.error);
-            setLoading(false);
-          }
+      const response = await verifyOTP({ email: email, otp: otp });
 
-          if (response.success) {
-            setCurrentStep(2);
-            setLoading(false);
-          }
-        }
-      });
-    } catch (err) {
-      toast.error("Failed to verify OTP. Error: " + err);
+      if (response.ok) {
+        setCurrentStep(2);
+        setLoading(false);
+      }
+    } catch (error) {
+      setLoading(false);
+      console.error("Error verifying OTP:", error);
+      toast.error("Failed to verify OTP.");
     }
   }
 
