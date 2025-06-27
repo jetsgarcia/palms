@@ -1,14 +1,16 @@
 "use server";
 
 import { z } from "zod";
-import { instructorRegisterFormSchema } from "../schemas/instructorRegisterForm";
-import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { Role } from "@prisma/client";
+import { instructorRegisterFormSchema } from "@/schemas/instructorRegisterForm";
+import { prisma } from "@/lib/prisma";
+
+type Response = { ok: true } | { ok: false; message: string };
 
 export async function registerInstructor(
   values: z.infer<typeof instructorRegisterFormSchema>
-) {
+): Promise<Response> {
   function generateSecurePassword(length: number = 12): string {
     const charset =
       "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
@@ -28,7 +30,7 @@ export async function registerInstructor(
   });
 
   if (existingUser) {
-    return { error: "Email already exists" };
+    return { ok: false, message: "Email already exists" };
   }
 
   const generatedPassword = generateSecurePassword();
@@ -40,28 +42,25 @@ export async function registerInstructor(
     firstLogin: true,
   };
 
-  try {
-    const response = await fetch(
-      `${process.env.APP_API_BASE_URL}/api/send-password`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          firstName: instructor.firstName,
-          email: instructor.email,
-          password: instructor.password,
-        }),
-      }
-    );
-    if (!response.ok) {
-      return {
-        error: `Failed to send password email. Error: ${response.status} ${response.statusText}`,
-      };
+  const emailResponse = await fetch(
+    `${process.env.APP_API_BASE_URL}/api/send-password`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        firstName: instructor.firstName,
+        email: instructor.email,
+        password: instructor.password,
+      }),
     }
-  } catch (error) {
-    return { error };
+  );
+
+  if (!emailResponse.ok) {
+    const errorText = await emailResponse.text();
+    console.error("Failed to send password email:", errorText);
+    return { ok: false, message: "Failed to send password email." };
   }
 
   try {
@@ -79,8 +78,9 @@ export async function registerInstructor(
       },
     });
 
-    return { success: true };
+    return { ok: true };
   } catch (error) {
-    return { error };
+    console.error("registerAdmin:", error);
+    return { ok: false, message: "Database error. Please retry later." };
   }
 }

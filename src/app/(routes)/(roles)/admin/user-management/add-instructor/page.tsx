@@ -41,17 +41,13 @@ export default function RegisterInstructorPage() {
     try {
       const response = await registerInstructor(values);
 
-      if (!response) {
-        toast.error("No response from server");
-        return;
+      if (response.ok) {
+        toast.success("Instructor registered successfully");
+        router.push("/admin/user-management");
       }
-
-      toast.success("Instructor registered successfully");
-      router.push("/admin/user-management");
     } catch (error) {
-      if (error instanceof Error) {
-        toast.error(`Failed to register instructor. Error: ${error.message}`);
-      }
+      console.error("Error registering instructor:", error);
+      toast.error("Failed to register instructor.");
     }
   }
 
