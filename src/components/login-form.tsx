@@ -115,7 +115,7 @@ export default function LoginForm() {
                       <EyeOff className="h-5" />
                     )}
                   </button>
-                </div>{" "}
+                </div>
               </FormControl>
               <FormDescription className="sr-only">
                 The password you use for your account.
