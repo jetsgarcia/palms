@@ -1,14 +1,16 @@
 "use server";
 
 import { z } from "zod";
-import { adminRegisterFormSchema } from "../schemas/adminRegisterForm";
-import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { Role } from "@prisma/client";
+import { adminRegisterFormSchema } from "@/schemas/adminRegisterForm";
+import { prisma } from "@/lib/prisma";
+
+type Response = { ok: true } | { ok: false; message: string };
 
 export async function registerAdmin(
   values: z.infer<typeof adminRegisterFormSchema>
-) {
+): Promise<Response> {
   function generateSecurePassword(length: number = 12): string {
     const charset =
       "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
@@ -28,7 +30,7 @@ export async function registerAdmin(
   });
 
   if (existingUser) {
-    return { error: "Email already exists" };
+    return { ok: false, message: "Email already exists" };
   }
 
   const generatedPassword = generateSecurePassword();
@@ -57,7 +59,8 @@ export async function registerAdmin(
 
   if (!emailResponse.ok) {
     const errorText = await emailResponse.text();
-    return { error: `Failed to send password email. ${errorText}` };
+    console.error("Failed to send password email:", errorText);
+    return { ok: false, message: "Failed to send password email." };
   }
 
   try {
@@ -75,8 +78,9 @@ export async function registerAdmin(
       },
     });
 
-    return { success: true };
+    return { ok: true };
   } catch (error) {
-    return { error };
+    console.error("registerAdmin:", error);
+    return { ok: false, message: "Database error. Please retry later." };
   }
 }

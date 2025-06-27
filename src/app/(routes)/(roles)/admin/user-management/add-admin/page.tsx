@@ -38,17 +38,13 @@ export default function RegisterAdminPage() {
     try {
       const response = await registerAdmin(values);
 
-      if (!response) {
-        toast.error("No response from server");
+      if (response.ok) {
+        toast.success("Admin registered successfully");
+        router.push("/admin/user-management");
       }
-
-      toast.success("Admin registered successfully");
-      router.push("/admin/user-management");
     } catch (error) {
-      if (error instanceof Error) {
-        toast.error(`Failed to register admin. Error: ${error.message}`);
-        return;
-      }
+      console.error("Error registering admin:", error);
+      toast.error("Failed to register admin.");
     }
   }
 
