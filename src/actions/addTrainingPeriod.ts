@@ -1,24 +1,25 @@
 "use server";
 
-import { z } from "zod";
 import { trainingPeriodFormSchema } from "@/schemas/trainingPeriodForm";
 import { prisma } from "@/lib/prisma";
 
-export async function addTrainingPeriod(
-  values: z.infer<typeof trainingPeriodFormSchema>
-) {
+type Response = { ok: true } | { ok: false; message: string };
+
+export async function addTrainingPeriod(raw: unknown): Promise<Response> {
+  const parsed = trainingPeriodFormSchema.safeParse(raw);
+  if (!parsed.success) {
+    return { ok: false, message: "Invalid input." };
+  }
+
+  const { name, startDate, endDate, weeks } = parsed.data;
+
   try {
     await prisma.training_periods.create({
-      data: {
-        name: values.name,
-        startDate: values.startDate,
-        endDate: values.endDate,
-        weeks: values.weeks,
-      },
+      data: { name, startDate, endDate, weeks },
     });
-
-    return { success: true };
+    return { ok: true };
   } catch (error) {
-    return { error };
+    console.error("addTrainingPeriod:", error);
+    return { ok: false, message: "Database error. Please retry later." };
   }
 }
