@@ -59,7 +59,7 @@ export function AFOSDataTable<TData extends { code: string }, TValue>({
               <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
-                className="cursor-pointer hover:bg-primary/20"
+                className="cursor-pointer hover:bg-primary/5"
                 onClick={() =>
                   router.push(`/admin/course-management/${row.original.code}`)
                 }
