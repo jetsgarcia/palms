@@ -46,17 +46,15 @@ export default function AddTrainingPeriodPage() {
     try {
       const response = await addTrainingPeriod(values);
 
-      if (!response) {
-        toast.error("No response from server");
+      if (response.ok) {
+        toast.success("Training period added successfully");
+        router.push("/admin/training-period");
+      } else {
+        toast.error(response.message);
       }
-
-      toast.success("Training period added successfully");
-      router.push("/admin/training-period");
     } catch (error) {
-      if (error instanceof Error) {
-        toast.error(`Failed to add training period. Error: ${error.message}`);
-        return;
-      }
+      console.error(error);
+      toast.error("Failed to add training period. Please try again later.");
     }
   }
 
