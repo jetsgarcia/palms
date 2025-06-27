@@ -1,3 +1,8 @@
+"use client";
+
+import { useState, FormEvent } from "react";
+import { toast } from "sonner";
+import { Level } from "@prisma/client";
 import { createAFOS } from "@/actions/createAFOS";
 import { Button } from "@/components/ui/button";
 import {
@@ -7,10 +12,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { useState, FormEvent } from "react";
-import { toast } from "sonner";
-import { Level } from "@prisma/client";
-import { cn } from "@/lib/utils";
+import { capitalizeWords, cn } from "@/lib/utils";
 
 interface AddAFOSDialogContentProps {
   trainingPeriodId: number;
@@ -18,11 +20,11 @@ interface AddAFOSDialogContentProps {
   refreshAFOS: () => Promise<void>;
 }
 
-interface FormErrors {
+type FormErrors = {
   name?: string;
   code?: string;
   level?: string;
-}
+};
 
 export default function AddAFOSDialogContent({
   trainingPeriodId,
@@ -54,12 +56,6 @@ export default function AddAFOSDialogContent({
     return Object.keys(newErrors).length === 0;
   }
 
-  const handleCapitalizeWords = (value: string): string => {
-    return value
-      .replace(/\b\w/g, (char: string) => char.toUpperCase())
-      .replace(/\B\w/g, (char: string) => char.toLowerCase());
-  };
-
   const resetForm = () => {
     setName("");
     setCode("");
@@ -84,16 +80,15 @@ export default function AddAFOSDialogContent({
         trainingPeriodId,
       });
 
-      if (!response) {
-        toast.error("No response from server");
+      if (response.ok) {
+        await refreshAFOS();
+        toast.success("AFOS added successfully");
+        setOpenDialog(false);
+        resetForm();
       }
-
-      await refreshAFOS();
-      toast.success("AFOS added successfully");
-      setOpenDialog(false);
-      resetForm();
     } catch (error) {
-      toast.error(`An error occurred while adding AFOS. Error: ${error}`);
+      console.error("Error adding AFOS:", error);
+      toast.error("Failed to create AFOS.");
     } finally {
       setIsSubmitting(false);
     }
@@ -117,14 +112,14 @@ export default function AddAFOSDialogContent({
               value={name}
               onChange={(e) => {
                 // Capitalize every first word
-                const value = handleCapitalizeWords(e.target.value);
+                const value = capitalizeWords(e.target.value);
                 setName(value);
                 if (errors.name) {
                   setErrors((prev) => ({ ...prev, name: undefined }));
                 }
               }}
               onBlur={(e) => {
-                const formatted = handleCapitalizeWords(e.target.value);
+                const formatted = capitalizeWords(e.target.value);
                 setName(formatted);
               }}
             />
