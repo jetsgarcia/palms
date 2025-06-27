@@ -1,10 +1,14 @@
 "use server";
 
-export async function fetchFirstLogin(userId: string) {
-  if (typeof userId !== "string" || userId.trim() === "") {
-    console.log("Invalid userId provided");
-    return false;
+type Response =
+  | { ok: true; firstLogin: boolean }
+  | { ok: false; message: string };
+
+export async function fetchFirstLogin(userId: string): Promise<Response> {
+  if (userId.trim() === "") {
+    return { ok: false, message: "Must provide a user ID" };
   }
+
   try {
     const response = await fetch(
       `${process.env.APP_API_BASE_URL}/api/first-login`,
@@ -15,12 +19,16 @@ export async function fetchFirstLogin(userId: string) {
       }
     );
 
-    if (!response.ok) throw new Error("Failed to fetch first login status");
+    if (!response.ok)
+      return { ok: false, message: "Failed to fetch first login status" };
 
     const { user } = await response.json();
-    return user?.firstLogin;
+    if (!user) {
+      return { ok: false, message: "User not found" };
+    }
+    return { ok: true, firstLogin: user.firstLogin };
   } catch (error) {
-    console.error("Error fetching first login status:", error);
-    return false;
+    console.error("fetchFirstLogin:", error);
+    return { ok: false, message: "Failed to fetch first login status" };
   }
 }

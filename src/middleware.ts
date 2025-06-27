@@ -1,29 +1,9 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
+import { fetchFirstLogin } from "./actions/fetchFirstLogin";
 
 const unprotectedRoutes = ["/login", "/", "/change-password"];
-
-async function fetchFirstLogin(userId: string) {
-  try {
-    const response = await fetch(
-      `${process.env.APP_API_BASE_URL}/api/first-login`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId }),
-      }
-    );
-
-    if (!response.ok) throw new Error("Failed to fetch first login status");
-
-    const { user } = await response.json();
-    return user?.firstLogin;
-  } catch (error) {
-    console.error("Error fetching first login status:", error);
-    return false;
-  }
-}
 
 export default async function middleware(request: NextRequest) {
   const token = await getToken({
@@ -66,7 +46,16 @@ export default async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
-  const firstLogin = await fetchFirstLogin(token?.id as string);
+  // Only fetch firstLogin if user is authenticated
+  let firstLogin = false;
+  try {
+    const response = await fetchFirstLogin(token?.id as string);
+    if (response.ok) {
+      firstLogin = response.firstLogin;
+    }
+  } catch (error) {
+    console.error(error);
+  }
 
   // Redirect users to change password if it's their first login
   if (firstLogin && pathname !== "/change-password") {

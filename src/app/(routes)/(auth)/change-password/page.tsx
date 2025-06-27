@@ -5,7 +5,6 @@ import { fetchFirstLogin } from "@/actions/fetchFirstLogin";
 
 export default async function ChangePasswordPage() {
   const session = await auth();
-  const firstLogin = await fetchFirstLogin(session?.user.id as string);
 
   // Change password for unauthenticated users
   if (!session) {
@@ -15,6 +14,17 @@ export default async function ChangePasswordPage() {
         logoutAfterChangePassword={false}
       />
     );
+  }
+
+  // Only fetch firstLogin if user is authenticated
+  let firstLogin = false;
+  try {
+    const response = await fetchFirstLogin(session?.user.id as string);
+    if (response.ok) {
+      firstLogin = response.firstLogin;
+    }
+  } catch (error) {
+    console.error(error);
   }
 
   // Change password for first time login
