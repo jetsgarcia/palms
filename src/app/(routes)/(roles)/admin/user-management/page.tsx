@@ -1,17 +1,18 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { allUserColumns } from "@/components/all-user-columns";
 import { AllUserDataTable } from "@/components/all-user-data-table";
-import { useEffect, useState } from "react";
 import { StudentsDataTable } from "@/components/students-data-table";
 import { studentsColumns } from "@/components/students-columns";
 import { InstructorsDataTable } from "@/components/instructors-data-table";
 import { instructorsColumns } from "@/components/instructors-columns";
 import { adminsColumns } from "@/components/admins-columns";
 import { AdminsDataTable } from "@/components/admins-data-table";
-import { Plus } from "lucide-react";
-import { fetchStudents, fetchUsers } from "@/actions/fetchUsers";
+import { fetchUsers } from "@/actions/fetchUsers";
 import { UserType } from "@/types/user";
 import { StudentType } from "@/types/student";
 import {
@@ -22,9 +23,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useRouter } from "next/navigation";
 import Loader from "@/components/loader";
 import ErrorMessage from "@/components/errorMessage";
+import { fetchStudents } from "@/actions/fetchStudents";
 
 export default function UserManagementPage() {
   const [allUsersData, setAllUsersData] = useState<UserType[]>([]);
@@ -36,50 +37,32 @@ export default function UserManagementPage() {
 
   useEffect(() => {
     async function loadData() {
+      setLoading(true);
+      setError(null);
       try {
-        setLoading(true);
-        setError(null);
         const [usersResult, studentsResult] = await Promise.all([
           fetchUsers(),
           fetchStudents(),
         ]);
 
-        if (
-          usersResult &&
-          typeof usersResult === "object" &&
-          "error" in usersResult
-        ) {
-          setError(
-            usersResult.error
-              ? String(usersResult.error)
-              : "Failed to fetch users"
-          );
+        if (!usersResult.ok) {
+          setError(usersResult.message || "Failed to fetch users");
           setAllUsersData([]);
           setStudentsData([]);
           return;
         }
-        if (
-          studentsResult &&
-          typeof studentsResult === "object" &&
-          "error" in studentsResult
-        ) {
-          setError(
-            studentsResult.error
-              ? String(studentsResult.error)
-              : "Failed to fetch students"
-          );
-          setAllUsersData(usersResult || []);
+        if (!studentsResult.ok) {
+          setError(studentsResult.message || "Failed to fetch students");
+          setAllUsersData(usersResult.data || []);
           setStudentsData([]);
           return;
         }
 
-        setAllUsersData(usersResult || []);
-        const safeData: StudentType[] = (studentsResult ?? []).filter(
-          (item): item is StudentType => item.student !== null
-        );
-        setStudentsData(safeData);
+        setAllUsersData(usersResult.data || []);
+        setStudentsData(studentsResult.data || []);
       } catch (error) {
-        setError(error instanceof Error ? error.message : "An error occurred");
+        console.error("Error fetching data:", error);
+        setError("An unexpected error occurred while fetching data.");
       } finally {
         setLoading(false);
       }

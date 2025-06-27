@@ -1,28 +1,16 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { UserType } from "@/types/user";
 
-export async function fetchUsers() {
+type Response = { ok: true; data: UserType[] } | { ok: false; message: string };
+
+export async function fetchUsers(): Promise<Response> {
   try {
     const users = await prisma.users.findMany();
-    return users;
+    return { ok: true, data: users };
   } catch (error) {
-    return { error };
-  }
-}
-
-export async function fetchStudents() {
-  try {
-    const students = await prisma.users.findMany({
-      where: {
-        role: "STUDENT",
-      },
-      include: {
-        student: true,
-      },
-    });
-    return students;
-  } catch (error) {
-    return { error };
+    console.error("fetchUsers:", error);
+    return { ok: false, message: "Database error. Please retry later." };
   }
 }
