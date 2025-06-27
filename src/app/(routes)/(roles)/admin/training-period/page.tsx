@@ -29,31 +29,29 @@ export default function TrainingPeriodPage() {
     async function loadTrainingPeriods() {
       try {
         const response = await fetchTrainingPeriods();
-        if (!response.data) {
-          return;
+
+        if (response.ok) {
+          const now = new Date();
+
+          const scheduled: TrainingPeriodType[] = response.data.filter(
+            (tp: TrainingPeriodType) => tp.startDate > now
+          );
+          const inProgress: TrainingPeriodType[] = response.data.filter(
+            (tp: TrainingPeriodType) => tp.startDate <= now && tp.endDate >= now
+          );
+          const completed: TrainingPeriodType[] = response.data.filter(
+            (tp: TrainingPeriodType) => tp.endDate < now
+          );
+
+          setScheduledTrainingPeriods(scheduled);
+          setInProgressTrainingPeriods(inProgress);
+          setCompletedTrainingPeriods(completed);
+
+          setLoading(false);
         }
-
-        const now = new Date();
-
-        const scheduled: TrainingPeriodType[] = response.data.filter(
-          (tp: TrainingPeriodType) => tp.startDate > now
-        );
-        const inProgress: TrainingPeriodType[] = response.data.filter(
-          (tp: TrainingPeriodType) => tp.startDate <= now && tp.endDate >= now
-        );
-        const completed: TrainingPeriodType[] = response.data.filter(
-          (tp: TrainingPeriodType) => tp.endDate < now
-        );
-
-        setScheduledTrainingPeriods(scheduled);
-        setInProgressTrainingPeriods(inProgress);
-        setCompletedTrainingPeriods(completed);
-
-        setLoading(false);
       } catch (error) {
-        if (error instanceof Error) {
-          setError(`Failed to fetch training periods. Error: ${error.message}`);
-        }
+        console.error("Error loading training periods:", error);
+        setError("Failed to load training periods.");
 
         setLoading(false);
       }
