@@ -108,7 +108,6 @@ export default function AddAFOSDialogContent({
               Name <span className="text-destructive">*</span>
             </label>
             <Input
-              placeholder="Infantry"
               value={name}
               onChange={(e) => {
                 // Capitalize every first word
@@ -135,7 +134,6 @@ export default function AddAFOSDialogContent({
               Code <span className="text-destructive">*</span>
             </label>
             <Input
-              placeholder="INF"
               value={code}
               onChange={(e) => {
                 setCode(e.target.value.toUpperCase());
