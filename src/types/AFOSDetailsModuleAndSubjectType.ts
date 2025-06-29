@@ -1,0 +1,18 @@
+export type AFOSDetailsModuleAndSubjectType = {
+  code: string;
+  level: string;
+  name: string;
+  trainingPeriodId: number;
+  modules: {
+    id: number;
+    name: string;
+    number: number;
+    afosCode: string;
+    subjects: {
+      code: string;
+      name: string;
+      instructorId: string;
+      moduleId: number;
+    }[];
+  }[];
+};
