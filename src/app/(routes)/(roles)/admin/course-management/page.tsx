@@ -14,7 +14,7 @@ import { afosColumns, afos } from "@/components/afos-columns";
 import { fetchAFOS } from "@/actions/fetchAFOS";
 import Loader from "@/components/loader";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import AddAFOSDialogContent from "@/components/add-afos-dialog-content";
+import AFOSFormDialogContent from "@/components/afos-form-dialog-content";
 import { Button } from "@/components/ui/button";
 import { TrainingPeriodType } from "@/types/trainingPeriod";
 import { fetchTrainingPeriods } from "@/actions/fetchTrainingPeriods";
@@ -144,7 +144,8 @@ export default function CourseManagementPage() {
                 </Button>
               </DialogTrigger>
               {selectedTrainingPeriod && (
-                <AddAFOSDialogContent
+                <AFOSFormDialogContent
+                  mode="add"
                   trainingPeriodId={selectedTrainingPeriod.id}
                   setOpenDialog={setOpenDialog}
                   refreshAFOS={loadAFOS}
