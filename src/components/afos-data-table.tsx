@@ -60,12 +60,21 @@ export function AFOSDataTable<TData extends { code: string }, TValue>({
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
                 className="cursor-pointer hover:bg-primary/5"
-                onClick={() =>
-                  router.push(`/admin/course-management/${row.original.code}`)
-                }
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
+                  <TableCell
+                    key={cell.id}
+                    onClick={() => {
+                      if (
+                        cell.column.id !== "edit" &&
+                        cell.column.id !== "delete"
+                      ) {
+                        router.push(
+                          `/admin/course-management/${row.original.code}`
+                        );
+                      }
+                    }}
+                  >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
