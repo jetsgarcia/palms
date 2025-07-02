@@ -1,7 +1,7 @@
 import { Level } from "@prisma/client";
 import { z } from "zod";
 
-export const createAFOSFormSchema = z.object({
+export const AFOSFormSchema = z.object({
   code: z.string().min(1, { message: "Code is required" }),
   name: z.string().min(1, { message: "Name is required" }),
   level: z.nativeEnum(Level, {
