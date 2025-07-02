@@ -84,8 +84,6 @@ export default function ModulesAndSubjectsPage({
   }
 
   return (
-    // TODO: Implement loading state
-    // TODO: Implement 404 state
     <>
       {loading ? (
         <Loader />
