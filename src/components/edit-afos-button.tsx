@@ -27,15 +27,8 @@ export default function EditAFOSButton({
   return (
     <Dialog open={openDialog} onOpenChange={setOpenDialog}>
       <DialogTrigger asChild>
-        <Button
-          variant="ghost"
-          className="z-50"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <Edit
-            className="cursor-pointer"
-            onClick={(e) => e.stopPropagation()}
-          />
+        <Button variant="ghost" className="z-50">
+          <Edit className="cursor-pointer" />
         </Button>
       </DialogTrigger>
       <AFOSFormDialogContent
