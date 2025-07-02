@@ -1,12 +1,12 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { createAFOSFormSchema } from "@/schemas/createAFOSForm";
+import { AFOSFormSchema } from "@/schemas/AFOSForm";
 
 type Response = { ok: true } | { ok: false; message: string };
 
 export async function createAFOS(raw: unknown): Promise<Response> {
-  const parsed = createAFOSFormSchema.safeParse(raw);
+  const parsed = AFOSFormSchema.safeParse(raw);
   if (!parsed.success) {
     return { ok: false, message: "Invalid input." };
   }
