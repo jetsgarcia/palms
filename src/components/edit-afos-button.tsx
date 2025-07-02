@@ -28,7 +28,7 @@ export default function EditAFOSButton({
     <Dialog open={openDialog} onOpenChange={setOpenDialog}>
       <DialogTrigger asChild>
         <Button variant="ghost" className="z-50">
-          <Edit className="cursor-pointer" />
+          <Edit />
         </Button>
       </DialogTrigger>
       <AFOSFormDialogContent
