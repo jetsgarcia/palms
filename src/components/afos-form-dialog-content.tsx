@@ -4,6 +4,8 @@ import { useState, FormEvent } from "react";
 import { toast } from "sonner";
 import { Level } from "@prisma/client";
 import { createAFOS } from "@/actions/createAFOS";
+// Import updateAFOS if it exists, otherwise you need to implement it
+// import { updateAFOS } from "@/actions/updateAFOS";
 import { Button } from "@/components/ui/button";
 import {
   DialogContent,
@@ -13,11 +15,13 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { capitalizeWords, cn } from "@/lib/utils";
+import { updateAFOS } from "@/actions/updateAFOS";
 
-interface AddAFOSDialogContentProps {
+interface AFOSFormDialogContentProps {
   trainingPeriodId: number;
   setOpenDialog: (open: boolean) => void;
   refreshAFOS: () => Promise<void>;
+  mode: "add" | "edit";
 }
 
 type FormErrors = {
@@ -26,11 +30,12 @@ type FormErrors = {
   level?: string;
 };
 
-export default function AddAFOSDialogContent({
+export default function AFOSFormDialogContent({
   trainingPeriodId,
   setOpenDialog,
   refreshAFOS,
-}: AddAFOSDialogContentProps) {
+  mode,
+}: AFOSFormDialogContentProps) {
   const [name, setName] = useState<string>("");
   const [code, setCode] = useState<string>("");
   const [level, setLevel] = useState<string>("");
@@ -73,22 +78,38 @@ export default function AddAFOSDialogContent({
     setIsSubmitting(true);
 
     try {
-      const response = await createAFOS({
-        name,
-        code,
-        level: level as Level,
-        trainingPeriodId,
-      });
+      let response;
+      if (mode === "edit") {
+        response = await updateAFOS({
+          name,
+          code,
+          level: level as Level,
+          trainingPeriodId,
+        });
+      } else if (mode === "add") {
+        response = await createAFOS({
+          name,
+          code,
+          level: level as Level,
+          trainingPeriodId,
+        });
+      }
 
-      if (response.ok) {
+      if (response && response.ok) {
         await refreshAFOS();
-        toast.success("AFOS added successfully");
+        toast.success(
+          mode === "edit"
+            ? "AFOS updated successfully"
+            : "AFOS added successfully"
+        );
         setOpenDialog(false);
         resetForm();
       }
     } catch (error) {
-      console.error("Error adding AFOS:", error);
-      toast.error("Failed to create AFOS.");
+      console.error("Error submitting AFOS:", error);
+      toast.error(
+        mode === "edit" ? "Failed to update AFOS." : "Failed to create AFOS."
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -96,9 +117,11 @@ export default function AddAFOSDialogContent({
   return (
     <DialogContent>
       <DialogHeader>
-        <DialogTitle>Add AFOS</DialogTitle>
+        <DialogTitle>{mode === "edit" ? "Edit AFOS" : "Add AFOS"}</DialogTitle>
         <DialogDescription>
-          Fill in the details below to add an AFOS.
+          {mode === "edit"
+            ? "Update the details below to edit the AFOS."
+            : "Fill in the details below to add an AFOS."}
         </DialogDescription>
       </DialogHeader>
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -141,6 +164,7 @@ export default function AddAFOSDialogContent({
                   setErrors((prev) => ({ ...prev, code: undefined }));
                 }
               }}
+              disabled={mode === "edit"} // Prevent editing code in edit mode
             />
             {errors.code && (
               <p className="text-sm text-destructive">{errors.code}</p>
@@ -179,7 +203,7 @@ export default function AddAFOSDialogContent({
 
         <div className="flex items-center justify-end space-x-4">
           <Button type="submit" disabled={isSubmitting}>
-            Submit
+            {mode === "edit" ? "Update" : "Submit"}
           </Button>
         </div>
       </form>
