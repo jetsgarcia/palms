@@ -55,7 +55,7 @@ model afos {
   name             String           @db.VarChar
   level            Level
   trainingPeriodId Int
-  trainingPeriod   training_periods @relation(fields: [trainingPeriodId], references: [id])
+  trainingPeriod   training_periods @relation(fields: [trainingPeriodId], references: [id], onDelete: Cascade)
   modules          modules[]
 }
 
@@ -64,7 +64,7 @@ model modules {
   number   Int
   name     String     @db.VarChar
   afosCode String?    @db.VarChar
-  afos     afos?      @relation(fields: [afosCode], references: [code], onDelete: NoAction, onUpdate: NoAction, map: "afos")
+  afos     afos?      @relation(fields: [afosCode], references: [code], onDelete: Cascade, map: "afos")
   subjects subjects[]
 }
 
@@ -73,8 +73,8 @@ model subjects {
   name         String  @db.VarChar
   instructorId String?
   moduleId     Int
-  users        users?  @relation(fields: [instructorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "instructor")
-  modules      modules @relation(fields: [moduleId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "module")
+  users        users?  @relation(fields: [instructorId], references: [id], map: "instructor")
+  modules      modules @relation(fields: [moduleId], references: [id], onDelete: Cascade, map: "module")
 }
 
 enum Role {
