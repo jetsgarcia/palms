@@ -44,6 +44,7 @@ export const afosColumns = (
           />
           <DeleteAFOSButton
             code={row.original.code}
+            name={row.original.name}
             refreshAFOS={refreshAFOS}
           />
         </div>

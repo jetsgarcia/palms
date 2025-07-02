@@ -18,11 +18,13 @@ import { deleteAFOS } from "@/actions/deleteAFOS";
 
 interface DeleteAFOSButtonProps {
   code: string;
+  name: string;
   refreshAFOS: () => Promise<void>;
 }
 
 export default function DeleteAFOSButton({
   code,
+  name,
   refreshAFOS,
 }: DeleteAFOSButtonProps) {
   async function handleDelete(code: string) {
@@ -43,14 +45,14 @@ export default function DeleteAFOSButton({
 
   return (
     <AlertDialog>
-      <AlertDialogTrigger>
+      <AlertDialogTrigger asChild>
         <Button variant="ghost" className="z-50">
           <Trash />
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogTitle>Delete {name}?</AlertDialogTitle>
           <AlertDialogDescription>
             This action cannot be undone. This will permanently delete the AFOS
             record and its modules along with the subjects.
