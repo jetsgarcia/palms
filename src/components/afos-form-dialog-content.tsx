@@ -22,6 +22,11 @@ interface AFOSFormDialogContentProps {
   setOpenDialog: (open: boolean) => void;
   refreshAFOS: () => Promise<void>;
   mode: "add" | "edit";
+  initialValues?: {
+    name: string;
+    code: string;
+    level: Level;
+  };
 }
 
 type FormErrors = {
@@ -35,10 +40,11 @@ export default function AFOSFormDialogContent({
   setOpenDialog,
   refreshAFOS,
   mode,
+  initialValues,
 }: AFOSFormDialogContentProps) {
-  const [name, setName] = useState<string>("");
-  const [code, setCode] = useState<string>("");
-  const [level, setLevel] = useState<string>("");
+  const [name, setName] = useState<string>(initialValues?.name || "");
+  const [code, setCode] = useState<string>(initialValues?.code || "");
+  const [level, setLevel] = useState<string>(initialValues?.level || "");
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
@@ -74,7 +80,6 @@ export default function AFOSFormDialogContent({
     if (!validateForm()) {
       return;
     }
-
     setIsSubmitting(true);
 
     try {
@@ -133,7 +138,6 @@ export default function AFOSFormDialogContent({
             <Input
               value={name}
               onChange={(e) => {
-                // Capitalize every first word
                 const value = capitalizeWords(e.target.value);
                 setName(value);
                 if (errors.name) {
@@ -164,7 +168,6 @@ export default function AFOSFormDialogContent({
                   setErrors((prev) => ({ ...prev, code: undefined }));
                 }
               }}
-              disabled={mode === "edit"} // Prevent editing code in edit mode
             />
             {errors.code && (
               <p className="text-sm text-destructive">{errors.code}</p>

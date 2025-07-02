@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import AFOSMoreActionsButton from "./afos-more-actions-button";
+import EditAFOSButton from "./edit-afos-button";
 
 export type afos = {
   code: string;
@@ -10,7 +10,9 @@ export type afos = {
   trainingPeriodId: number;
 };
 
-export const afosColumns: ColumnDef<afos>[] = [
+export const afosColumns = (
+  refreshAFOS: () => Promise<void>
+): ColumnDef<afos>[] => [
   {
     accessorKey: "code",
     header: "AFOS Code",
@@ -24,9 +26,20 @@ export const afosColumns: ColumnDef<afos>[] = [
     header: "AFOS Level",
   },
   {
-    id: "actions",
+    id: "edit",
     cell: ({ row }) => {
-      return <AFOSMoreActionsButton code={row.original.code} />;
+      return (
+        <EditAFOSButton
+          code={row.original.code}
+          trainingPeriodId={row.original.trainingPeriodId}
+          refreshAFOS={refreshAFOS}
+          initialValues={{
+            name: row.original.name,
+            code: row.original.code,
+            level: row.original.level,
+          }}
+        />
+      );
     },
   },
 ];

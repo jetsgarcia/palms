@@ -157,7 +157,7 @@ export default function CourseManagementPage() {
             <Loader />
           ) : (
             <AFOSDataTable
-              columns={afosColumns}
+              columns={afosColumns(loadAFOS)}
               data={AFOS.filter((afos) =>
                 selectedTrainingPeriod
                   ? afos.trainingPeriodId === selectedTrainingPeriod.id
