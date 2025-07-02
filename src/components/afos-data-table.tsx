@@ -15,6 +15,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -59,21 +60,21 @@ export function AFOSDataTable<TData extends { code: string }, TValue>({
               <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
-                className="cursor-pointer hover:bg-primary/5"
+                className="hover:bg-primary/5"
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell
                     key={cell.id}
                     onClick={() => {
-                      if (
-                        cell.column.id !== "edit" &&
-                        cell.column.id !== "delete"
-                      ) {
+                      if (cell.column.id !== "actions") {
                         router.push(
                           `/admin/course-management/${row.original.code}`
                         );
                       }
                     }}
+                    className={cn(
+                      cell.column.id !== "actions" ? "cursor-pointer" : "w-10"
+                    )}
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
