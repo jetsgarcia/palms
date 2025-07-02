@@ -24,7 +24,11 @@ export async function fetchAFOSWithModulesAndSubjects({
       include: {
         modules: {
           include: {
-            subjects: true,
+            subjects: {
+              include: {
+                users: true,
+              },
+            },
           },
         },
       },

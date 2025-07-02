@@ -13,6 +13,14 @@ export type AFOSDetailsModuleAndSubjectType = {
       name: string;
       instructorId: string;
       moduleId: number;
+      users?: {
+        id: string;
+        firstName: string;
+        lastName: string;
+        middleInitial?: string;
+        suffix?: string;
+        email: string;
+      };
     }[];
   }[];
 };

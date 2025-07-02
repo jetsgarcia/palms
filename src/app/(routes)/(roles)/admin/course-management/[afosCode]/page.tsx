@@ -105,6 +105,7 @@ export default function ModulesAndSubjectsPage({
                   onOpenChange={setIsAddModuleOpen}
                 >
                   <DialogTrigger asChild>
+                    {/* // TODO: Add module */}
                     <Button>
                       <Plus />
                       Add Module
@@ -223,6 +224,7 @@ export default function ModulesAndSubjectsPage({
                                   }
                                 >
                                   <DialogTrigger asChild>
+                                    {/* //TODO: Add subject */}
                                     <Button variant="outline" size="sm">
                                       <Plus className="h-4 w-4 mr-2" />
                                       Add Subject
@@ -257,11 +259,23 @@ export default function ModulesAndSubjectsPage({
                                       key={subject.code}
                                       className="flex items-center justify-between p-3 border rounded-lg"
                                     >
-                                      <div className="flex-1">
+                                      <div className="flex-1 flex">
                                         <h5 className="font-medium">
                                           {subject.name}
                                         </h5>
+                                        <div className="px-2">
+                                          <Separator orientation="vertical" />
+                                        </div>
+                                        <p className="text-gray-500">
+                                          Instructor: {subject.users?.firstName}{" "}
+                                          {subject.users?.middleInitial
+                                            ? `${subject.users.middleInitial}. `
+                                            : ""}
+                                          {subject.users?.lastName}
+                                        </p>
                                       </div>
+                                      {/* // TODO: Display instructor name */}
+
                                       <div className="flex items-center gap-2">
                                         <Dialog>
                                           <DialogTrigger asChild>
