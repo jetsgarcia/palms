@@ -53,21 +53,21 @@ export default function ModulesAndSubjectsPage({
   const [isAddModuleOpen, setIsAddModuleOpen] = useState(false);
   const [isAddSubjectOpen, setIsAddSubjectOpen] = useState<number | null>(null);
 
-  useEffect(() => {
-    async function getAllData(afosCode: string) {
-      try {
-        const response = await fetchAFOSWithModulesAndSubjects({ afosCode });
-        if (response.ok) {
-          setAFOS(response.data);
-          setLoading(false);
-        }
-      } catch (error) {
-        console.error(error);
+  async function getAllData(afosCode: string) {
+    try {
+      const response = await fetchAFOSWithModulesAndSubjects({ afosCode });
+      if (response.ok) {
+        setAFOS(response.data);
         setLoading(false);
-        setError("Failed to get data.");
       }
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+      setError("Failed to get data.");
     }
+  }
 
+  useEffect(() => {
     getAllData(afosCode);
   }, [afosCode]);
 
@@ -105,21 +105,29 @@ export default function ModulesAndSubjectsPage({
                   onOpenChange={setIsAddModuleOpen}
                 >
                   <DialogTrigger asChild>
-                    {/* // TODO: Add module */}
                     <Button>
                       <Plus />
                       Add Module
                     </Button>
                   </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>Add module</DialogTitle>
-                      <DialogDescription>
-                        Fill in the details below to add a new module.
-                      </DialogDescription>
-                    </DialogHeader>
-                    <ModuleForm />
-                  </DialogContent>
+                  {AFOS && (
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Add module</DialogTitle>
+                        <DialogDescription>
+                          Fill in the details below to add a new module.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <ModuleForm
+                        id={0}
+                        mode="add"
+                        moduleNumber={AFOS.modules.length + 1}
+                        afosCode={afosCode}
+                        setIsAddModuleOpen={setIsAddModuleOpen}
+                        getAllData={() => getAllData(afosCode)}
+                      />
+                    </DialogContent>
+                  )}
                 </Dialog>
               </div>
               {/* Modules List */}
@@ -162,11 +170,7 @@ export default function ModulesAndSubjectsPage({
                           <div className="flex items-center gap-2">
                             <Dialog>
                               <DialogTrigger asChild>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() => console.log("Edit module")} // TODO: Implement edit module action
-                                >
+                                <Button variant="ghost" size="sm">
                                   <Edit className="h-4 w-4" />
                                 </Button>
                               </DialogTrigger>
@@ -177,7 +181,15 @@ export default function ModulesAndSubjectsPage({
                                     Update the details of the module below.
                                   </DialogDescription>
                                 </DialogHeader>
-                                <ModuleForm initialData={module} />
+                                <ModuleForm
+                                  mode="edit"
+                                  moduleNumber={AFOS.modules.length}
+                                  afosCode={afosCode}
+                                  initialData={module}
+                                  id={module.id}
+                                  setIsAddModuleOpen={setIsAddModuleOpen}
+                                  getAllData={() => getAllData(afosCode)}
+                                />
                               </DialogContent>
                             </Dialog>
                             <AlertDialog>
