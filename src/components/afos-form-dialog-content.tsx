@@ -3,9 +3,7 @@
 import { useState, FormEvent } from "react";
 import { toast } from "sonner";
 import { Level } from "@prisma/client";
-import { createAFOS } from "@/actions/createAFOS";
-// Import updateAFOS if it exists, otherwise you need to implement it
-// import { updateAFOS } from "@/actions/updateAFOS";
+import { createAFOS } from "@/actions/afos";
 import { Button } from "@/components/ui/button";
 import {
   DialogContent,
@@ -15,7 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { capitalizeWords, cn } from "@/lib/utils";
-import { updateAFOS } from "@/actions/updateAFOS";
+import { updateAFOS } from "@/actions/afos";
 
 interface AFOSFormDialogContentProps {
   trainingPeriodId: number;

@@ -14,7 +14,7 @@ import {
 } from "./ui/alert-dialog";
 import { AlertDialogTrigger } from "@radix-ui/react-alert-dialog";
 import { toast } from "sonner";
-import { deleteAFOS } from "@/actions/deleteAFOS";
+import { deleteAFOS } from "@/actions/afos";
 
 interface DeleteAFOSButtonProps {
   code: string;

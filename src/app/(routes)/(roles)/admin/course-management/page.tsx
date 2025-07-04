@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/select";
 import { AFOSDataTable } from "@/components/afos-data-table";
 import { afosColumns, afos } from "@/components/afos-columns";
-import { fetchAFOS } from "@/actions/fetchAFOS";
+import { readAFOS } from "@/actions/afos";
 import Loader from "@/components/loader";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import AFOSFormDialogContent from "@/components/afos-form-dialog-content";
@@ -33,7 +33,7 @@ export default function CourseManagementPage() {
 
   async function loadAFOS() {
     try {
-      const response = await fetchAFOS();
+      const response = await readAFOS();
 
       if (response.ok) {
         setAFOS(response.data);
