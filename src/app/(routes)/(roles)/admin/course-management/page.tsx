@@ -17,7 +17,7 @@ import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import AFOSFormDialogContent from "@/components/afos-form-dialog-content";
 import { Button } from "@/components/ui/button";
 import { TrainingPeriodType } from "@/types/trainingPeriod";
-import { fetchTrainingPeriods } from "@/actions/fetchTrainingPeriods";
+import { readTrainingPeriods } from "@/actions/trainingPeriod";
 import ErrorMessage from "@/components/errorMessage";
 
 export default function CourseManagementPage() {
@@ -53,7 +53,7 @@ export default function CourseManagementPage() {
       setError: (err: string | null) => void
     ) {
       try {
-        const response = await fetchTrainingPeriods();
+        const response = await readTrainingPeriods();
 
         if (response.ok) {
           const now = new Date();

@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
-import { fetchTrainingPeriods } from "@/actions/fetchTrainingPeriods";
+import { readTrainingPeriods } from "@/actions/trainingPeriod";
 import { TrainingPeriodType } from "@/types/trainingPeriod";
 import TrainingPeriod from "@/components/training-period";
 import { useRouter } from "next/navigation";
@@ -28,7 +28,7 @@ export default function TrainingPeriodPage() {
   useEffect(() => {
     async function loadTrainingPeriods() {
       try {
-        const response = await fetchTrainingPeriods();
+        const response = await readTrainingPeriods();
 
         if (response.ok) {
           const now = new Date();

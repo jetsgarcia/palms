@@ -24,7 +24,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { toast } from "sonner";
-import { addTrainingPeriod } from "@/actions/addTrainingPeriod";
+import { createTrainingPeriod } from "@/actions/trainingPeriod";
 import { capitalizeWords, cn } from "@/lib/utils";
 
 export default function AddTrainingPeriodPage() {
@@ -44,7 +44,7 @@ export default function AddTrainingPeriodPage() {
 
   async function onSubmit(values: z.infer<typeof trainingPeriodFormSchema>) {
     try {
-      const response = await addTrainingPeriod(values);
+      const response = await createTrainingPeriod(values);
 
       if (response.ok) {
         toast.success("Training period added successfully");
