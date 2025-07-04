@@ -1,7 +1,7 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { useState, startTransition } from "react";
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/form";
 import { loginSchema } from "@/schemas/loginSchema";
 import { z } from "zod";
-import { login } from "@/actions/login";
+import { login } from "@/actions/auth";
 import Link from "next/link";
 
 export default function LoginForm() {
@@ -37,24 +37,20 @@ export default function LoginForm() {
     if (isSubmitting) return;
     setIsSubmitting(true);
 
-    try {
-      const response = await login(data);
+    const response = await login(data);
 
-      if (!response) {
-        startTransition(() =>
-          setLoginError("Unexpected error, please try again.")
-        );
-      } else if (response.error) {
-        startTransition(() => setLoginError(response.error));
-      }
-      /* No success condition needed. The server already issued a redirect,
-         so the response never reaches this point */
-    } catch (e) {
-      if (e instanceof Error) {
-        startTransition(() => setLoginError(e.message));
-      }
-    } finally {
+    if (response.ok) {
+      /*  
+      No success condition needed. The server already issued a redirect,
+      so the response never reaches this point.
+      */
+      setLoginError("");
       setIsSubmitting(false);
+      return;
+    } else {
+      setLoginError(response.message);
+      setIsSubmitting(false);
+      return;
     }
   }
 

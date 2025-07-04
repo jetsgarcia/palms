@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
-import { fetchFirstLogin } from "./actions/fetchFirstLogin";
+import { fetchFirstLogin } from "./actions/auth";
 
 const unprotectedRoutes = ["/login", "/", "/change-password"];
 

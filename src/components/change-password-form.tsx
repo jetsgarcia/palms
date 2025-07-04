@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { signOut, useSession } from "next-auth/react";
-import { changePassword } from "@/actions/changePassword";
+import { changePassword } from "@/actions/auth";
 import {
   Card,
   CardDescription,
