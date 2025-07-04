@@ -12,7 +12,7 @@ export async function createModule(
 ): Promise<CreateModuleResponse> {
   const parsed = moduleFormSchema.safeParse(input);
   if (!parsed.success) {
-    return { ok: false, message: "Invalid input." };
+    return { ok: false, message: "Invalid input" };
   }
 
   const { number, name, afosCode } = parsed.data;
@@ -40,7 +40,7 @@ export async function updateModule(
 
   const parsed = updateModuleSchema.safeParse(input);
   if (!parsed.success) {
-    return { ok: false, message: "Invalid input." };
+    return { ok: false, message: "Invalid input" };
   }
 
   const { id, number, name, afosCode } = parsed.data;

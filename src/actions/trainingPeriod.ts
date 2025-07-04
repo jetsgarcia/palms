@@ -17,7 +17,7 @@ export async function createTrainingPeriod(
 ): Promise<CreateTrainingPeriodResponse> {
   const parsed = trainingPeriodFormSchema.safeParse(input);
   if (!parsed.success) {
-    return { ok: false, message: "Invalid input." };
+    return { ok: false, message: "Invalid input" };
   }
 
   const { name, startDate, endDate, weeks } = parsed.data;

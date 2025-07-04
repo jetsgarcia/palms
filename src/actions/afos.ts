@@ -15,7 +15,7 @@ type DeleteAFOSResponse = { ok: true } | { ok: false; message: string };
 export async function createAFOS(input: unknown): Promise<CreateAFOSResponse> {
   const parsed = AFOSFormSchema.safeParse(input);
   if (!parsed.success) {
-    return { ok: false, message: "Invalid input." };
+    return { ok: false, message: "Invalid input" };
   }
 
   const { name, code, level, trainingPeriodId } = parsed.data;
@@ -49,7 +49,7 @@ export async function readAFOS(): Promise<ReadAFOSResponse> {
 export async function updateAFOS(input: unknown): Promise<UpdateAFOSResponse> {
   const parsed = AFOSFormSchema.safeParse(input);
   if (!parsed.success) {
-    return { ok: false, message: "Invalid input." };
+    return { ok: false, message: "Invalid input" };
   }
 
   const { name, code, level, trainingPeriodId } = parsed.data;
@@ -73,7 +73,7 @@ export async function updateAFOS(input: unknown): Promise<UpdateAFOSResponse> {
 
 export async function deleteAFOS(code: string): Promise<DeleteAFOSResponse> {
   if (!code) {
-    return { ok: false, message: "Code is required." };
+    return { ok: false, message: "Code is required" };
   }
 
   try {
