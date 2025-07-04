@@ -1,19 +1,21 @@
 "use server";
 
+import z from "zod";
 import { prisma } from "@/lib/prisma";
+import { moduleFormSchema } from "@/schemas/moduleForm";
+import { handlePrismaError } from "@/lib/handlePrismaError";
 
 type CreateModuleResponse = { ok: true } | { ok: false; message: string };
 
-interface CreateModule {
-  number: number;
-  name: string;
-  afosCode: string;
-}
-
 export async function createModule(
-  raw: CreateModule
+  input: unknown
 ): Promise<CreateModuleResponse> {
-  const { number, name, afosCode } = raw;
+  const parsed = moduleFormSchema.safeParse(input);
+  if (!parsed.success) {
+    return { ok: false, message: "Invalid input." };
+  }
+
+  const { number, name, afosCode } = parsed.data;
 
   try {
     await prisma.modules.create({
@@ -25,24 +27,23 @@ export async function createModule(
     });
     return { ok: true };
   } catch (error) {
-    console.error("createModule:", error);
-    return { ok: false, message: "Failed to create module." };
+    return handlePrismaError(error, "createModule", "add module");
   }
 }
 
 type UpdateModuleResponse = { ok: true } | { ok: false; message: string };
 
-interface UpdateModule {
-  id: number;
-  number: number;
-  name: string;
-  afosCode: string;
-}
-
 export async function updateModule(
-  raw: UpdateModule
+  input: unknown
 ): Promise<UpdateModuleResponse> {
-  const { id, number, name, afosCode } = raw;
+  const updateModuleSchema = moduleFormSchema.extend({ id: z.number() });
+
+  const parsed = updateModuleSchema.safeParse(input);
+  if (!parsed.success) {
+    return { ok: false, message: "Invalid input." };
+  }
+
+  const { id, number, name, afosCode } = parsed.data;
 
   try {
     await prisma.modules.update({
@@ -55,7 +56,6 @@ export async function updateModule(
     });
     return { ok: true };
   } catch (error) {
-    console.error("updateModule:", error);
-    return { ok: false, message: "Failed to update module." };
+    return handlePrismaError(error, "updateModule", "edit module");
   }
 }
