@@ -15,13 +15,13 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { sendOTP } from "@/actions/sendOtp";
+import { sendOTP } from "@/actions/otp";
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { verifyOTP } from "@/actions/verifyOtp";
+import { verifyOTP } from "@/actions/otp";
 import ChangePasswordForm from "./change-password-form";
 
 interface ChangePasswordWithOTPFormProps {
