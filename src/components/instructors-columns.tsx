@@ -7,7 +7,7 @@ export type Instructors = {
   id: string;
   name: string;
   email: string;
-  assignedSubject: string;
+  assignedSubject?: string;
 };
 
 export const instructorsColumns: ColumnDef<Instructors>[] = [

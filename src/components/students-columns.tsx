@@ -5,14 +5,14 @@ import UserManagementMoreActionsButton from "./user-management-more-actions-butt
 
 export type Student = {
   id: string;
-  serialNumber: string;
+  serialNumber?: string;
   name: string;
   email: string;
-  trainingPeriod: number;
-  trainingYear: number;
-  rank: string;
-  afos: string;
-  course: string | null;
+  trainingPeriod?: number;
+  trainingYear?: number;
+  rank?: string;
+  afos?: string;
+  course?: string | null;
 };
 
 export const studentsColumns: ColumnDef<Student>[] = [

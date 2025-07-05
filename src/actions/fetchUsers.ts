@@ -7,7 +7,12 @@ type Response = { ok: true; data: users[] } | { ok: false; message: string };
 
 export async function fetchUsers(): Promise<Response> {
   try {
-    const users = await prisma.users.findMany();
+    const users = await prisma.users.findMany({
+      include: {
+        student: true,
+        subjects: true,
+      },
+    });
     return { ok: true, data: users };
   } catch (error) {
     console.error("fetchUsers:", error);

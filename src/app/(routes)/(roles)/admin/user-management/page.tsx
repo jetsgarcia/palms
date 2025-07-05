@@ -13,7 +13,6 @@ import { instructorsColumns } from "@/components/instructors-columns";
 import { adminsColumns } from "@/components/admins-columns";
 import { AdminsDataTable } from "@/components/admins-data-table";
 import { fetchUsers } from "@/actions/fetchUsers";
-import { StudentType } from "@/types/student";
 import {
   Dialog,
   DialogContent,
@@ -24,12 +23,10 @@ import {
 } from "@/components/ui/dialog";
 import Loader from "@/components/loader";
 import ErrorMessage from "@/components/errorMessage";
-import { readStudents } from "@/actions/student";
-import { users } from "@prisma/client";
+import { AllUsersType } from "@/types/allUsers";
 
 export default function UserManagementPage() {
-  const [allUsersData, setAllUsersData] = useState<users[]>([]);
-  const [studentsData, setStudentsData] = useState<StudentType[]>([]);
+  const [allUsersData, setAllUsersData] = useState<AllUsersType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [active, setActive] = useState("all");
@@ -37,32 +34,17 @@ export default function UserManagementPage() {
 
   useEffect(() => {
     async function loadData() {
-      setLoading(true);
-      setError(null);
       try {
-        const [usersResult, studentsResult] = await Promise.all([
-          fetchUsers(),
-          readStudents(),
-        ]);
+        const response = await fetchUsers();
 
-        if (!usersResult.ok) {
-          setError(usersResult.message || "Failed to fetch users");
-          setAllUsersData([]);
-          setStudentsData([]);
-          return;
+        if (response.ok) {
+          setAllUsersData(response.data);
+        } else {
+          setError(response.message);
         }
-        if (!studentsResult.ok) {
-          setError(studentsResult.message || "Failed to fetch students");
-          setAllUsersData(usersResult.data || []);
-          setStudentsData([]);
-          return;
-        }
-
-        setAllUsersData(usersResult.data || []);
-        setStudentsData(studentsResult.data || []);
       } catch (error) {
         console.error("Error fetching data:", error);
-        setError("An unexpected error occurred while fetching data.");
+        setError("An unexpected error occurred while getting data.");
       } finally {
         setLoading(false);
       }
@@ -77,6 +59,7 @@ export default function UserManagementPage() {
         <ErrorMessage error={error} />
       ) : (
         <>
+          {/* Header */}
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <Button
@@ -181,6 +164,7 @@ export default function UserManagementPage() {
             )}
           </div>
 
+          {/* Data Table */}
           {loading ? (
             <Loader />
           ) : (
@@ -199,21 +183,23 @@ export default function UserManagementPage() {
               {active === "students" && (
                 <StudentsDataTable
                   columns={studentsColumns}
-                  data={studentsData.map((user) => ({
-                    id: user.id,
-                    serialNumber: user.student.serialNumber,
-                    name:
-                      user.firstName +
-                      " " +
-                      (user.middleInitial ? user.middleInitial + " " : "") +
-                      user.lastName,
-                    email: user.email,
-                    trainingPeriod: user.student.trainingPeriod,
-                    trainingYear: user.student.trainingYear,
-                    rank: user.student.rank,
-                    afos: user.student.afos,
-                    course: user.student.course,
-                  }))}
+                  data={allUsersData
+                    .filter((user) => user.role === "STUDENT" && user.student)
+                    .map((user) => ({
+                      id: user.id,
+                      serialNumber: user.student?.serialNumber,
+                      name:
+                        user.firstName +
+                        " " +
+                        (user.middleInitial ? user.middleInitial + " " : "") +
+                        user.lastName,
+                      email: user.email,
+                      trainingPeriod: user.student?.trainingPeriod,
+                      trainingYear: user.student?.trainingYear,
+                      rank: user.student?.rank,
+                      afos: user.student?.afos,
+                      course: user.student?.course,
+                    }))}
                 />
               )}
               {active === "instructors" && (
@@ -225,7 +211,10 @@ export default function UserManagementPage() {
                       id: user.id,
                       name: user.firstName + " " + user.lastName,
                       email: user.email,
-                      assignedSubject: "",
+                      assignedSubject:
+                        user.subjects
+                          ?.map((subject) => subject.code)
+                          .join(", ") || "None",
                     }))}
                 />
               )}
