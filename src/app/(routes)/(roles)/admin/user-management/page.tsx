@@ -13,7 +13,6 @@ import { instructorsColumns } from "@/components/instructors-columns";
 import { adminsColumns } from "@/components/admins-columns";
 import { AdminsDataTable } from "@/components/admins-data-table";
 import { fetchUsers } from "@/actions/fetchUsers";
-import { UserType } from "@/types/user";
 import { StudentType } from "@/types/student";
 import {
   Dialog,
@@ -26,9 +25,10 @@ import {
 import Loader from "@/components/loader";
 import ErrorMessage from "@/components/errorMessage";
 import { readStudents } from "@/actions/student";
+import { users } from "@prisma/client";
 
 export default function UserManagementPage() {
-  const [allUsersData, setAllUsersData] = useState<UserType[]>([]);
+  const [allUsersData, setAllUsersData] = useState<users[]>([]);
   const [studentsData, setStudentsData] = useState<StudentType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

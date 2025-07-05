@@ -1,9 +1,9 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { UserType } from "@/types/user";
+import { users } from "@prisma/client";
 
-type Response = { ok: true; data: UserType[] } | { ok: false; message: string };
+type Response = { ok: true; data: users[] } | { ok: false; message: string };
 
 export async function fetchUsers(): Promise<Response> {
   try {
