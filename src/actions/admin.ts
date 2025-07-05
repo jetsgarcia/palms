@@ -7,11 +7,11 @@ import { prisma } from "@/lib/prisma";
 import { generatePassword } from "@/lib/generatePassword";
 import { handlePrismaError } from "@/lib/handlePrismaError";
 
-type RegisterAdminResponse = { ok: true } | { ok: false; message: string };
+type CreateAdminResponse = { ok: true } | { ok: false; message: string };
 
 export async function createAdmin(
   input: unknown
-): Promise<RegisterAdminResponse> {
+): Promise<CreateAdminResponse> {
   const parsed = adminRegisterFormSchema.safeParse(input);
   if (!parsed.success) {
     return { ok: false, message: "Invalid input" };
