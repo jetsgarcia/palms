@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { UserPlus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { adminRegisterFormSchema } from "@/schemas/adminRegisterForm";
-import { registerAdmin } from "@/actions/registerAdmin";
+import { createAdmin } from "@/actions/admin";
 import { toast } from "sonner";
 
 export default function RegisterAdminPage() {
@@ -36,7 +36,7 @@ export default function RegisterAdminPage() {
 
   async function onSubmit(values: z.infer<typeof adminRegisterFormSchema>) {
     try {
-      const response = await registerAdmin(values);
+      const response = await createAdmin(values);
 
       if (response.ok) {
         toast.success("Admin registered successfully");
