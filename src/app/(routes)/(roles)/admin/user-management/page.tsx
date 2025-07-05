@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/dialog";
 import Loader from "@/components/loader";
 import ErrorMessage from "@/components/errorMessage";
-import { fetchStudents } from "@/actions/fetchStudents";
+import { readStudents } from "@/actions/student";
 
 export default function UserManagementPage() {
   const [allUsersData, setAllUsersData] = useState<UserType[]>([]);
@@ -42,7 +42,7 @@ export default function UserManagementPage() {
       try {
         const [usersResult, studentsResult] = await Promise.all([
           fetchUsers(),
-          fetchStudents(),
+          readStudents(),
         ]);
 
         if (!usersResult.ok) {

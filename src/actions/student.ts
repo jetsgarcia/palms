@@ -1,13 +1,14 @@
 "use server";
 
+import { handlePrismaError } from "@/lib/handlePrismaError";
 import { prisma } from "@/lib/prisma";
 import { StudentType } from "@/types/student";
 
-type Response =
+type ReadStudentsResponse =
   | { ok: true; data: StudentType[] }
   | { ok: false; message: string };
 
-export async function fetchStudents(): Promise<Response> {
+export async function readStudents(): Promise<ReadStudentsResponse> {
   try {
     const students = await prisma.users.findMany({
       where: {
@@ -27,7 +28,6 @@ export async function fetchStudents(): Promise<Response> {
 
     return { ok: true, data: filteredStudents };
   } catch (error) {
-    console.error("fetchStudents:", error);
-    return { ok: false, message: "Failed to fetch students list." };
+    return handlePrismaError(error, "readStudents", "get students");
   }
 }
