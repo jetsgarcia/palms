@@ -64,7 +64,7 @@ export async function createAdmin(
     if (!emailResponse.ok) {
       const errorText = await emailResponse.text();
       console.error("Failed to send password email:", errorText);
-      return { ok: false, message: "Failed to send password email" };
+      return { ok: false, message: "Failed to send email containing password" };
     }
 
     return { ok: true };
