@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { UserPlus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { instructorRegisterFormSchema } from "@/schemas/instructorRegisterForm";
-import { registerInstructor } from "@/actions/registerInstructor";
+import { createInstructor } from "@/actions/instructor";
 import { toast } from "sonner";
 import { capitalizeWords } from "@/lib/utils";
 
@@ -39,7 +39,7 @@ export default function RegisterInstructorPage() {
     values: z.infer<typeof instructorRegisterFormSchema>
   ) {
     try {
-      const response = await registerInstructor(values);
+      const response = await createInstructor(values);
 
       if (response.ok) {
         toast.success("Instructor registered successfully");
