@@ -4,11 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { readTrainingPeriods } from "@/actions/trainingPeriod";
-import { TrainingPeriodType } from "@/types/trainingPeriod";
 import TrainingPeriod from "@/components/training-period";
 import { useRouter } from "next/navigation";
 import Loader from "@/components/loader";
 import ErrorMessage from "@/components/errorMessage";
+import { training_periods } from "@prisma/client";
 
 export default function TrainingPeriodPage() {
   const router = useRouter();
@@ -16,13 +16,13 @@ export default function TrainingPeriodPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [scheduledTrainingPeriods, setScheduledTrainingPeriods] = useState<
-    TrainingPeriodType[]
+    training_periods[]
   >([]);
   const [inProgressTrainingPeriods, setInProgressTrainingPeriods] = useState<
-    TrainingPeriodType[]
+    training_periods[]
   >([]);
   const [completedTrainingPeriods, setCompletedTrainingPeriods] = useState<
-    TrainingPeriodType[]
+    training_periods[]
   >([]);
 
   useEffect(() => {
@@ -33,14 +33,14 @@ export default function TrainingPeriodPage() {
         if (response.ok) {
           const now = new Date();
 
-          const scheduled: TrainingPeriodType[] = response.data.filter(
-            (tp: TrainingPeriodType) => tp.startDate > now
+          const scheduled: training_periods[] = response.data.filter(
+            (tp: training_periods) => tp.startDate > now
           );
-          const inProgress: TrainingPeriodType[] = response.data.filter(
-            (tp: TrainingPeriodType) => tp.startDate <= now && tp.endDate >= now
+          const inProgress: training_periods[] = response.data.filter(
+            (tp: training_periods) => tp.startDate <= now && tp.endDate >= now
           );
-          const completed: TrainingPeriodType[] = response.data.filter(
-            (tp: TrainingPeriodType) => tp.endDate < now
+          const completed: training_periods[] = response.data.filter(
+            (tp: training_periods) => tp.endDate < now
           );
 
           setScheduledTrainingPeriods(scheduled);

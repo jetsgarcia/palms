@@ -3,11 +3,11 @@
 import { prisma } from "@/lib/prisma";
 import { handlePrismaError } from "@/lib/handlePrismaError";
 import { AFOSFormSchema } from "@/schemas/AFOSForm";
-import { AFOSType } from "@/types/afos";
+import { afos } from "@prisma/client";
 
 type CreateAFOSResponse = { ok: true } | { ok: false; message: string };
 type ReadAFOSResponse =
-  | { ok: true; data: AFOSType[] }
+  | { ok: true; data: afos[] }
   | { ok: false; message: string };
 type UpdateAFOSResponse = { ok: true } | { ok: false; message: string };
 type DeleteAFOSResponse = { ok: true } | { ok: false; message: string };

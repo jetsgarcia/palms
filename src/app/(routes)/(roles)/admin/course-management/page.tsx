@@ -16,9 +16,9 @@ import Loader from "@/components/loader";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import AFOSFormDialogContent from "@/components/afos-form-dialog-content";
 import { Button } from "@/components/ui/button";
-import { TrainingPeriodType } from "@/types/trainingPeriod";
 import { readTrainingPeriods } from "@/actions/trainingPeriod";
 import ErrorMessage from "@/components/errorMessage";
+import { training_periods } from "@prisma/client";
 
 export default function CourseManagementPage() {
   const [AFOS, setAFOS] = useState<afos[]>([]);
@@ -26,8 +26,8 @@ export default function CourseManagementPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedTrainingPeriod, setSelectedTrainingPeriod] =
-    useState<TrainingPeriodType>();
-  const [trainingPeriods, setTrainingPeriods] = useState<TrainingPeriodType[]>(
+    useState<training_periods>();
+  const [trainingPeriods, setTrainingPeriods] = useState<training_periods[]>(
     []
   );
 
@@ -48,8 +48,8 @@ export default function CourseManagementPage() {
 
   useEffect(() => {
     async function loadTrainingPeriods(
-      setSelectedTrainingPeriod: (tp: TrainingPeriodType) => void,
-      setTrainingPeriods: (tp: TrainingPeriodType[]) => void,
+      setSelectedTrainingPeriod: (tp: training_periods) => void,
+      setTrainingPeriods: (tp: training_periods[]) => void,
       setError: (err: string | null) => void
     ) {
       try {
@@ -59,9 +59,9 @@ export default function CourseManagementPage() {
           const now = new Date();
 
           const activeOrUpcoming = response.data
-            .filter((tp: TrainingPeriodType) => new Date(tp.endDate) >= now)
+            .filter((tp: training_periods) => new Date(tp.endDate) >= now)
             .sort(
-              (a: TrainingPeriodType, b: TrainingPeriodType) =>
+              (a: training_periods, b: training_periods) =>
                 new Date(a.startDate).getTime() -
                 new Date(b.startDate).getTime()
             );
