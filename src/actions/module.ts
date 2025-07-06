@@ -59,3 +59,19 @@ export async function updateModule(
     return handlePrismaError(error, "updateModule", "edit module");
   }
 }
+
+type DeleteModuleResponse = { ok: true } | { ok: false; message: string };
+
+export async function deleteModule(id: number): Promise<DeleteModuleResponse> {
+  if (id === null || id === undefined) {
+    return { ok: false, message: "Module ID is required" };
+  }
+  try {
+    await prisma.modules.delete({
+      where: { id },
+    });
+    return { ok: true };
+  } catch (error) {
+    return handlePrismaError(error, "deleteModule", "delete module");
+  }
+}

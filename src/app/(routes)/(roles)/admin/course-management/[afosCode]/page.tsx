@@ -37,6 +37,8 @@ import { fetchAFOSWithModulesAndSubjects } from "@/actions/fetchAfosWithModulesA
 import { AFOSDetailsModuleAndSubjectType } from "@/types/AFOSDetailsModuleAndSubjectType";
 import Loader from "@/components/loader";
 import ErrorMessage from "@/components/errorMessage";
+import { deleteModule } from "@/actions/module";
+import { toast } from "sonner";
 
 export default function ModulesAndSubjectsPage({
   params,
@@ -233,9 +235,31 @@ export default function ModulesAndSubjectsPage({
                                       Cancel
                                     </AlertDialogCancel>
                                     <AlertDialogAction
-                                      onClick={() =>
-                                        console.log("Delete module")
-                                      } // TODO: Implement delete module action
+                                      onClick={() => {
+                                        async function deleteCurrentModule() {
+                                          try {
+                                            const response = await deleteModule(
+                                              module.id
+                                            );
+
+                                            if (response.ok) {
+                                              toast.success(
+                                                `${module.name} deleted successfully`
+                                              );
+                                            } else {
+                                              toast.error(response.message);
+                                            }
+                                          } catch (error) {
+                                            console.error(error);
+                                            toast.error(
+                                              "Failed to delete module"
+                                            );
+                                          } finally {
+                                            getAllData(afosCode);
+                                          }
+                                        }
+                                        return deleteCurrentModule();
+                                      }}
                                     >
                                       Delete
                                     </AlertDialogAction>
