@@ -70,6 +70,8 @@ export default function CourseManagementPage() {
             setSelectedTrainingPeriod(activeOrUpcoming[0]);
           }
           setTrainingPeriods(activeOrUpcoming);
+        } else {
+          setError(response.message);
         }
       } catch (error) {
         console.error(error);
