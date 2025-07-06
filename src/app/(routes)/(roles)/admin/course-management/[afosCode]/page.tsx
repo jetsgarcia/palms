@@ -51,6 +51,7 @@ export default function ModulesAndSubjectsPage({
     new Set()
   );
   const [isAddModuleOpen, setIsAddModuleOpen] = useState(false);
+  const [isEditModuleOpen, setIsEditModuleOpen] = useState<number | null>(null);
   const [isAddSubjectOpen, setIsAddSubjectOpen] = useState<number | null>(null);
 
   async function getAllData(afosCode: string) {
@@ -123,7 +124,7 @@ export default function ModulesAndSubjectsPage({
                         mode="add"
                         moduleNumber={AFOS.modules.length + 1}
                         afosCode={afosCode}
-                        setIsAddModuleOpen={setIsAddModuleOpen}
+                        setModuleOpen={setIsAddModuleOpen}
                         getAllData={() => getAllData(afosCode)}
                       />
                     </DialogContent>
@@ -133,233 +134,259 @@ export default function ModulesAndSubjectsPage({
               {/* Modules List */}
               <div className="space-y-4">
                 {AFOS &&
-                  AFOS.modules.map((module) => {
-                    const isExpanded = expandedModules.has(module.id);
-                    const moduleSubjects = module.subjects;
-                    return (
-                      <div
-                        key={module.id}
-                        className="border rounded-lg bg-background shadow-sm"
-                      >
-                        <div className="flex items-center justify-between px-4 py-3">
-                          <div className="flex items-center gap-3 flex-1">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => toggleModule(module.id)}
-                              className="p-1 h-8 w-8"
-                            >
-                              {isExpanded ? (
-                                <ChevronDown className="h-4 w-4" />
-                              ) : (
-                                <ChevronRight className="h-4 w-4" />
-                              )}
-                            </Button>
-                            <div className="flex-1">
-                              <span className="text-lg font-semibold">
-                                {module.name}
-                              </span>
-                              <div className="flex items-center gap-4 mt-2">
-                                <Badge variant="outline">
-                                  {moduleSubjects.length} subject
-                                  {moduleSubjects.length !== 1 ? "s" : ""}
-                                </Badge>
+                  AFOS.modules
+                    .slice()
+                    .sort((a, b) => a.number - b.number)
+                    .map((module) => {
+                      const isExpanded = expandedModules.has(module.id);
+                      const moduleSubjects = module.subjects;
+                      return (
+                        <div
+                          key={module.id}
+                          className="border rounded-lg bg-background shadow-sm"
+                        >
+                          <div className="flex items-center justify-between px-4 py-3">
+                            <div className="flex items-center gap-3 flex-1">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => toggleModule(module.id)}
+                                className="p-1 h-8 w-8"
+                              >
+                                {isExpanded ? (
+                                  <ChevronDown className="h-4 w-4" />
+                                ) : (
+                                  <ChevronRight className="h-4 w-4" />
+                                )}
+                              </Button>
+                              <div className="flex-1">
+                                <span className="text-lg font-semibold">
+                                  {module.name}
+                                </span>
+                                <div className="flex items-center gap-4 mt-2">
+                                  <Badge variant="outline">
+                                    {moduleSubjects.length} subject
+                                    {moduleSubjects.length !== 1 ? "s" : ""}
+                                  </Badge>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Dialog>
-                              <DialogTrigger asChild>
-                                <Button variant="ghost" size="sm">
-                                  <Edit className="h-4 w-4" />
-                                </Button>
-                              </DialogTrigger>
-                              <DialogContent>
-                                <DialogHeader>
-                                  <DialogTitle>Edit Module</DialogTitle>
-                                  <DialogDescription>
-                                    Update the details of the module below.
-                                  </DialogDescription>
-                                </DialogHeader>
-                                <ModuleForm
-                                  mode="edit"
-                                  moduleNumber={AFOS.modules.length}
-                                  afosCode={afosCode}
-                                  initialData={module}
-                                  id={module.id}
-                                  setIsAddModuleOpen={setIsAddModuleOpen}
-                                  getAllData={() => getAllData(afosCode)}
-                                />
-                              </DialogContent>
-                            </Dialog>
-                            <AlertDialog>
-                              <AlertDialogTrigger asChild>
-                                <Button variant="ghost" size="sm">
-                                  <Trash2 className="h-4 w-4" />
-                                </Button>
-                              </AlertDialogTrigger>
-                              <AlertDialogContent>
-                                <AlertDialogHeader>
-                                  <AlertDialogTitle>
-                                    Delete Module
-                                  </AlertDialogTitle>
-                                  <AlertDialogDescription>
-                                    Are you sure you want to delete &quot;
-                                    {module.name}
-                                    &quot;? This will also delete all subjects
-                                    within this module. This action cannot be
-                                    undone.
-                                  </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                  <AlertDialogAction
-                                    onClick={() => console.log("Delete module")} // TODO: Implement delete module action
+                            <div className="flex items-center gap-2">
+                              <Dialog
+                                open={isEditModuleOpen === module.id}
+                                onOpenChange={(open) =>
+                                  setIsEditModuleOpen(open ? module.id : null)
+                                }
+                              >
+                                <DialogTrigger asChild>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() =>
+                                      setIsEditModuleOpen(module.id)
+                                    }
                                   >
-                                    Delete
-                                  </AlertDialogAction>
-                                </AlertDialogFooter>
-                              </AlertDialogContent>
-                            </AlertDialog>
-                          </div>
-                        </div>
-                        <SlideDown show={isExpanded}>
-                          <div className="pt-0 px-4 pb-4">
-                            <Separator className="mb-4" />
-                            <div className="space-y-3">
-                              <div className="flex items-center justify-between">
-                                <h4 className="font-medium">Subjects</h4>
-                                <Dialog
-                                  open={isAddSubjectOpen === module.id}
-                                  onOpenChange={(open) =>
-                                    setIsAddSubjectOpen(open ? module.id : null)
-                                  }
-                                >
-                                  <DialogTrigger asChild>
-                                    {/* //TODO: Add subject */}
-                                    <Button variant="outline" size="sm">
-                                      <Plus className="h-4 w-4 mr-2" />
-                                      Add Subject
-                                    </Button>
-                                  </DialogTrigger>
-                                  <DialogContent>
-                                    <DialogHeader>
-                                      <DialogTitle>
-                                        Add Subject to {module.name}
-                                      </DialogTitle>
-                                      <DialogDescription>
-                                        Fill in the details below to add a new
-                                        subject to this module.
-                                      </DialogDescription>
-                                    </DialogHeader>
-                                    <SubjectForm />
-                                  </DialogContent>
-                                </Dialog>
-                              </div>
-                              {moduleSubjects.length === 0 ? (
-                                <div className="text-center py-8 text-muted-foreground">
-                                  <BookOpen className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                                  <p>No subjects added yet</p>
-                                  <p className="text-sm">
-                                    Click &quot;Add Subject&quot; to get started
-                                  </p>
-                                </div>
-                              ) : (
-                                <div className="grid gap-3">
-                                  {moduleSubjects.map((subject) => (
-                                    <div
-                                      key={subject.code}
-                                      className="flex items-center justify-between p-3 border rounded-lg"
+                                    <Edit className="h-4 w-4" />
+                                  </Button>
+                                </DialogTrigger>
+                                <DialogContent>
+                                  <DialogHeader>
+                                    <DialogTitle>Edit Module</DialogTitle>
+                                    <DialogDescription>
+                                      Update the details of the module below.
+                                    </DialogDescription>
+                                  </DialogHeader>
+                                  <ModuleForm
+                                    mode="edit"
+                                    moduleNumber={module.number}
+                                    afosCode={afosCode}
+                                    initialData={module}
+                                    id={module.id}
+                                    setModuleOpen={() =>
+                                      setIsEditModuleOpen(null)
+                                    }
+                                    getAllData={() => getAllData(afosCode)}
+                                  />
+                                </DialogContent>
+                              </Dialog>
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <Button variant="ghost" size="sm">
+                                    <Trash2 className="h-4 w-4" />
+                                  </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle>
+                                      Delete Module
+                                    </AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                      Are you sure you want to delete &quot;
+                                      {module.name}
+                                      &quot;? This will also delete all subjects
+                                      within this module. This action cannot be
+                                      undone.
+                                    </AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                    <AlertDialogCancel>
+                                      Cancel
+                                    </AlertDialogCancel>
+                                    <AlertDialogAction
+                                      onClick={() =>
+                                        console.log("Delete module")
+                                      } // TODO: Implement delete module action
                                     >
-                                      <div className="flex-1 flex">
-                                        <h5 className="font-medium">
-                                          {subject.name}
-                                        </h5>
-                                        <div className="px-2">
-                                          <Separator orientation="vertical" />
-                                        </div>
-                                        <p className="text-gray-500">
-                                          Instructor: {subject.users?.firstName}{" "}
-                                          {subject.users?.middleInitial
-                                            ? `${subject.users.middleInitial}. `
-                                            : ""}
-                                          {subject.users?.lastName}
-                                        </p>
-                                      </div>
-                                      {/* // TODO: Display instructor name */}
-
-                                      <div className="flex items-center gap-2">
-                                        <Dialog>
-                                          <DialogTrigger asChild>
-                                            <Button
-                                              variant="ghost"
-                                              size="sm"
-                                              onClick={
-                                                () =>
-                                                  console.log("Edit subject") // TODO: Implement edit subject action
-                                              }
-                                            >
-                                              <Edit className="h-4 w-4" />
-                                            </Button>
-                                          </DialogTrigger>
-                                          <DialogContent>
-                                            <DialogHeader>
-                                              <DialogTitle>
-                                                Edit Subject
-                                              </DialogTitle>
-                                              <DialogDescription>
-                                                Update the details of the
-                                                subject below.
-                                              </DialogDescription>
-                                            </DialogHeader>
-                                            <SubjectForm
-                                              initialData={subject}
-                                            />
-                                          </DialogContent>
-                                        </Dialog>
-                                        <AlertDialog>
-                                          <AlertDialogTrigger asChild>
-                                            <Button variant="ghost" size="sm">
-                                              <Trash2 className="h-4 w-4" />
-                                            </Button>
-                                          </AlertDialogTrigger>
-                                          <AlertDialogContent>
-                                            <AlertDialogHeader>
-                                              <AlertDialogTitle>
-                                                Delete Subject
-                                              </AlertDialogTitle>
-                                              <AlertDialogDescription>
-                                                Are you sure you want to delete
-                                                &quot;
-                                                {subject.name}&quot;? This
-                                                action cannot be undone.
-                                              </AlertDialogDescription>
-                                            </AlertDialogHeader>
-                                            <AlertDialogFooter>
-                                              <AlertDialogCancel>
-                                                Cancel
-                                              </AlertDialogCancel>
-                                              <AlertDialogAction
-                                                onClick={() =>
-                                                  console.log("Delete subject")
-                                                } // TODO: Implement delete subject action
-                                              >
-                                                Delete
-                                              </AlertDialogAction>
-                                            </AlertDialogFooter>
-                                          </AlertDialogContent>
-                                        </AlertDialog>
-                                      </div>
-                                    </div>
-                                  ))}
-                                </div>
-                              )}
+                                      Delete
+                                    </AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
                             </div>
                           </div>
-                        </SlideDown>
-                      </div>
-                    );
-                  })}
+                          <SlideDown show={isExpanded}>
+                            <div className="pt-0 px-4 pb-4">
+                              <Separator className="mb-4" />
+                              <div className="space-y-3">
+                                <div className="flex items-center justify-between">
+                                  <h4 className="font-medium">Subjects</h4>
+                                  <Dialog
+                                    open={isAddSubjectOpen === module.id}
+                                    onOpenChange={(open) =>
+                                      setIsAddSubjectOpen(
+                                        open ? module.id : null
+                                      )
+                                    }
+                                  >
+                                    <DialogTrigger asChild>
+                                      {/* //TODO: Add subject */}
+                                      <Button variant="outline" size="sm">
+                                        <Plus className="h-4 w-4 mr-2" />
+                                        Add Subject
+                                      </Button>
+                                    </DialogTrigger>
+                                    <DialogContent>
+                                      <DialogHeader>
+                                        <DialogTitle>
+                                          Add Subject to {module.name}
+                                        </DialogTitle>
+                                        <DialogDescription>
+                                          Fill in the details below to add a new
+                                          subject to this module.
+                                        </DialogDescription>
+                                      </DialogHeader>
+                                      <SubjectForm />
+                                    </DialogContent>
+                                  </Dialog>
+                                </div>
+                                {moduleSubjects.length === 0 ? (
+                                  <div className="text-center py-8 text-muted-foreground">
+                                    <BookOpen className="h-12 w-12 mx-auto mb-3 opacity-50" />
+                                    <p>No subjects added yet</p>
+                                    <p className="text-sm">
+                                      Click &quot;Add Subject&quot; to get
+                                      started
+                                    </p>
+                                  </div>
+                                ) : (
+                                  <div className="grid gap-3">
+                                    {moduleSubjects.map((subject) => (
+                                      <div
+                                        key={subject.code}
+                                        className="flex items-center justify-between p-3 border rounded-lg"
+                                      >
+                                        <div className="flex-1 flex">
+                                          <h5 className="font-medium">
+                                            {subject.name}
+                                          </h5>
+                                          <div className="px-2">
+                                            <Separator orientation="vertical" />
+                                          </div>
+                                          <p className="text-gray-500">
+                                            Instructor:{" "}
+                                            {subject.users?.firstName}{" "}
+                                            {subject.users?.middleInitial
+                                              ? `${subject.users.middleInitial}. `
+                                              : ""}
+                                            {subject.users?.lastName}
+                                          </p>
+                                        </div>
+                                        {/* // TODO: Display instructor name */}
+
+                                        <div className="flex items-center gap-2">
+                                          <Dialog>
+                                            <DialogTrigger asChild>
+                                              <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                onClick={
+                                                  () =>
+                                                    console.log("Edit subject") // TODO: Implement edit subject action
+                                                }
+                                              >
+                                                <Edit className="h-4 w-4" />
+                                              </Button>
+                                            </DialogTrigger>
+                                            <DialogContent>
+                                              <DialogHeader>
+                                                <DialogTitle>
+                                                  Edit Subject
+                                                </DialogTitle>
+                                                <DialogDescription>
+                                                  Update the details of the
+                                                  subject below.
+                                                </DialogDescription>
+                                              </DialogHeader>
+                                              <SubjectForm
+                                                initialData={subject}
+                                              />
+                                            </DialogContent>
+                                          </Dialog>
+                                          <AlertDialog>
+                                            <AlertDialogTrigger asChild>
+                                              <Button variant="ghost" size="sm">
+                                                <Trash2 className="h-4 w-4" />
+                                              </Button>
+                                            </AlertDialogTrigger>
+                                            <AlertDialogContent>
+                                              <AlertDialogHeader>
+                                                <AlertDialogTitle>
+                                                  Delete Subject
+                                                </AlertDialogTitle>
+                                                <AlertDialogDescription>
+                                                  Are you sure you want to
+                                                  delete &quot;
+                                                  {subject.name}&quot;? This
+                                                  action cannot be undone.
+                                                </AlertDialogDescription>
+                                              </AlertDialogHeader>
+                                              <AlertDialogFooter>
+                                                <AlertDialogCancel>
+                                                  Cancel
+                                                </AlertDialogCancel>
+                                                <AlertDialogAction
+                                                  onClick={() =>
+                                                    console.log(
+                                                      "Delete subject"
+                                                    )
+                                                  } // TODO: Implement delete subject action
+                                                >
+                                                  Delete
+                                                </AlertDialogAction>
+                                              </AlertDialogFooter>
+                                            </AlertDialogContent>
+                                          </AlertDialog>
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </SlideDown>
+                        </div>
+                      );
+                    })}
               </div>
 
               {AFOS && AFOS.modules.length === 0 && (

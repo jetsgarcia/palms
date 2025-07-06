@@ -23,7 +23,7 @@ interface ModuleFormProps {
   initialData?: {
     name: string;
   };
-  setIsAddModuleOpen: (open: boolean) => void;
+  setModuleOpen: (open: boolean) => void;
   getAllData: () => Promise<void>;
 }
 
@@ -37,7 +37,7 @@ export default function ModuleForm({
   moduleNumber,
   afosCode,
   initialData,
-  setIsAddModuleOpen,
+  setModuleOpen,
   getAllData,
 }: ModuleFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -76,7 +76,7 @@ export default function ModuleForm({
             ? "Module updated successfully"
             : "Module added successfully"
         );
-        setIsAddModuleOpen(false);
+        setModuleOpen(false);
         setIsSubmitting(false);
       } else if (response && !response.ok) {
         toast.error(
