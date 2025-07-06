@@ -107,6 +107,8 @@ export default function AFOSFormDialogContent({
         );
         setOpenDialog(false);
         resetForm();
+      } else if (response && !response.ok) {
+        toast.error(response.message);
       }
     } catch (error) {
       console.error("Error submitting AFOS:", error);
@@ -204,7 +206,7 @@ export default function AFOSFormDialogContent({
 
         <div className="flex items-center justify-end space-x-4">
           <Button type="submit" disabled={isSubmitting}>
-            {mode === "edit" ? "Update" : "Submit"}
+            Submit
           </Button>
         </div>
       </form>
