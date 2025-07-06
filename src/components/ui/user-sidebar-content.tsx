@@ -21,6 +21,7 @@ import {
   LayoutDashboard,
   ListCheck,
 } from "lucide-react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 // Sidebar items for students
@@ -122,10 +123,10 @@ export function UserSidebarContent({ userType }: SidebarLinkItemProps) {
                 {studentRecordsItems.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild>
-                      <a href={item.url} className="text-gray-300">
+                      <Link href={item.url} className="text-gray-300">
                         <item.icon />
                         <span>{item.title}</span>
-                      </a>
+                      </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
@@ -148,10 +149,10 @@ export function UserSidebarContent({ userType }: SidebarLinkItemProps) {
                           : ""
                       )}
                     >
-                      <a href={item.url} className="text-gray-300">
+                      <Link href={item.url} className="text-gray-300">
                         <item.icon />
                         <span>{item.title}</span>
-                      </a>
+                      </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
@@ -171,14 +172,14 @@ export function UserSidebarContent({ userType }: SidebarLinkItemProps) {
                       asChild
                       className={cn(
                         isActive(item.url)
-                          ? "bg-green-900 text-white hover:bg-green-900 hover:text-white"
-                          : ""
+                          ? "bg-green-900 text-white hover:bg-green-900 hover:text-white font-semibold"
+                          : "font-light"
                       )}
                     >
-                      <a href={item.url} className="text-gray-300">
+                      <Link href={item.url} className="text-gray-300">
                         <item.icon />
                         <span>{item.title}</span>
-                      </a>
+                      </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
