@@ -3,7 +3,13 @@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { UserPlus } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { instructorRegisterFormSchema } from "@/schemas/instructorRegisterForm";
+import { createInstructor } from "@/actions/instructor";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
@@ -13,12 +19,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { UserPlus } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { instructorRegisterFormSchema } from "@/schemas/instructorRegisterForm";
-import { createInstructor } from "@/actions/instructor";
-import { toast } from "sonner";
 
 export default function RegisterInstructorPage() {
   const router = useRouter();
@@ -43,6 +43,8 @@ export default function RegisterInstructorPage() {
       if (response.ok) {
         toast.success("Instructor registered successfully");
         router.push("/admin/user-management");
+      } else {
+        toast.error(response.message);
       }
     } catch (error) {
       console.error("Error registering instructor:", error);

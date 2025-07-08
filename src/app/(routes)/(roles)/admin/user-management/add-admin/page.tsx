@@ -41,6 +41,8 @@ export default function RegisterAdminPage() {
       if (response.ok) {
         toast.success("Admin registered successfully");
         router.push("/admin/user-management");
+      } else {
+        toast.error(response.message);
       }
     } catch (error) {
       console.error("Error registering admin:", error);
