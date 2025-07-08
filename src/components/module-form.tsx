@@ -79,11 +79,7 @@ export default function ModuleForm({
         setModuleOpen(false);
         setIsSubmitting(false);
       } else if (response && !response.ok) {
-        toast.error(
-          mode === "edit"
-            ? `Failed to update module: ${response.message}`
-            : `Failed to create module: ${response.message}`
-        );
+        toast.error(mode === "edit" ? response.message : response.message);
         setIsSubmitting(false);
       }
     } catch (error) {
