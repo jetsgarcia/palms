@@ -412,7 +412,7 @@ export default function ModulesAndSubjectsPage({
                       );
                     })}
               </div>
-
+              {/* Empty Placeholder */}
               {AFOS && AFOS.modules.length === 0 && (
                 <div className="grid place-items-center text-muted-foreground h-[calc(100dvh-10rem)]">
                   No module added yet
