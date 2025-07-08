@@ -6,6 +6,8 @@ import { moduleFormSchema } from "@/schemas/moduleForm";
 import { handlePrismaError } from "@/lib/handlePrismaError";
 
 type CreateModuleResponse = { ok: true } | { ok: false; message: string };
+type UpdateModuleResponse = { ok: true } | { ok: false; message: string };
+type DeleteModuleResponse = { ok: true } | { ok: false; message: string };
 
 export async function createModule(
   input: unknown
@@ -30,8 +32,6 @@ export async function createModule(
     return handlePrismaError(error, "createModule", "add module");
   }
 }
-
-type UpdateModuleResponse = { ok: true } | { ok: false; message: string };
 
 export async function updateModule(
   input: unknown
@@ -59,8 +59,6 @@ export async function updateModule(
     return handlePrismaError(error, "updateModule", "edit module");
   }
 }
-
-type DeleteModuleResponse = { ok: true } | { ok: false; message: string };
 
 export async function deleteModule(id: number): Promise<DeleteModuleResponse> {
   if (id === null || id === undefined) {
