@@ -54,7 +54,10 @@ export default function ModulesAndSubjectsPage({
   );
   const [isAddModuleOpen, setIsAddModuleOpen] = useState(false);
   const [isEditModuleOpen, setIsEditModuleOpen] = useState<number | null>(null);
-  const [isAddSubjectOpen, setIsAddSubjectOpen] = useState<number | null>(null);
+  const [isAddSubjectOpen, setIsAddSubjectOpen] = useState(false);
+  const [isEditSubjectOpen, setIsEditSubjectOpen] = useState<string | null>(
+    null
+  );
 
   async function getAllData(afosCode: string) {
     try {
@@ -275,15 +278,10 @@ export default function ModulesAndSubjectsPage({
                                 <div className="flex items-center justify-between">
                                   <h4 className="font-medium">Subjects</h4>
                                   <Dialog
-                                    open={isAddSubjectOpen === module.id}
-                                    onOpenChange={(open) =>
-                                      setIsAddSubjectOpen(
-                                        open ? module.id : null
-                                      )
-                                    }
+                                    open={isAddSubjectOpen}
+                                    onOpenChange={setIsAddSubjectOpen}
                                   >
                                     <DialogTrigger asChild>
-                                      {/* //TODO: Add subject */}
                                       <Button variant="outline" size="sm">
                                         <Plus className="h-4 w-4 mr-2" />
                                         Add Subject
@@ -299,7 +297,14 @@ export default function ModulesAndSubjectsPage({
                                           subject to this module.
                                         </DialogDescription>
                                       </DialogHeader>
-                                      <SubjectForm />
+                                      <SubjectForm
+                                        moduleId={module.id}
+                                        mode="add"
+                                        setSubjectOpen={() =>
+                                          setIsAddSubjectOpen(false)
+                                        }
+                                        getAllData={() => getAllData(afosCode)}
+                                      />
                                     </DialogContent>
                                   </Dialog>
                                 </div>
@@ -335,17 +340,26 @@ export default function ModulesAndSubjectsPage({
                                             {subject.users?.lastName}
                                           </p>
                                         </div>
-                                        {/* // TODO: Display instructor name */}
 
                                         <div className="flex items-center gap-2">
-                                          <Dialog>
+                                          <Dialog
+                                            open={
+                                              isEditSubjectOpen === subject.code
+                                            }
+                                            onOpenChange={(open) =>
+                                              setIsEditSubjectOpen(
+                                                open ? subject.code : null
+                                              )
+                                            }
+                                          >
                                             <DialogTrigger asChild>
                                               <Button
                                                 variant="ghost"
                                                 size="sm"
-                                                onClick={
-                                                  () =>
-                                                    console.log("Edit subject") // TODO: Implement edit subject action
+                                                onClick={() =>
+                                                  setIsEditSubjectOpen(
+                                                    subject.code
+                                                  )
                                                 }
                                               >
                                                 <Edit className="h-4 w-4" />
@@ -363,6 +377,14 @@ export default function ModulesAndSubjectsPage({
                                               </DialogHeader>
                                               <SubjectForm
                                                 initialData={subject}
+                                                moduleId={subject.moduleId}
+                                                mode="edit"
+                                                setSubjectOpen={() =>
+                                                  setIsEditSubjectOpen(null)
+                                                }
+                                                getAllData={() =>
+                                                  getAllData(afosCode)
+                                                }
                                               />
                                             </DialogContent>
                                           </Dialog>

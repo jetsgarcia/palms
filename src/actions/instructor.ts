@@ -1,13 +1,16 @@
 "use server";
 
 import bcrypt from "bcryptjs";
-import { Role } from "@prisma/client";
+import { Role, users } from "@prisma/client";
 import { instructorRegisterFormSchema } from "@/schemas/instructorRegisterForm";
 import { prisma } from "@/lib/prisma";
 import { generatePassword } from "@/lib/generatePassword";
 import { handlePrismaError } from "@/lib/handlePrismaError";
 
 type CreateInstructorResponse = { ok: true } | { ok: false; message: string };
+type ReadInstructorResponse =
+  | { ok: true; data: users[] }
+  | { ok: false; message: string };
 
 export async function createInstructor(
   input: unknown
@@ -74,5 +77,19 @@ export async function createInstructor(
       "registerInstructor",
       "register instructor"
     );
+  }
+}
+
+export async function readInstructor(): Promise<ReadInstructorResponse> {
+  try {
+    const instructors = await prisma.users.findMany({
+      where: {
+        role: Role.INSTRUCTOR,
+      },
+    });
+
+    return { ok: true, data: instructors };
+  } catch (error) {
+    return handlePrismaError(error, "readInstructor", "read instructor");
   }
 }
