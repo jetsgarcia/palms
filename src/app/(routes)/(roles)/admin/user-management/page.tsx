@@ -121,7 +121,8 @@ export default function UserManagementPage() {
                             }
                           }}
                         >
-                          {label}
+                          {/* Make label singular */}
+                          {label.slice(0, -1)}
                         </Button>
                       ))}
                   </div>
