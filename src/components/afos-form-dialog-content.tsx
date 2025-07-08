@@ -12,7 +12,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { capitalizeWords, cn } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { updateAFOS } from "@/actions/afos";
 
 interface AFOSFormDialogContentProps {
@@ -138,15 +138,10 @@ export default function AFOSFormDialogContent({
             <Input
               value={name}
               onChange={(e) => {
-                const value = capitalizeWords(e.target.value);
-                setName(value);
+                setName(e.target.value);
                 if (errors.name) {
                   setErrors((prev) => ({ ...prev, name: undefined }));
                 }
-              }}
-              onBlur={(e) => {
-                const formatted = capitalizeWords(e.target.value);
-                setName(formatted);
               }}
             />
             {errors.name && (

@@ -19,7 +19,6 @@ import { useRouter } from "next/navigation";
 import { instructorRegisterFormSchema } from "@/schemas/instructorRegisterForm";
 import { createInstructor } from "@/actions/instructor";
 import { toast } from "sonner";
-import { capitalizeWords } from "@/lib/utils";
 
 export default function RegisterInstructorPage() {
   const router = useRouter();
@@ -74,15 +73,7 @@ export default function RegisterInstructorPage() {
                     Last name <span className="text-destructive">*</span>
                   </FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Reyes"
-                      {...field}
-                      onChange={(e) => {
-                        const value = capitalizeWords(e.target.value);
-                        field.onChange(value);
-                      }}
-                      value={capitalizeWords(field.value || "")}
-                    />
+                    <Input placeholder="Reyes" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -97,15 +88,7 @@ export default function RegisterInstructorPage() {
                     First name <span className="text-destructive">*</span>
                   </FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Juan"
-                      {...field}
-                      onChange={(e) => {
-                        const value = capitalizeWords(e.target.value);
-                        field.onChange(value);
-                      }}
-                      value={capitalizeWords(field.value || "")}
-                    />
+                    <Input placeholder="Juan" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

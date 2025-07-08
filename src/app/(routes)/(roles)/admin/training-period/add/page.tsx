@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/form";
 import { toast } from "sonner";
 import { createTrainingPeriod } from "@/actions/trainingPeriod";
-import { capitalizeWords, cn } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 export default function AddTrainingPeriodPage() {
   const router = useRouter();
@@ -81,19 +81,7 @@ export default function AddTrainingPeriodPage() {
                   <span className="text-destructive">*</span>
                 </FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="Training Period 1 | 2020"
-                    {...field}
-                    onChange={(e) => {
-                      const value = capitalizeWords(e.target.value);
-                      field.onChange(value);
-                    }}
-                    value={capitalizeWords(field.value || "")}
-                    onBlur={(e) => {
-                      const formatted = capitalizeWords(e.target.value);
-                      field.onChange(formatted);
-                    }}
-                  />
+                  <Input placeholder="Training Period 1 | 2020" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

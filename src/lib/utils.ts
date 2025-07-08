@@ -5,8 +5,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function capitalizeWords(str: string): string {
-  return str
-    .replace(/\b\w/g, (char) => char.toUpperCase())
-    .replace(/\B\w/g, (char) => char.toLowerCase());
+export function makeUpperCase(str: string): string {
+  return str.toUpperCase();
 }

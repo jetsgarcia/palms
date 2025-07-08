@@ -71,20 +71,7 @@ export default function RegisterAdminPage() {
                     Last name <span className="text-destructive">*</span>
                   </FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Reyes"
-                      {...field}
-                      onChange={(e) => {
-                        // Capitalize every first letter in word
-                        const value = e.target.value
-                          .replace(/\b\w/g, (char) => char.toUpperCase())
-                          .replace(/\B\w/g, (char) => char.toLowerCase());
-                        field.onChange(value);
-                      }}
-                      value={(field.value || "")
-                        .replace(/\b\w/g, (char) => char.toUpperCase())
-                        .replace(/\B\w/g, (char) => char.toLowerCase())}
-                    />
+                    <Input placeholder="Reyes" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -99,20 +86,7 @@ export default function RegisterAdminPage() {
                     First name <span className="text-destructive">*</span>
                   </FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Juan"
-                      {...field}
-                      onChange={(e) => {
-                        // Capitalize every first letter in word
-                        const value = e.target.value
-                          .replace(/\b\w/g, (char) => char.toUpperCase())
-                          .replace(/\B\w/g, (char) => char.toLowerCase());
-                        field.onChange(value);
-                      }}
-                      value={(field.value || "")
-                        .replace(/\b\w/g, (char) => char.toUpperCase())
-                        .replace(/\B\w/g, (char) => char.toLowerCase())}
-                    />
+                    <Input placeholder="Juan" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

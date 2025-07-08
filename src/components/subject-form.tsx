@@ -20,6 +20,7 @@ import { useEffect, useState } from "react";
 import { readInstructor } from "@/actions/instructor";
 import { users } from "@prisma/client";
 import { CustomSelect } from "./ui/CustomSelect";
+import { makeUpperCase } from "@/lib/utils";
 
 export default function SubjectForm({
   moduleId,
@@ -112,7 +113,14 @@ export default function SubjectForm({
                 Code <span className="text-destructive">*</span>
               </FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input
+                  {...field}
+                  onChange={(e) => {
+                    const value = makeUpperCase(e.target.value);
+                    field.onChange(value);
+                  }}
+                  value={makeUpperCase(field.value || "")}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
