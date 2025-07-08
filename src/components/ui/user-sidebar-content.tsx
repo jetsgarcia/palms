@@ -107,7 +107,9 @@ interface SidebarLinkItemProps {
 export function UserSidebarContent({ userType }: SidebarLinkItemProps) {
   const path = usePathname();
   const isActive = (url: string) => {
-    return path === url;
+    if (url === "#") return false;
+    if (url === "/admin") return path === "/admin";
+    return path === url || (url !== "/" && path.startsWith(url));
   };
 
   return (
