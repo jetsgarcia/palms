@@ -1,15 +1,16 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import UserManagementMoreActionsButton from "./user-management-more-actions-button";
+import UserManagementMoreActionsButton from "../../user-management-more-actions-button";
 
-export type Admin = {
+export type Instructors = {
   id: string;
   name: string;
   email: string;
+  assignedSubject?: string;
 };
 
-export const adminsColumns: ColumnDef<Admin>[] = [
+export const instructorsColumns: ColumnDef<Instructors>[] = [
   {
     accessorKey: "name",
     header: "Name",
@@ -17,6 +18,10 @@ export const adminsColumns: ColumnDef<Admin>[] = [
   {
     accessorKey: "email",
     header: "Email",
+  },
+  {
+    accessorKey: "assignedSubject",
+    header: "Assigned Subject",
   },
   {
     id: "actions",
