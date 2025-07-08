@@ -107,6 +107,21 @@ export const PasswordEmailTemplate: React.FC<
           to reach out to our support team.
         </p>
 
+        {/* Login Link */}
+        <div style={{ textAlign: "center", marginBottom: "24px" }}>
+          <a
+            href={`${process.env.APP_API_BASE_URL}/login`}
+            style={{
+              color: "#093a12",
+              textDecoration: "underline",
+              fontWeight: "500",
+              fontSize: "16px",
+            }}
+          >
+            Click here to log in to PALMS
+          </a>
+        </div>
+
         <div
           style={{
             backgroundColor: "#fffbeb",
