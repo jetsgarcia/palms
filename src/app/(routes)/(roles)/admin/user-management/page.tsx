@@ -3,16 +3,19 @@
 import { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { allUserColumns } from "@/components/all-user-columns";
-import { AllUserDataTable } from "@/components/all-user-data-table";
-import { StudentsDataTable } from "@/components/students-data-table";
-import { studentsColumns } from "@/components/students-columns";
-import { InstructorsDataTable } from "@/components/instructors-data-table";
-import { instructorsColumns } from "@/components/instructors-columns";
-import { adminsColumns } from "@/components/admins-columns";
-import { AdminsDataTable } from "@/components/admins-data-table";
 import { fetchUsers } from "@/actions/fetchUsers";
+import { AllUsersType } from "@/types/allUsers";
+import { Button } from "@/components/ui/button";
+import { allUserColumns } from "@/components/admin/user-management/all-user-columns";
+import { AllUserDataTable } from "@/components/admin/user-management/all-user-data-table";
+import { StudentsDataTable } from "@/components/admin/user-management/students-data-table";
+import { studentsColumns } from "@/components/admin/user-management/students-columns";
+import { InstructorsDataTable } from "@/components/admin/user-management/instructors-data-table";
+import { instructorsColumns } from "@/components/admin/user-management/instructors-columns";
+import { adminsColumns } from "@/components/admin/user-management/admins-columns";
+import { AdminsDataTable } from "@/components/admin/user-management/admins-data-table";
+import Loader from "@/components/loader";
+import ErrorMessage from "@/components/errorMessage";
 import {
   Dialog,
   DialogContent,
@@ -21,15 +24,33 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import Loader from "@/components/loader";
-import ErrorMessage from "@/components/errorMessage";
-import { AllUsersType } from "@/types/allUsers";
+
+const roles = [
+  { key: "all", label: "All", addPath: null },
+  {
+    key: "student",
+    label: "Students",
+    addPath: "/admin/user-management/add-student",
+  },
+  {
+    key: "instructor",
+    label: "Instructors",
+    addPath: "/admin/user-management/add-instructor",
+  },
+  {
+    key: "admin",
+    label: "Admins",
+    addPath: "/admin/user-management/add-admin",
+  },
+];
 
 export default function UserManagementPage() {
   const [allUsersData, setAllUsersData] = useState<AllUsersType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [active, setActive] = useState("all");
+  const [active, setActive] = useState<
+    "all" | "student" | "instructor" | "admin"
+  >("all");
   const router = useRouter();
 
   useEffect(() => {
@@ -62,38 +83,15 @@ export default function UserManagementPage() {
           {/* Header */}
           <div className="flex items-center justify-between">
             <div className="flex items-center">
-              <Button
-                variant={active === "all" ? "default" : "ghost"}
-                onClick={() => {
-                  setActive("all");
-                }}
-              >
-                All
-              </Button>
-              <Button
-                variant={active === "students" ? "default" : "ghost"}
-                onClick={() => {
-                  setActive("students");
-                }}
-              >
-                Students
-              </Button>
-              <Button
-                variant={active === "instructors" ? "default" : "ghost"}
-                onClick={() => {
-                  setActive("instructors");
-                }}
-              >
-                Instructors
-              </Button>
-              <Button
-                variant={active === "admins" ? "default" : "ghost"}
-                onClick={() => {
-                  setActive("admins");
-                }}
-              >
-                Admins
-              </Button>
+              {roles.map(({ key, label }) => (
+                <Button
+                  key={key}
+                  variant={active === key ? "default" : "ghost"}
+                  onClick={() => setActive(key as typeof active)}
+                >
+                  {label}
+                </Button>
+              ))}
             </div>
             {active === "all" ? (
               <Dialog>
@@ -110,61 +108,48 @@ export default function UserManagementPage() {
                     </DialogDescription>
                   </DialogHeader>
                   <div className="grid gap-4 py-4">
-                    <Button
-                      variant="outline"
-                      className="hover:bg-primary hover:text-white"
-                      onClick={() => {
-                        router.push("/admin/user-management/add-student");
-                      }}
-                    >
-                      Student
-                    </Button>{" "}
-                    <Button
-                      variant="outline"
-                      className="hover:bg-primary hover:text-white"
-                      onClick={() => {
-                        router.push("/admin/user-management/add-instructor");
-                      }}
-                    >
-                      Instructor
-                    </Button>
-                    <Button
-                      variant="outline"
-                      className="hover:bg-primary hover:text-white"
-                      onClick={() => {
-                        router.push("/admin/user-management/add-admin");
-                      }}
-                    >
-                      Admin
-                    </Button>
+                    {roles
+                      .filter(({ key }) => key !== "all")
+                      .map(({ key, label, addPath }) => (
+                        <Button
+                          key={key}
+                          variant="outline"
+                          className="hover:bg-primary hover:text-white"
+                          onClick={() => {
+                            if (addPath) {
+                              router.push(addPath);
+                            }
+                          }}
+                        >
+                          {label}
+                        </Button>
+                      ))}
                   </div>
                 </DialogContent>
               </Dialog>
             ) : (
               <Button
                 onClick={() => {
-                  if (active === "admins") {
-                    router.push("/admin/user-management/add-admin");
-                  }
-
-                  if (active === "instructors") {
-                    router.push("/admin/user-management/add-instructor");
-                  }
-                  if (active === "students") {
-                    router.push("/admin/user-management/add-student");
+                  switch (active) {
+                    case "admin":
+                      router.push("/admin/user-management/add-admin");
+                      break;
+                    case "instructor":
+                      router.push("/admin/user-management/add-instructor");
+                      break;
+                    case "student":
+                      router.push("/admin/user-management/add-student");
+                      break;
                   }
                 }}
               >
                 <Plus />
-                Add
-                {active === "students" && " Student"}
-                {active === "instructors" && " Instructor"}
-                {active === "admins" && " Admin"}
+                Add {active}
               </Button>
             )}
           </div>
 
-          {/* Data Table */}
+          {/* Main content */}
           {loading ? (
             <Loader />
           ) : (
@@ -180,7 +165,7 @@ export default function UserManagementPage() {
                   }))}
                 />
               )}
-              {active === "students" && (
+              {active === "student" && (
                 <StudentsDataTable
                   columns={studentsColumns}
                   data={allUsersData
@@ -202,7 +187,7 @@ export default function UserManagementPage() {
                     }))}
                 />
               )}
-              {active === "instructors" && (
+              {active === "instructor" && (
                 <InstructorsDataTable
                   columns={instructorsColumns}
                   data={allUsersData
@@ -218,7 +203,7 @@ export default function UserManagementPage() {
                     }))}
                 />
               )}
-              {active === "admins" && (
+              {active === "admin" && (
                 <AdminsDataTable
                   columns={adminsColumns}
                   data={allUsersData
