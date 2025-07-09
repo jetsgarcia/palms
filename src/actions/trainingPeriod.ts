@@ -14,6 +14,9 @@ type ReadTrainingPeriodsResponse =
 type UpdateTrainingPeriodResponse =
   | { ok: true }
   | { ok: false; message: string };
+type DeleteTrainingPeriodResponse =
+  | { ok: true }
+  | { ok: false; message: string };
 
 export async function createTrainingPeriod(
   input: unknown
@@ -75,6 +78,23 @@ export async function updateTrainingPeriod(
       error,
       "updateTrainingPeriod",
       "edit training period"
+    );
+  }
+}
+
+export async function deleteTrainingPeriod(
+  id: number
+): Promise<DeleteTrainingPeriodResponse> {
+  if (!id) return { ok: false, message: "ID is required" };
+
+  try {
+    await prisma.training_periods.delete({ where: { id } });
+    return { ok: true };
+  } catch (error) {
+    return handlePrismaError(
+      error,
+      "deleteTrainingPeriod",
+      "delete training period"
     );
   }
 }
