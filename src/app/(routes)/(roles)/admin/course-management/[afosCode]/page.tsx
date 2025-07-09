@@ -39,6 +39,7 @@ import Loader from "@/components/loader";
 import ErrorMessage from "@/components/errorMessage";
 import { deleteModule } from "@/actions/module";
 import { toast } from "sonner";
+import { deleteSubject } from "@/actions/subject";
 
 export default function ModulesAndSubjectsPage({
   params,
@@ -70,6 +71,22 @@ export default function ModulesAndSubjectsPage({
       console.error(error);
       setLoading(false);
       setError("Failed to get data.");
+    }
+  }
+
+  async function handleDeleteSubject(subjectCode: string) {
+    try {
+      const response = await deleteSubject(subjectCode);
+
+      if (response.ok) {
+        toast.success("Subject deleted successfully");
+        getAllData(afosCode);
+      } else {
+        toast.error(response.message);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to delete subject");
     }
   }
 
@@ -412,10 +429,10 @@ export default function ModulesAndSubjectsPage({
                                                 </AlertDialogCancel>
                                                 <AlertDialogAction
                                                   onClick={() =>
-                                                    console.log(
-                                                      "Delete subject"
+                                                    handleDeleteSubject(
+                                                      subject.code
                                                     )
-                                                  } // TODO: Implement delete subject action
+                                                  }
                                                 >
                                                   Delete
                                                 </AlertDialogAction>
