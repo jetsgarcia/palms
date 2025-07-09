@@ -19,7 +19,15 @@ export default function TrainingPeriod({
     <div className="rounded-lg border px-6 py-4 shadow-sm w-full hover:bg-gray-50 ease-in-out duration-100">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold">{name}</h2>
-        <TrainingPeriodMoreActionsButton trainingPeriodId={id} />
+        <TrainingPeriodMoreActionsButton
+          initialData={{
+            name,
+            startDate,
+            endDate,
+            weeks,
+          }}
+          id={id}
+        />
       </div>
       <div className="flex">
         <div className="flex flex-col w-80">

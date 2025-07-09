@@ -1,48 +1,45 @@
-import { Edit, MoreHorizontal, Trash } from "lucide-react";
+import { Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+
+import { Dialog, DialogTrigger } from "./ui/dialog";
+import TrainingPeriodForm from "./training-period-form";
+import { useContext, useState } from "react";
+import { FormContext } from "@/app/(routes)/(roles)/admin/training-period/page";
+import z from "zod";
+import { trainingPeriodFormSchema } from "@/schemas/trainingPeriodForm";
 
 interface MoreActionsButtonProps {
-  trainingPeriodId: number;
+  initialData: z.infer<typeof trainingPeriodFormSchema>;
+  id?: number;
 }
 
 export default function TrainingPeriodMoreActionsButton({
-  trainingPeriodId,
+  initialData,
+  id,
 }: MoreActionsButtonProps) {
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const formContext = useContext(FormContext);
+
+  const { loadTrainingPeriods } = formContext;
+  // TODO: Implement delete training period functionality
+
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-8 w-8 p-0">
-          <span className="sr-only">Open menu</span>
-          <MoreHorizontal className="h-4 w-4" />
+    <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+      <DialogTrigger asChild>
+        <Button variant="outline">
+          <Edit />
         </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem
-          className="cursor-pointer"
-          onClick={() => {
-            // TODO: Implement edit training period functionality
-            console.log(`Edit training period with ID: ${trainingPeriodId}`);
-          }}
-        >
-          <Edit /> Edit training period
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          className="cursor-pointer"
-          variant="destructive"
-          onClick={() => {
-            // TODO: Implement delete training period functionality
-            console.log(`Delete training period with ID: ${trainingPeriodId}`);
-          }}
-        >
-          <Trash /> Delete training period
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+      </DialogTrigger>
+      <TrainingPeriodForm
+        mode="edit"
+        refreshTrainingPeriods={loadTrainingPeriods}
+        setFormOpen={setOpenDialog}
+        initialData={initialData}
+        id={id}
+      />
+    </Dialog>
+
+    // <Trash /> Delete training period
   );
 }
