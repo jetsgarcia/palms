@@ -48,6 +48,7 @@ export default function TrainingPeriodForm({
   initialData,
   id,
 }: TrainingPeriodFormProps) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [openStartDate, setOpenStartDate] = useState(false);
   const [openEndDate, setOpenEndDate] = useState(false);
 
@@ -62,6 +63,7 @@ export default function TrainingPeriodForm({
   });
 
   async function onSubmit(values: z.infer<typeof trainingPeriodFormSchema>) {
+    setIsSubmitting(true);
     try {
       let response;
 
@@ -77,14 +79,17 @@ export default function TrainingPeriodForm({
         );
         refreshTrainingPeriods();
         setFormOpen(false);
+        setIsSubmitting(false);
       } else if (response && !response.ok) {
         toast.error(response.message);
+        setIsSubmitting(false);
       }
     } catch (error) {
       console.error(error);
       toast.error(
         `Failed to ${mode === "add" ? "add" : "edit"} training period.`
       );
+      setIsSubmitting(false);
     }
   }
 
@@ -280,7 +285,9 @@ export default function TrainingPeriodForm({
           />
           <div className="flex items-center justify-end space-x-4">
             <div className="flex items-center space-x-4">
-              <Button type="submit">Submit</Button>
+              <Button type="submit" disabled={isSubmitting}>
+                Submit
+              </Button>
             </div>
           </div>
         </form>
