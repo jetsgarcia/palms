@@ -10,16 +10,16 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "./ui/form";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
+} from "../../ui/form";
+import { Input } from "../../ui/input";
+import { Button } from "../../ui/button";
 import { toast } from "sonner";
 import { createSubject, updateSubject } from "@/actions/subject";
 import { subjectFormSchema } from "@/schemas/subjectForm";
 import { useEffect, useState } from "react";
 import { readInstructor } from "@/actions/instructor";
 import { users } from "@prisma/client";
-import { CustomSelect } from "./ui/CustomSelect";
+import { CustomSelect } from "../../ui/CustomSelect";
 import { makeUpperCase } from "@/lib/utils";
 
 export default function SubjectForm({

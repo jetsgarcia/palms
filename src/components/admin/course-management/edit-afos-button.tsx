@@ -2,7 +2,7 @@
 
 import { Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogTrigger } from "./ui/dialog";
+import { Dialog, DialogTrigger } from "../../ui/dialog";
 import { useState } from "react";
 import AFOSFormDialogContent from "./afos-form-dialog-content";
 

@@ -31,8 +31,8 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Separator } from "@/components/ui/separator";
-import ModuleForm from "@/components/module-form";
-import SubjectForm from "@/components/subject-form";
+import ModuleForm from "@/components/admin/course-management/module-form";
+import SubjectForm from "@/components/admin/course-management/subject-form";
 import { fetchAFOSWithModulesAndSubjects } from "@/actions/fetchAfosWithModulesAndSubjects";
 import { AFOSDetailsModuleAndSubjectType } from "@/types/AFOSDetailsModuleAndSubjectType";
 import Loader from "@/components/loader";

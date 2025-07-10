@@ -1,7 +1,7 @@
 import { Edit, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-import { Dialog, DialogTrigger } from "./ui/dialog";
+import { Dialog, DialogTrigger } from "../../ui/dialog";
 import TrainingPeriodForm from "./training-period-form";
 import { useContext, useState } from "react";
 import { FormContext } from "@/app/(routes)/(roles)/admin/training-period/page";
@@ -17,7 +17,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "./ui/alert-dialog";
+} from "../../ui/alert-dialog";
 import { deleteTrainingPeriod } from "@/actions/trainingPeriod";
 import { toast } from "sonner";
 

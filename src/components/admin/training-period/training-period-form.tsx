@@ -30,7 +30,7 @@ import {
   createTrainingPeriod,
   updateTrainingPeriod,
 } from "@/actions/trainingPeriod";
-import { Button } from "./ui/button";
+import { Button } from "../../ui/button";
 import { ChevronDownIcon, Info } from "lucide-react";
 
 interface TrainingPeriodFormProps {

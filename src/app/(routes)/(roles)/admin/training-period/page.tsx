@@ -5,11 +5,11 @@ import { createContext, useEffect, useState } from "react";
 import { readTrainingPeriods } from "@/actions/trainingPeriod";
 import { training_periods } from "@prisma/client";
 import { Button } from "@/components/ui/button";
-import TrainingPeriod from "@/components/training-period";
+import TrainingPeriod from "@/components/admin/training-period/training-period";
 import Loader from "@/components/loader";
 import ErrorMessage from "@/components/errorMessage";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import TrainingPeriodForm from "@/components/training-period-form";
+import TrainingPeriodForm from "@/components/admin/training-period/training-period-form";
 
 type FormContextType = {
   loadTrainingPeriods: () => Promise<void>;

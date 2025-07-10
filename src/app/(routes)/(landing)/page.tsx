@@ -1,9 +1,9 @@
-import ContactSection from "@/components/contact-section";
-import FeaturesSection from "@/components/feature-section";
-import Footer from "@/components/footer";
-import Header from "@/components/header";
-import HeroSection from "@/components/hero-section";
-import HowItWorksSection from "@/components/how-it-works-section";
+import ContactSection from "@/components/landing/contact-section";
+import FeaturesSection from "@/components/landing/feature-section";
+import Footer from "@/components/landing/footer";
+import Header from "@/components/landing/header";
+import HeroSection from "@/components/landing/hero-section";
+import HowItWorksSection from "@/components/landing/how-it-works-section";
 
 export default function LandingPage() {
   return (

@@ -9,12 +9,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { AFOSDataTable } from "@/components/afos-data-table";
-import { afosColumns, afos } from "@/components/afos-columns";
+import { AFOSDataTable } from "@/components/admin/course-management/afos-data-table";
+import {
+  afosColumns,
+  afos,
+} from "@/components/admin/course-management/afos-columns";
 import { readAFOS } from "@/actions/afos";
 import Loader from "@/components/loader";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import AFOSFormDialogContent from "@/components/afos-form-dialog-content";
+import AFOSFormDialogContent from "@/components/admin/course-management/afos-form-dialog-content";
 import { Button } from "@/components/ui/button";
 import { readTrainingPeriods } from "@/actions/trainingPeriod";
 import ErrorMessage from "@/components/errorMessage";
