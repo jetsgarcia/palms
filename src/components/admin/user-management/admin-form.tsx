@@ -68,6 +68,7 @@ export default function AdminForm({
         setFormOpen(false);
         refreshUsers();
         setIsSubmitting(false);
+        form.reset();
       } else if (response && !response.ok) {
         toast.error(response.message);
         setIsSubmitting(false);
