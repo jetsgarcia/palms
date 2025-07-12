@@ -61,7 +61,7 @@ export async function login(input: unknown): Promise<LoginResponse> {
 export async function fetchFirstLogin(
   userId: string
 ): Promise<FetchFirstLoginResponse> {
-  if (userId.trim() === "") {
+  if (userId && userId.trim() === "") {
     return { ok: false, message: "Must provide a user ID" };
   }
 
