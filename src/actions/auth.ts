@@ -29,19 +29,10 @@ export async function login(input: unknown): Promise<LoginResponse> {
   }
 
   try {
-    let redirectTo = "/";
-    if (user.role === "ADMIN") {
-      redirectTo = "/admin";
-    } else if (user.role === "STUDENT") {
-      redirectTo = "/student";
-    } else if (user.role === "INSTRUCTOR") {
-      redirectTo = "/instructor";
-    }
-
     await signIn("credentials", {
       email,
       password,
-      redirectTo,
+      redirect: false,
     });
 
     return { ok: true };
@@ -54,6 +45,7 @@ export async function login(input: unknown): Promise<LoginResponse> {
           return { ok: false, message: "Something went wrong" };
       }
     }
+    console.log("login:", error);
     return { ok: false, message: "An unexpected error occurred" };
   }
 }

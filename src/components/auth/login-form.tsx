@@ -19,8 +19,10 @@ import { loginSchema } from "@/schemas/loginSchema";
 import { z } from "zod";
 import { login } from "@/actions/auth";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
+  const router = useRouter();
   const [loginError, setLoginError] = useState("");
   const [passwordVisibility, setPasswordVisibility] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -40,12 +42,7 @@ export default function LoginForm() {
     const response = await login(data);
 
     if (response.ok) {
-      /*  
-      No success condition needed. The server already issued a redirect,
-      so the response never reaches this point.
-      */
-      setLoginError("");
-      setIsSubmitting(false);
+      router.push("/");
       return;
     } else {
       setLoginError(response.message);
