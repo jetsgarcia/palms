@@ -8,6 +8,7 @@ import { generatePassword } from "@/lib/generatePassword";
 import { handlePrismaError } from "@/lib/handlePrismaError";
 
 type CreateAdminResponse = { ok: true } | { ok: false; message: string };
+type UpdateAdminResponse = { ok: true } | { ok: false; message: string };
 
 export async function createAdmin(
   input: unknown
@@ -70,5 +71,38 @@ export async function createAdmin(
     return { ok: true };
   } catch (error) {
     return handlePrismaError(error, "registerAdmin", "register admin");
+  }
+}
+
+export async function updateAdmin(
+  input: unknown,
+  id: string
+): Promise<UpdateAdminResponse> {
+  const parsed = adminRegisterFormSchema.safeParse(input);
+  if (!parsed.success) {
+    return { ok: false, message: "Invalid input" };
+  }
+
+  if (!id) {
+    return { ok: false, message: "User ID is required" };
+  }
+
+  const { firstName, lastName, middleInitial, suffix, email } = parsed.data;
+
+  try {
+    await prisma.users.update({
+      where: { id },
+      data: {
+        firstName,
+        lastName,
+        middleInitial: middleInitial || null,
+        suffix: suffix || null,
+        email,
+      },
+    });
+
+    return { ok: true };
+  } catch (error) {
+    return handlePrismaError(error, "updateAdmin", "edit admin");
   }
 }

@@ -1,18 +1,35 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import UserManagementMoreActionsButton from "./user-management-more-actions-button";
+import EditAdminButton from "./edit-admin-button";
 
 export type Admin = {
   id: string;
-  name: string;
+  firstName: string;
+  middleInitial?: string;
+  lastName: string;
+  suffix?: string;
   email: string;
 };
 
-export const adminsColumns: ColumnDef<Admin>[] = [
+export const adminsColumns = (
+  loadData: () => Promise<void>
+): ColumnDef<Admin>[] => [
   {
-    accessorKey: "name",
-    header: "Name",
+    accessorKey: "firstName",
+    header: "First name",
+  },
+  {
+    accessorKey: "middleInitial",
+    header: "Middle Initial",
+  },
+  {
+    accessorKey: "lastName",
+    header: "Last name",
+  },
+  {
+    accessorKey: "suffix",
+    header: "Suffix",
   },
   {
     accessorKey: "email",
@@ -21,7 +38,19 @@ export const adminsColumns: ColumnDef<Admin>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      return <UserManagementMoreActionsButton userId={row.original.id} />;
+      return (
+        <EditAdminButton
+          loadData={loadData}
+          id={row.original.id}
+          initialData={{
+            firstName: row.original.firstName,
+            middleInitial: row.original.middleInitial,
+            lastName: row.original.lastName,
+            suffix: row.original.suffix,
+            email: row.original.email,
+          }}
+        />
+      );
     },
   },
 ];

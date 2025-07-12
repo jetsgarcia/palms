@@ -11,6 +11,7 @@ type CreateInstructorResponse = { ok: true } | { ok: false; message: string };
 type ReadInstructorResponse =
   | { ok: true; data: users[] }
   | { ok: false; message: string };
+type UpdateInstructorResponse = { ok: true } | { ok: false; message: string };
 
 export async function createInstructor(
   input: unknown
@@ -91,5 +92,38 @@ export async function readInstructor(): Promise<ReadInstructorResponse> {
     return { ok: true, data: instructors };
   } catch (error) {
     return handlePrismaError(error, "readInstructor", "read instructor");
+  }
+}
+
+export async function updateInstructor(
+  input: unknown,
+  id: string
+): Promise<UpdateInstructorResponse> {
+  const parsed = instructorRegisterFormSchema.safeParse(input);
+  if (!parsed.success) {
+    return { ok: false, message: "Invalid input" };
+  }
+
+  if (!id) {
+    return { ok: false, message: "User ID is required" };
+  }
+
+  const { firstName, lastName, middleInitial, suffix, email } = parsed.data;
+
+  try {
+    await prisma.users.update({
+      where: { id },
+      data: {
+        firstName,
+        lastName,
+        middleInitial: middleInitial || null,
+        suffix: suffix || null,
+        email,
+      },
+    });
+
+    return { ok: true };
+  } catch (error) {
+    return handlePrismaError(error, "updateInstructor", "edit instructor");
   }
 }
