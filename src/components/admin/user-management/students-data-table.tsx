@@ -93,16 +93,6 @@ export function StudentsDataTable<TData, TValue>({
             }
           />
           <Input
-            placeholder="Filter training year..."
-            value={
-              (table.getColumn("trainingYear")?.getFilterValue() as string) ??
-              ""
-            }
-            onChange={(e) =>
-              table.getColumn("trainingYear")?.setFilterValue(e.target.value)
-            }
-          />
-          <Input
             placeholder="Filter rank..."
             value={(table.getColumn("rank")?.getFilterValue() as string) ?? ""}
             onChange={(e) =>

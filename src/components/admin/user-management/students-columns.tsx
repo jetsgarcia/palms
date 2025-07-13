@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-// import UserManagementMoreActionsButton from "./user-management-more-actions-button";
+import EditStudentButton from "./edit-student-button";
 
 export type Student = {
   id: string;
@@ -9,15 +9,18 @@ export type Student = {
   firstName: string;
   middleInitial?: string;
   lastName: string;
+  suffix?: string;
   email: string;
-  trainingPeriod?: number;
-  trainingYear?: number;
-  rank?: string;
+  trainingPeriod: string;
+  trainingPeriodId: number;
+  rank: string;
   afos?: string;
   course?: string | null;
 };
 
-export const studentsColumns: ColumnDef<Student>[] = [
+export const studentsColumns = (
+  loadData: () => Promise<void>
+): ColumnDef<Student>[] => [
   {
     accessorKey: "serialNumber",
     header: "Serial number",
@@ -44,11 +47,7 @@ export const studentsColumns: ColumnDef<Student>[] = [
   },
   {
     accessorKey: "trainingPeriod",
-    header: "Training Period",
-  },
-  {
-    accessorKey: "trainingYear",
-    header: "Training Year",
+    header: "Training period",
   },
   {
     accessorKey: "rank",
@@ -66,7 +65,25 @@ export const studentsColumns: ColumnDef<Student>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      // return <UserManagementMoreActionsButton userId={row.original.id} />;
+      return (
+        <EditStudentButton
+          loadData={loadData}
+          id={row.original.id}
+          initialData={{
+            serialNumber: row.original.serialNumber ?? "",
+            firstName: row.original.firstName,
+            middleInitial: row.original.middleInitial,
+            lastName: row.original.lastName,
+            suffix: row.original.suffix,
+            email: row.original.email,
+            trainingPeriod: row.original.trainingPeriod,
+            trainingPeriodId: row.original.trainingPeriodId,
+            rank: row.original.rank,
+            afos: row.original.afos,
+            course: row.original.course,
+          }}
+        />
+      );
     },
   },
 ];

@@ -9,7 +9,11 @@ export async function fetchUsers(): Promise<Response> {
   try {
     const users = await prisma.users.findMany({
       include: {
-        student: true,
+        student: {
+          include: {
+            training_periods: true,
+          },
+        },
         subjects: true,
       },
     });

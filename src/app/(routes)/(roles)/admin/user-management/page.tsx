@@ -144,20 +144,22 @@ export default function UserManagementPage() {
             <div className="container mx-auto">
               {active === "student" && (
                 <StudentsDataTable
-                  columns={studentsColumns}
+                  columns={studentsColumns(loadData)}
                   data={allUsersData
                     .filter((user) => user.role === "STUDENT" && user.student)
                     .map((user) => ({
                       id: user.id,
-                      serialNumber: user.student?.serialNumber,
+                      serialNumber: user.student?.serialNumber ?? "",
                       firstName: user.firstName,
-                      middleInitial: user.middleInitial ?? undefined,
+                      middleInitial: user.middleInitial ?? "",
                       lastName: user.lastName,
-                      suffix: user.suffix ?? undefined,
+                      suffix: user.suffix ?? "",
+                      trainingPeriod: user.training_periods?.name ?? "",
+                      trainingPeriodId: user.training_periods?.id ?? 0,
                       email: user.email,
-                      rank: user.student?.rank,
-                      afos: user.student?.afos,
-                      course: user.student?.course,
+                      rank: user.student?.rank ?? "",
+                      afos: user.student?.afos ?? "",
+                      course: user.student?.course ?? "",
                     }))}
                 />
               )}
