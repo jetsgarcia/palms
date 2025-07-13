@@ -1,12 +1,14 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import UserManagementMoreActionsButton from "./user-management-more-actions-button";
+// import UserManagementMoreActionsButton from "./user-management-more-actions-button";
 
 export type Student = {
   id: string;
   serialNumber?: string;
-  name: string;
+  firstName: string;
+  middleInitial?: string;
+  lastName: string;
   email: string;
   trainingPeriod?: number;
   trainingYear?: number;
@@ -18,11 +20,23 @@ export type Student = {
 export const studentsColumns: ColumnDef<Student>[] = [
   {
     accessorKey: "serialNumber",
-    header: "Serial Number",
+    header: "Serial number",
   },
   {
-    accessorKey: "name",
-    header: "Name",
+    accessorKey: "firstName",
+    header: "First name",
+  },
+  {
+    accessorKey: "middleInitial",
+    header: "Middle initial",
+  },
+  {
+    accessorKey: "lastName",
+    header: "Last name",
+  },
+  {
+    accessorKey: "suffix",
+    header: "Suffix",
   },
   {
     accessorKey: "email",
@@ -52,7 +66,7 @@ export const studentsColumns: ColumnDef<Student>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      return <UserManagementMoreActionsButton userId={row.original.id} />;
+      // return <UserManagementMoreActionsButton userId={row.original.id} />;
     },
   },
 ];

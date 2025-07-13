@@ -2,12 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { fetchUsers } from "@/actions/fetchUsers";
 import { AllUsersType } from "@/types/allUsers";
 import { Button } from "@/components/ui/button";
-import { allUserColumns } from "@/components/admin/user-management/all-user-columns";
-import { AllUserDataTable } from "@/components/admin/user-management/all-user-data-table";
 import { StudentsDataTable } from "@/components/admin/user-management/students-data-table";
 import { studentsColumns } from "@/components/admin/user-management/students-columns";
 import { InstructorsDataTable } from "@/components/admin/user-management/instructors-data-table";
@@ -16,19 +13,12 @@ import { adminsColumns } from "@/components/admin/user-management/admins-columns
 import { AdminsDataTable } from "@/components/admin/user-management/admins-data-table";
 import Loader from "@/components/loader";
 import ErrorMessage from "@/components/errorMessage";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import InstructorForm from "@/components/admin/user-management/instructor-form";
 import AdminForm from "@/components/admin/user-management/admin-form";
+import StudentForm from "@/components/admin/user-management/student-form";
 
 const roles = [
-  { key: "all", label: "All", addPath: null },
   {
     key: "student",
     label: "Students",
@@ -53,10 +43,9 @@ export default function UserManagementPage() {
   const [allUsersData, setAllUsersData] = useState<AllUsersType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [active, setActive] = useState<
-    "all" | "student" | "instructor" | "admin"
-  >("all");
-  const router = useRouter();
+  const [active, setActive] = useState<"student" | "instructor" | "admin">(
+    "student"
+  );
 
   async function loadData() {
     try {
@@ -98,92 +87,53 @@ export default function UserManagementPage() {
                 </Button>
               ))}
             </div>
-            {active === "all" ? (
-              <Dialog>
+            {active === "student" && (
+              <Dialog
+                open={openStudentDialog}
+                onOpenChange={setOpenStudentDialog}
+              >
                 <DialogTrigger asChild>
                   <Button>
-                    <Plus /> Add User
+                    <Plus /> Add student
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px]">
-                  <DialogHeader>
-                    <DialogTitle>Select User</DialogTitle>
-                    <DialogDescription>
-                      Please select the user you want to register.
-                    </DialogDescription>
-                  </DialogHeader>
-                  {/* //TODO: Connect this to dialogs */}
-                  <div className="grid gap-4 py-4">
-                    {roles
-                      .filter(({ key }) => key !== "all")
-                      .map(({ key, label, addPath }) => (
-                        <Button
-                          key={key}
-                          variant="outline"
-                          className="hover:bg-primary hover:text-white"
-                          onClick={() => {
-                            if (addPath) {
-                              router.push(addPath);
-                            }
-                          }}
-                        >
-                          {/* Make label singular */}
-                          {label.slice(0, -1)}
-                        </Button>
-                      ))}
-                  </div>
-                </DialogContent>
+                <StudentForm
+                  mode="add"
+                  refreshUsers={loadData}
+                  setFormOpen={setOpenStudentDialog}
+                />
               </Dialog>
-            ) : (
-              <>
-                {/* //TODO: Register student */}
-                {active === "student" && (
-                  <Dialog
-                    open={openStudentDialog}
-                    onOpenChange={setOpenStudentDialog}
-                  >
-                    <DialogTrigger asChild>
-                      <Button>
-                        <Plus /> Add student
-                      </Button>
-                    </DialogTrigger>
-                  </Dialog>
-                )}
-                {active === "instructor" && (
-                  <Dialog
-                    open={openInstructorDialog}
-                    onOpenChange={setOpenInstructorDialog}
-                  >
-                    <DialogTrigger asChild>
-                      <Button>
-                        <Plus /> Add instructor
-                      </Button>
-                    </DialogTrigger>
-                    <InstructorForm
-                      mode="add"
-                      refreshUsers={loadData}
-                      setFormOpen={setOpenInstructorDialog}
-                    />
-                  </Dialog>
-                )}
-                {active === "admin" && (
-                  <Dialog
-                    open={openAdminDialog}
-                    onOpenChange={setOpenAdminDialog}
-                  >
-                    <DialogTrigger asChild>
-                      <Button>
-                        <Plus /> Add admin
-                      </Button>
-                    </DialogTrigger>
-                    <AdminForm
-                      mode="add"
-                      refreshUsers={loadData}
-                      setFormOpen={setOpenAdminDialog}
-                    />
-                  </Dialog>
-                )}
-              </>
+            )}
+            {active === "instructor" && (
+              <Dialog
+                open={openInstructorDialog}
+                onOpenChange={setOpenInstructorDialog}
+              >
+                <DialogTrigger asChild>
+                  <Button>
+                    <Plus /> Add instructor
+                  </Button>
+                </DialogTrigger>
+                <InstructorForm
+                  mode="add"
+                  refreshUsers={loadData}
+                  setFormOpen={setOpenInstructorDialog}
+                />
+              </Dialog>
+            )}
+            {active === "admin" && (
+              <Dialog open={openAdminDialog} onOpenChange={setOpenAdminDialog}>
+                <DialogTrigger asChild>
+                  <Button>
+                    <Plus /> Add admin
+                  </Button>
+                </DialogTrigger>
+                <AdminForm
+                  mode="add"
+                  refreshUsers={loadData}
+                  setFormOpen={setOpenAdminDialog}
+                />
+              </Dialog>
             )}
           </div>
 
@@ -192,17 +142,6 @@ export default function UserManagementPage() {
             <Loader />
           ) : (
             <div className="container mx-auto">
-              {active === "all" && (
-                <AllUserDataTable
-                  columns={allUserColumns}
-                  data={allUsersData.map((user) => ({
-                    id: user.id,
-                    name: user.firstName + " " + user.lastName,
-                    email: user.email,
-                    role: user.role,
-                  }))}
-                />
-              )}
               {active === "student" && (
                 <StudentsDataTable
                   columns={studentsColumns}
@@ -211,14 +150,11 @@ export default function UserManagementPage() {
                     .map((user) => ({
                       id: user.id,
                       serialNumber: user.student?.serialNumber,
-                      name:
-                        user.firstName +
-                        " " +
-                        (user.middleInitial ? user.middleInitial + " " : "") +
-                        user.lastName,
+                      firstName: user.firstName,
+                      middleInitial: user.middleInitial ?? undefined,
+                      lastName: user.lastName,
+                      suffix: user.suffix ?? undefined,
                       email: user.email,
-                      trainingPeriod: user.student?.trainingPeriod,
-                      trainingYear: user.student?.trainingYear,
                       rank: user.student?.rank,
                       afos: user.student?.afos,
                       course: user.student?.course,

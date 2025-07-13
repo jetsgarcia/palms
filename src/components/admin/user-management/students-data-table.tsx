@@ -67,10 +67,12 @@ export function StudentsDataTable<TData, TValue>({
             }
           />
           <Input
-            placeholder="Filter name..."
-            value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+            placeholder="Filter last name..."
+            value={
+              (table.getColumn("lastName")?.getFilterValue() as string) ?? ""
+            }
             onChange={(e) =>
-              table.getColumn("name")?.setFilterValue(e.target.value)
+              table.getColumn("lastName")?.setFilterValue(e.target.value)
             }
           />
           <Input
