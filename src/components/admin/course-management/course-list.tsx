@@ -1,8 +1,6 @@
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { readCoursesForTrainingPeriod } from "@/actions/courses";
-import { courses } from "@prisma/client";
-import { toast } from "sonner";
+import { useEffect } from "react";
+import { useCourseStore } from "@/store";
 import { BookOpen, Edit, MoreHorizontal, Trash2 } from "lucide-react";
 import {
   Card,
@@ -32,36 +30,17 @@ export function CourseList({
   selectedTrainingPeriod,
   displayMode,
 }: CourseListProps) {
-  const [loading, setLoading] = useState(true);
-  const [courses, setCourses] = useState<courses[]>([]);
+  const courses = useCourseStore((state) => state.courses);
+  const loading = useCourseStore((state) => state.loading);
+  const fetchCoursesForTrainingPeriod = useCourseStore(
+    (state) => state.fetchCoursesForTrainingPeriod
+  );
 
   useEffect(() => {
-    async function fetchCourses() {
-      setLoading(true);
+    fetchCoursesForTrainingPeriod(selectedTrainingPeriod);
+  }, [selectedTrainingPeriod, fetchCoursesForTrainingPeriod]);
 
-      try {
-        const response = await readCoursesForTrainingPeriod(
-          selectedTrainingPeriod
-        );
-
-        if (response.ok) {
-          setCourses(response.data);
-          setLoading(false);
-        } else {
-          console.error("Failed to fetch courses:", response.message);
-          setLoading(false);
-        }
-      } catch (error) {
-        console.error("Error fetching courses:", error);
-        toast.error("An error occurred while fetching courses.");
-        setLoading(false);
-      }
-    }
-
-    fetchCourses();
-  }, [selectedTrainingPeriod]);
-
-  return loading ? (
+  return loading && courses.length === 0 ? (
     <Loader />
   ) : (
     <>

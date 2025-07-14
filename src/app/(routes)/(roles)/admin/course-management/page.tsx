@@ -7,11 +7,14 @@ import DisplayModeToggle from "@/components/admin/course-management/display-mode
 import { Button } from "@/components/ui/button";
 import { CourseList } from "@/components/admin/course-management/course-list";
 import Loader from "@/components/loader";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { CourseFormContent } from "@/components/admin/course-management/course-form-content";
 
 export default function CoursesManagementPage() {
-  const [currentSelectedTrainingPeriod, setCurrentSelectedTrainingPeriod] =
+  const [selectedTrainingPeriod, setSelectedTrainingPeriod] =
     useState<number>();
   const [displayMode, setDisplayMode] = useState<"cards" | "table">("cards");
+  const [courseDialogOpen, setCourseDialogOpen] = useState(false);
 
   return (
     <div className="space-y-2">
@@ -20,15 +23,25 @@ export default function CoursesManagementPage() {
         {/* First layer */}
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold">Courses</h1>
-          <Button size="lg">
-            <Plus /> Add course
-          </Button>
+          <Dialog open={courseDialogOpen} onOpenChange={setCourseDialogOpen}>
+            <DialogTrigger asChild>
+              <Button size="lg">
+                <Plus /> Add course
+              </Button>
+            </DialogTrigger>
+            {selectedTrainingPeriod && (
+              <CourseFormContent
+                selectedTrainingPeriod={selectedTrainingPeriod}
+                setCourseDialogOpen={setCourseDialogOpen}
+              />
+            )}
+          </Dialog>
         </div>
         {/* Second layer */}
         <div className="flex items-center justify-between">
           <TrainingPeriodSelectionButton
-            currentSelectedTrainingPeriod={currentSelectedTrainingPeriod}
-            setCurrentSelectedTrainingPeriod={setCurrentSelectedTrainingPeriod}
+            selectedTrainingPeriod={selectedTrainingPeriod}
+            setSelectedTrainingPeriod={setSelectedTrainingPeriod}
           />
           <DisplayModeToggle
             displayMode={displayMode}
@@ -37,9 +50,9 @@ export default function CoursesManagementPage() {
         </div>
       </div>
       {/* Main content */}
-      {currentSelectedTrainingPeriod ? (
+      {selectedTrainingPeriod ? (
         <CourseList
-          currentSelectedTrainingPeriod={currentSelectedTrainingPeriod}
+          selectedTrainingPeriod={selectedTrainingPeriod}
           displayMode={displayMode}
         />
       ) : (
