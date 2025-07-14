@@ -1,5 +1,4 @@
-"use client";
-
+import { useRouter } from "next/navigation";
 import {
   ColumnDef,
   flexRender,
@@ -14,7 +13,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 interface DataTableProps<TData, TValue> {
@@ -22,7 +20,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
 }
 
-export function AFOSDataTable<TData extends { code: string }, TValue>({
+export function CourseDataTable<TData extends { code: string }, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
@@ -38,7 +36,10 @@ export function AFOSDataTable<TData extends { code: string }, TValue>({
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
+            <TableRow
+              key={headerGroup.id}
+              className="bg-green-900/5 hover:bg-green-900/5"
+            >
               {headerGroup.headers.map((header) => {
                 return (
                   <TableHead key={header.id}>
@@ -60,11 +61,13 @@ export function AFOSDataTable<TData extends { code: string }, TValue>({
               <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
-                className="hover:bg-primary/5"
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell
                     key={cell.id}
+                    className={cn(
+                      cell.column.id !== "actions" ? "cursor-pointer" : "w-10"
+                    )}
                     onClick={() => {
                       if (cell.column.id !== "actions") {
                         router.push(
@@ -72,9 +75,6 @@ export function AFOSDataTable<TData extends { code: string }, TValue>({
                         );
                       }
                     }}
-                    className={cn(
-                      cell.column.id !== "actions" ? "cursor-pointer" : "w-10"
-                    )}
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
