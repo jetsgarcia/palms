@@ -40,16 +40,16 @@ export function TrainingPeriodSelectionButton({
         const response = await readTrainingPeriods();
 
         if (response.ok) {
-          setTrainingPeriods(response.data);
+          // Sort training periods by endDate descending
+          const sorted = [...response.data].sort(
+            (a, b) =>
+              new Date(b.endDate).getTime() - new Date(a.endDate).getTime()
+          );
+          setTrainingPeriods(sorted);
 
-          // Set default value to the training period with the highest endDate
-          if (response.data && response.data.length > 0) {
-            const latest = response.data.reduce((prev, curr) => {
-              return new Date(curr.endDate) > new Date(prev.endDate)
-                ? curr
-                : prev;
-            });
-            setCurrentSelectedTrainingPeriod(latest.id);
+          // Set default value to the training period with the highest endDate (now first in sorted array)
+          if (sorted && sorted.length > 0) {
+            setCurrentSelectedTrainingPeriod(sorted[0].id);
           }
           setLoading(false);
         } else {
