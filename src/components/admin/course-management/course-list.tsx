@@ -23,6 +23,7 @@ import { courseColumns } from "./course-columns";
 import { CourseDataTable } from "./course-data-table";
 import { Dialog } from "@/components/ui/dialog";
 import { CourseFormContent } from "./course-form-content";
+import DeleteCourseDialog from "./delete-course-dialog";
 
 interface CourseListProps {
   selectedTrainingPeriod: number;
@@ -35,6 +36,7 @@ export function CourseList({
 }: CourseListProps) {
   const [editCourseDialogOpen, setEditCourseDialogOpen] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState<courses>();
+  const [deleteCourseDialogOpen, setDeleteCourseDialogOpen] = useState(false);
   const courses = useCourseStore((state) => state.courses);
   const loading = useCourseStore((state) => state.loading);
   const fetchCoursesForTrainingPeriod = useCourseStore(
@@ -80,7 +82,13 @@ export function CourseList({
                           <Edit />
                           Edit course
                         </DropdownMenuItem>
-                        <DropdownMenuItem variant="destructive">
+                        <DropdownMenuItem
+                          variant="destructive"
+                          onClick={() => {
+                            setSelectedCourse(course);
+                            setDeleteCourseDialogOpen(true);
+                          }}
+                        >
                           <Trash2 />
                           Delete course
                         </DropdownMenuItem>
@@ -117,7 +125,7 @@ export function CourseList({
       {displayMode === "table" && (
         <CourseDataTable columns={courseColumns} data={courses} />
       )}
-      {selectedCourse && (
+      {editCourseDialogOpen && selectedCourse && (
         <Dialog
           open={editCourseDialogOpen}
           onOpenChange={(open) => {
@@ -133,6 +141,14 @@ export function CourseList({
             />
           )}
         </Dialog>
+      )}
+
+      {deleteCourseDialogOpen && selectedCourse && (
+        <DeleteCourseDialog
+          deleteCourseDialogOpen={deleteCourseDialogOpen}
+          setDeleteCourseDialogOpen={setDeleteCourseDialogOpen}
+          selectedCourse={selectedCourse}
+        />
       )}
     </>
   );
