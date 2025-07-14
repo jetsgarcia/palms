@@ -31,6 +31,7 @@ export default function CoursesManagementPage() {
             </DialogTrigger>
             {selectedTrainingPeriod && (
               <CourseFormContent
+                mode="create"
                 selectedTrainingPeriod={selectedTrainingPeriod}
                 setCourseDialogOpen={setCourseDialogOpen}
               />

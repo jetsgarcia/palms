@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { createCourse } from "@/actions/courses";
+import { createCourse, updateCourse } from "@/actions/courses";
 import { toast } from "sonner";
 import { useState } from "react";
 import { courseFormSchema } from "@/schemas/courseForm";
@@ -34,13 +34,17 @@ import {
 import { useCourseStore } from "@/store";
 
 interface CourseFormContentProps {
+  mode: "create" | "edit";
   selectedTrainingPeriod: number;
   setCourseDialogOpen: (open: boolean) => void;
+  initialData?: z.infer<typeof courseFormSchema>;
 }
 
 export function CourseFormContent({
+  mode,
   selectedTrainingPeriod,
   setCourseDialogOpen,
+  initialData,
 }: CourseFormContentProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const fetchCoursesForTrainingPeriod = useCourseStore(
@@ -49,7 +53,7 @@ export function CourseFormContent({
 
   const form = useForm<z.infer<typeof courseFormSchema>>({
     resolver: zodResolver(courseFormSchema),
-    defaultValues: {
+    defaultValues: initialData ?? {
       code: "",
       name: "",
       trainingPeriodId: selectedTrainingPeriod,
@@ -60,15 +64,23 @@ export function CourseFormContent({
     setIsSubmitting(true);
 
     try {
-      const response = await createCourse(values);
+      let response;
 
-      if (response.ok) {
+      if (mode === "create") {
+        response = await createCourse(values);
+      } else if (mode === "edit" && initialData) {
+        response = await updateCourse(values);
+      }
+
+      if (response && response.ok) {
         fetchCoursesForTrainingPeriod(selectedTrainingPeriod);
         setCourseDialogOpen(false);
-        toast.success("Course created successfully");
+        toast.success(
+          `Course ${mode === "create" ? "created" : "updated"} successfully`
+        );
         form.reset();
         setIsSubmitting(false);
-      } else {
+      } else if (response && !response.ok) {
         toast.error(response.message);
         setIsSubmitting(false);
       }
@@ -82,9 +94,11 @@ export function CourseFormContent({
   return (
     <DialogContent className="sm:max-w-[425px]">
       <DialogHeader>
-        <DialogTitle>Add course</DialogTitle>
+        <DialogTitle>{mode === "create" ? "Add" : "Edit"} course</DialogTitle>
         <DialogDescription>
-          Fill in the details below to create a new course.
+          {mode === "create"
+            ? "Fill in the details below to create a new course"
+            : "Edit the course details below"}
         </DialogDescription>
       </DialogHeader>
 
@@ -102,6 +116,7 @@ export function CourseFormContent({
                     onChange={(e) =>
                       field.onChange(e.target.value.toUpperCase())
                     }
+                    disabled={mode === "edit"}
                   />
                 </FormControl>
                 <FormMessage />
@@ -127,10 +142,7 @@ export function CourseFormContent({
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Level</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+                <Select value={field.value} onValueChange={field.onChange}>
                   <FormControl>
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select level" />

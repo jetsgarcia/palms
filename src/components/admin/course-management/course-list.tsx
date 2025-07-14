@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { useEffect } from "react";
+import { courses } from "@prisma/client";
+import { useEffect, useState } from "react";
 import { useCourseStore } from "@/store";
 import { BookOpen, Edit, MoreHorizontal, Trash2 } from "lucide-react";
 import {
@@ -20,6 +21,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { courseColumns } from "./course-columns";
 import { CourseDataTable } from "./course-data-table";
+import { Dialog } from "@/components/ui/dialog";
+import { CourseFormContent } from "./course-form-content";
 
 interface CourseListProps {
   selectedTrainingPeriod: number;
@@ -30,6 +33,8 @@ export function CourseList({
   selectedTrainingPeriod,
   displayMode,
 }: CourseListProps) {
+  const [editCourseDialogOpen, setEditCourseDialogOpen] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState<courses>();
   const courses = useCourseStore((state) => state.courses);
   const loading = useCourseStore((state) => state.loading);
   const fetchCoursesForTrainingPeriod = useCourseStore(
@@ -66,12 +71,17 @@ export function CourseList({
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem>
-                          <Edit className="mr-2 h-4 w-4" />
+                        <DropdownMenuItem
+                          onClick={() => {
+                            setSelectedCourse(course);
+                            setEditCourseDialogOpen(true);
+                          }}
+                        >
+                          <Edit />
                           Edit course
                         </DropdownMenuItem>
                         <DropdownMenuItem variant="destructive">
-                          <Trash2 className="mr-2 h-4 w-4" />
+                          <Trash2 />
                           Delete course
                         </DropdownMenuItem>
                       </DropdownMenuContent>
@@ -106,6 +116,23 @@ export function CourseList({
       )}
       {displayMode === "table" && (
         <CourseDataTable columns={courseColumns} data={courses} />
+      )}
+      {selectedCourse && (
+        <Dialog
+          open={editCourseDialogOpen}
+          onOpenChange={(open) => {
+            setEditCourseDialogOpen(open);
+          }}
+        >
+          {selectedTrainingPeriod && (
+            <CourseFormContent
+              mode="edit"
+              selectedTrainingPeriod={selectedTrainingPeriod}
+              setCourseDialogOpen={setEditCourseDialogOpen}
+              initialData={selectedCourse}
+            />
+          )}
+        </Dialog>
       )}
     </>
   );
