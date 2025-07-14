@@ -20,13 +20,13 @@ import {
 } from "@/components/ui/popover";
 
 interface TrainingPeriodSelectionButtonProps {
-  currentSelectedTrainingPeriod?: number;
-  setCurrentSelectedTrainingPeriod: (id: number) => void;
+  selectedTrainingPeriod?: number;
+  setSelectedTrainingPeriod: (id: number) => void;
 }
 
 export function TrainingPeriodSelectionButton({
-  currentSelectedTrainingPeriod,
-  setCurrentSelectedTrainingPeriod,
+  selectedTrainingPeriod,
+  setSelectedTrainingPeriod,
 }: TrainingPeriodSelectionButtonProps) {
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
@@ -49,7 +49,7 @@ export function TrainingPeriodSelectionButton({
 
           // Set default value to the training period with the highest endDate (now first in sorted array)
           if (sorted && sorted.length > 0) {
-            setCurrentSelectedTrainingPeriod(sorted[0].id);
+            setSelectedTrainingPeriod(sorted[0].id);
           }
           setLoading(false);
         } else {
@@ -64,7 +64,7 @@ export function TrainingPeriodSelectionButton({
     }
 
     fetchTrainingPeriods();
-  }, [setCurrentSelectedTrainingPeriod]);
+  }, [setSelectedTrainingPeriod]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -81,10 +81,9 @@ export function TrainingPeriodSelectionButton({
             </span>
           ) : (
             <>
-              {currentSelectedTrainingPeriod &&
-                trainingPeriods.find(
-                  (tp) => tp.id === currentSelectedTrainingPeriod
-                )?.name}
+              {selectedTrainingPeriod &&
+                trainingPeriods.find((tp) => tp.id === selectedTrainingPeriod)
+                  ?.name}
             </>
           )}
           <ChevronsUpDown className="opacity-50" />
@@ -102,8 +101,8 @@ export function TrainingPeriodSelectionButton({
                   value={tp.id.toString()}
                   onSelect={(currentValue) => {
                     const numValue = Number(currentValue);
-                    if (numValue !== currentSelectedTrainingPeriod) {
-                      setCurrentSelectedTrainingPeriod(numValue);
+                    if (numValue !== selectedTrainingPeriod) {
+                      setSelectedTrainingPeriod(numValue);
                     }
                     setOpen(false);
                   }}
@@ -112,7 +111,7 @@ export function TrainingPeriodSelectionButton({
                   <Check
                     className={cn(
                       "ml-auto",
-                      currentSelectedTrainingPeriod === tp.id
+                      selectedTrainingPeriod === tp.id
                         ? "opacity-100"
                         : "opacity-0"
                     )}

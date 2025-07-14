@@ -24,12 +24,12 @@ import { courseColumns } from "./course-columns";
 import { CourseDataTable } from "./course-data-table";
 
 interface CourseListProps {
-  currentSelectedTrainingPeriod: number;
+  selectedTrainingPeriod: number;
   displayMode?: "cards" | "table";
 }
 
 export function CourseList({
-  currentSelectedTrainingPeriod,
+  selectedTrainingPeriod,
   displayMode,
 }: CourseListProps) {
   const [loading, setLoading] = useState(true);
@@ -41,7 +41,7 @@ export function CourseList({
 
       try {
         const response = await readCoursesForTrainingPeriod(
-          currentSelectedTrainingPeriod
+          selectedTrainingPeriod
         );
 
         if (response.ok) {
@@ -59,7 +59,7 @@ export function CourseList({
     }
 
     fetchCourses();
-  }, [currentSelectedTrainingPeriod]);
+  }, [selectedTrainingPeriod]);
 
   return loading ? (
     <Loader />
