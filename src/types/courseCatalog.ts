@@ -1,4 +1,4 @@
-export type AFOSDetailsModuleAndSubjectType = {
+export type CourseCatalogType = {
   code: string;
   level: string;
   name: string;
