@@ -109,21 +109,6 @@ export default function AdminForm({
           />
           <FormField
             control={form.control}
-            name="lastName"
-            render={({ field }) => (
-              <FormItem className="flex-1">
-                <FormLabel>
-                  Last name <span className="text-destructive">*</span>
-                </FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
             name="middleInitial"
             render={({ field }) => (
               <FormItem className="flex-1">
@@ -140,6 +125,21 @@ export default function AdminForm({
                       field.onChange(value);
                     }}
                   />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="lastName"
+            render={({ field }) => (
+              <FormItem className="flex-1">
+                <FormLabel>
+                  Last name <span className="text-destructive">*</span>
+                </FormLabel>
+                <FormControl>
+                  <Input {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
