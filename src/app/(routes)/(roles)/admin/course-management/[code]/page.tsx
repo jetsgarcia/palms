@@ -33,21 +33,21 @@ import {
 import { Separator } from "@/components/ui/separator";
 import ModuleForm from "@/components/admin/course-management/module-form";
 import SubjectForm from "@/components/admin/course-management/subject-form";
-import { fetchAFOSWithModulesAndSubjects } from "@/actions/fetchAfosWithModulesAndSubjects";
-import { AFOSDetailsModuleAndSubjectType } from "@/types/AFOSDetailsModuleAndSubjectType";
+import { CourseCatalogType } from "@/types/courseCatalog";
 import Loader from "@/components/loader";
 import ErrorMessage from "@/components/errorMessage";
 import { deleteModule } from "@/actions/module";
 import { toast } from "sonner";
 import { deleteSubject } from "@/actions/subject";
+import { fetchCourseCatalog } from "@/actions/fetchCoursesCatalog";
 
 export default function ModulesAndSubjectsPage({
   params,
 }: {
-  params: Promise<{ afosCode: string }>;
+  params: Promise<{ code: string }>;
 }) {
-  const { afosCode } = use(params);
-  const [AFOS, setAFOS] = useState<AFOSDetailsModuleAndSubjectType>();
+  const { code } = use(params);
+  const [courseCatalog, setCourseCatalog] = useState<CourseCatalogType>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [expandedModules, setExpandedModules] = useState<Set<number>>(
@@ -60,11 +60,11 @@ export default function ModulesAndSubjectsPage({
     null
   );
 
-  async function getAllData(afosCode: string) {
+  async function getAllData(code: string) {
     try {
-      const response = await fetchAFOSWithModulesAndSubjects({ afosCode });
+      const response = await fetchCourseCatalog({ code });
       if (response.ok) {
-        setAFOS(response.data);
+        setCourseCatalog(response.data);
         setLoading(false);
       }
     } catch (error) {
@@ -80,7 +80,7 @@ export default function ModulesAndSubjectsPage({
 
       if (response.ok) {
         toast.success("Subject deleted successfully");
-        getAllData(afosCode);
+        getAllData(code);
       } else {
         toast.error(response.message);
       }
@@ -91,8 +91,8 @@ export default function ModulesAndSubjectsPage({
   }
 
   useEffect(() => {
-    getAllData(afosCode);
-  }, [afosCode]);
+    getAllData(code);
+  }, [code]);
 
   function toggleModule(moduleId: number) {
     setExpandedModules((prev) => {
@@ -118,9 +118,13 @@ export default function ModulesAndSubjectsPage({
             <div className="space-y-4">
               {/* Header */}
               <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold">
-                  {AFOS?.name} ({AFOS?.level})
-                </h1>
+                <div className="space-y-1">
+                  <h1 className="text-2xl font-bold">{courseCatalog?.name}</h1>
+                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                    <span>Code: {courseCatalog?.code}</span>
+                    <span>Level: {courseCatalog?.level}</span>
+                  </div>
+                </div>
 
                 {/* Add Module Button */}
                 <Dialog
@@ -133,7 +137,7 @@ export default function ModulesAndSubjectsPage({
                       Add Module
                     </Button>
                   </DialogTrigger>
-                  {AFOS && (
+                  {courseCatalog && (
                     <DialogContent>
                       <DialogHeader>
                         <DialogTitle>Add module</DialogTitle>
@@ -144,10 +148,10 @@ export default function ModulesAndSubjectsPage({
                       <ModuleForm
                         id={0}
                         mode="add"
-                        moduleNumber={AFOS.modules.length + 1}
-                        afosCode={afosCode}
+                        moduleNumber={courseCatalog.modules.length + 1}
+                        afosCode={code}
                         setModuleOpen={setIsAddModuleOpen}
-                        getAllData={() => getAllData(afosCode)}
+                        getAllData={() => getAllData(code)}
                       />
                     </DialogContent>
                   )}
@@ -155,8 +159,8 @@ export default function ModulesAndSubjectsPage({
               </div>
               {/* Modules List */}
               <div className="space-y-4">
-                {AFOS &&
-                  AFOS.modules
+                {courseCatalog &&
+                  courseCatalog.modules
                     .slice()
                     .sort((a, b) => a.number - b.number)
                     .map((module) => {
@@ -221,13 +225,13 @@ export default function ModulesAndSubjectsPage({
                                   <ModuleForm
                                     mode="edit"
                                     moduleNumber={module.number}
-                                    afosCode={afosCode}
+                                    afosCode={code}
                                     initialData={module}
                                     id={module.id}
                                     setModuleOpen={() =>
                                       setIsEditModuleOpen(null)
                                     }
-                                    getAllData={() => getAllData(afosCode)}
+                                    getAllData={() => getAllData(code)}
                                   />
                                 </DialogContent>
                               </Dialog>
@@ -275,7 +279,7 @@ export default function ModulesAndSubjectsPage({
                                               "Failed to delete module"
                                             );
                                           } finally {
-                                            getAllData(afosCode);
+                                            getAllData(code);
                                           }
                                         }
                                         return deleteCurrentModule();
@@ -320,7 +324,7 @@ export default function ModulesAndSubjectsPage({
                                         setSubjectOpen={() =>
                                           setIsAddSubjectOpen(false)
                                         }
-                                        getAllData={() => getAllData(afosCode)}
+                                        getAllData={() => getAllData(code)}
                                       />
                                     </DialogContent>
                                   </Dialog>
@@ -400,7 +404,7 @@ export default function ModulesAndSubjectsPage({
                                                   setIsEditSubjectOpen(null)
                                                 }
                                                 getAllData={() =>
-                                                  getAllData(afosCode)
+                                                  getAllData(code)
                                                 }
                                               />
                                             </DialogContent>
@@ -452,7 +456,7 @@ export default function ModulesAndSubjectsPage({
                     })}
               </div>
               {/* Empty Placeholder */}
-              {AFOS && AFOS.modules.length === 0 && (
+              {courseCatalog && courseCatalog.modules.length === 0 && (
                 <div className="grid place-items-center text-muted-foreground h-[calc(100dvh-10rem)]">
                   No module added yet
                 </div>

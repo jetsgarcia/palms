@@ -19,8 +19,21 @@ import { subjectFormSchema } from "@/schemas/subjectForm";
 import { useEffect, useState } from "react";
 import { readInstructor } from "@/actions/instructor";
 import { users } from "@prisma/client";
-import { CustomSelect } from "../../ui/CustomSelect";
-import { makeUpperCase } from "@/lib/utils";
+import { cn, makeUpperCase } from "@/lib/utils";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Check, ChevronsUpDown } from "lucide-react";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 
 export default function SubjectForm({
   moduleId,
@@ -37,6 +50,7 @@ export default function SubjectForm({
 }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [instructors, setInstructors] = useState<users[]>([]);
+  const [open, setOpen] = useState(false);
 
   const form = useForm<z.infer<typeof subjectFormSchema>>({
     resolver: zodResolver(subjectFormSchema),
@@ -148,25 +162,66 @@ export default function SubjectForm({
             <FormItem>
               <FormLabel>Instructor</FormLabel>
               <FormControl>
-                <CustomSelect
-                  value={field.value || ""}
-                  onChange={field.onChange}
-                  options={instructors.map((instructor) => {
-                    const fullName = `${instructor.lastName}, ${
-                      instructor.firstName
-                    }${
-                      instructor.middleInitial
-                        ? ` ${instructor.middleInitial}.`
-                        : ""
-                    }${instructor.suffix ? `, ${instructor.suffix}` : ""}`;
-                    return {
-                      value: instructor.id.toString(),
-                      label: fullName,
-                    };
-                  })}
-                  placeholder="Select instructor"
-                  disabled={isSubmitting}
-                />
+                <Popover open={open} onOpenChange={setOpen}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      aria-expanded={open}
+                      className="w-full justify-between"
+                    >
+                      {instructors.length > 0
+                        ? (() => {
+                            const selected = instructors.find(
+                              (inst) => inst.id.toString() === field.value
+                            );
+                            if (!selected) return "Select instructor";
+                            const fullName = `${selected.lastName}, ${selected.firstName}${selected.middleInitial ? ` ${selected.middleInitial}.` : ""}${selected.suffix ? `, ${selected.suffix}` : ""}`;
+                            return fullName;
+                          })()
+                        : "Select instructor"}
+                      <ChevronsUpDown className="opacity-50" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[29rem] p-0">
+                    <Command>
+                      <CommandInput
+                        className="h-9"
+                        placeholder="Search instructor..."
+                      />
+                      <CommandList>
+                        <CommandEmpty>No instructor found</CommandEmpty>
+                        <CommandGroup>
+                          {instructors.map((inst) => {
+                            const fullName = `${inst.lastName}, ${inst.firstName}${inst.middleInitial ? ` ${inst.middleInitial}.` : ""}${inst.suffix ? `, ${inst.suffix}` : ""}`;
+                            return (
+                              <CommandItem
+                                key={inst.id}
+                                value={inst.id.toString()}
+                                onSelect={() => {
+                                  if (field.value !== inst.id.toString()) {
+                                    field.onChange(inst.id.toString());
+                                  }
+                                  setOpen(false);
+                                }}
+                              >
+                                {fullName}
+                                <Check
+                                  className={cn(
+                                    "ml-auto",
+                                    field.value === inst.id.toString()
+                                      ? "opacity-100"
+                                      : "opacity-0"
+                                  )}
+                                />
+                              </CommandItem>
+                            );
+                          })}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
               </FormControl>
               <FormMessage />
             </FormItem>
