@@ -33,6 +33,12 @@ export function DataTable<TData, TValue>({
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    state: {
+      pagination: {
+        pageIndex: page - 1,
+        pageSize: 10, // default page size, adjust if needed
+      },
+    },
   });
 
   return (
@@ -95,21 +101,28 @@ export function DataTable<TData, TValue>({
           variant="outline"
           size="sm"
           onClick={() => {
-            table.previousPage();
-            setPage(page - 1);
+            if (page > 1) {
+              setPage(page - 1);
+              table.previousPage();
+            }
           }}
-          disabled={!table.getCanPreviousPage()}
+          disabled={page <= 1}
         >
           Previous
         </Button>
+        <div className=" hidden">
+          Page {page} of {table.getPageCount()}
+        </div>
         <Button
           variant="outline"
           size="sm"
           onClick={() => {
-            table.nextPage();
-            setPage(page + 1);
+            if (page < table.getPageCount()) {
+              setPage(page + 1);
+              table.nextPage();
+            }
           }}
-          disabled={!table.getCanNextPage()}
+          disabled={page >= table.getPageCount()}
         >
           Next
         </Button>

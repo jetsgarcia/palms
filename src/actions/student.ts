@@ -6,8 +6,12 @@ import { prisma } from "@/lib/prisma";
 import { generatePassword } from "@/lib/generatePassword";
 import { handlePrismaError } from "@/lib/handlePrismaError";
 import { studentRegisterFormSchema } from "@/schemas/studentRegisterForm";
+import { StudentType } from "@/types/student";
 
 type CreateStudentResponse = { ok: true } | { ok: false; message: string };
+type ReadStudentResponse =
+  | { ok: true; data: StudentType[] }
+  | { ok: false; message: string };
 type UpdateStudentResponse = { ok: true } | { ok: false; message: string };
 
 export async function createStudent(
@@ -25,9 +29,7 @@ export async function createStudent(
     suffix,
     email,
     serialNumber,
-    trainingPeriod,
     rank,
-    afos,
     course,
   } = parsed.data;
 
@@ -58,11 +60,8 @@ export async function createStudent(
         student: {
           create: {
             serialNumber,
-            trainingPeriodId: trainingPeriod,
             rank,
-            afos,
             course: course || null,
-            remarks: "",
           },
         },
       },
@@ -95,6 +94,38 @@ export async function createStudent(
   }
 }
 
+export async function readStudents(
+  offset: number
+): Promise<ReadStudentResponse> {
+  try {
+    const students = await prisma.users.findMany({
+      where: {
+        role: Role.STUDENT,
+      },
+      include: {
+        student: {
+          include: {
+            courses: {
+              include: {
+                training_periods: true,
+              },
+            },
+          },
+        },
+      },
+      skip: offset,
+      take: 50,
+    });
+
+    console.log("Fetched students:", JSON.stringify(students, null, 2));
+
+    return { ok: true, data: students as StudentType[] };
+  } catch (error) {
+    console.error("Error reading students:", error);
+    throw new Error("Failed to read students");
+  }
+}
+
 export async function updateStudent(
   input: unknown,
   id: string
@@ -115,9 +146,7 @@ export async function updateStudent(
     suffix,
     email,
     serialNumber,
-    trainingPeriod,
     rank,
-    afos,
     course,
   } = parsed.data;
 
@@ -133,9 +162,7 @@ export async function updateStudent(
         student: {
           update: {
             serialNumber,
-            trainingPeriodId: trainingPeriod,
             rank,
-            afos,
             course: course || null,
           },
         },
