@@ -117,8 +117,6 @@ export async function readStudents(
       take: 50,
     });
 
-    console.log("Fetched students:", JSON.stringify(students, null, 2));
-
     return { ok: true, data: students as StudentType[] };
   } catch (error) {
     console.error("Error reading students:", error);
