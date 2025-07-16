@@ -1,206 +1,164 @@
 "use client";
 
+import {
+  Student,
+  studentColumns,
+} from "@/components/admin/user-management/student-columns";
+import { DataTable } from "@/components/admin/user-management/student-data-table";
 import { useEffect, useState } from "react";
-import { Plus } from "lucide-react";
-import { fetchUsers } from "@/actions/fetchUsers";
-import { AllUsersType } from "@/types/allUsers";
-import { Button } from "@/components/ui/button";
-import { StudentsDataTable } from "@/components/admin/user-management/students-data-table";
-import { studentsColumns } from "@/components/admin/user-management/students-columns";
-import { InstructorsDataTable } from "@/components/admin/user-management/instructors-data-table";
-import { instructorsColumns } from "@/components/admin/user-management/instructors-columns";
-import { adminsColumns } from "@/components/admin/user-management/admins-columns";
-import { AdminsDataTable } from "@/components/admin/user-management/admins-data-table";
-import Loader from "@/components/loader";
-import ErrorMessage from "@/components/errorMessage";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import InstructorForm from "@/components/admin/user-management/instructor-form";
-import AdminForm from "@/components/admin/user-management/admin-form";
-import StudentForm from "@/components/admin/user-management/student-form";
 
-const roles = [
+const data: Student[] = [
   {
-    key: "student",
-    label: "Students",
-    addPath: "/admin/user-management/add-student",
+    serialNumber: "O-001",
+    firstName: "John",
+    middleInitial: "A",
+    lastName: "Doe",
+    suffix: "Jr.",
+    email: "sample@email.com",
+    rank: "Private",
+    course: "Computer Science",
+    trainingYear: "2023",
   },
   {
-    key: "instructor",
-    label: "Instructors",
-    addPath: "/admin/user-management/add-instructor",
+    serialNumber: "O-002",
+    firstName: "Jane",
+    middleInitial: "B",
+    lastName: "Smith",
+    suffix: "",
+    email: "asdasd@asdawd.com",
+    rank: "Corporal",
+    course: "Information Technology",
+    trainingYear: "2022",
   },
   {
-    key: "admin",
-    label: "Admins",
-    addPath: "/admin/user-management/add-admin",
+    serialNumber: "O-003",
+    firstName: "Jane",
+    middleInitial: "B",
+    lastName: "Smith",
+    suffix: "",
+    email: "asdasd@asdawd.com",
+    rank: "Corporal",
+    course: "Information Technology",
+    trainingYear: "2022",
+  },
+  {
+    serialNumber: "O-004",
+    firstName: "Jane",
+    middleInitial: "B",
+    lastName: "Smith",
+    suffix: "",
+    email: "asdasd@asdawd.com",
+    rank: "Corporal",
+    course: "Information Technology",
+    trainingYear: "2022",
+  },
+  {
+    serialNumber: "O-005",
+    firstName: "Jane",
+    middleInitial: "B",
+    lastName: "Smith",
+    suffix: "",
+    email: "asdasd@asdawd.com",
+    rank: "Corporal",
+    course: "Information Technology",
+    trainingYear: "2022",
+  },
+  {
+    serialNumber: "O-006",
+    firstName: "Jane",
+    middleInitial: "B",
+    lastName: "Smith",
+    suffix: "",
+    email: "asdasd@asdawd.com",
+    rank: "Corporal",
+    course: "Information Technology",
+    trainingYear: "2022",
+  },
+  {
+    serialNumber: "O-007",
+    firstName: "Jane",
+    middleInitial: "B",
+    lastName: "Smith",
+    suffix: "",
+    email: "asdasd@asdawd.com",
+    rank: "Corporal",
+    course: "Information Technology",
+    trainingYear: "2022",
+  },
+  {
+    serialNumber: "O-008",
+    firstName: "Jane",
+    middleInitial: "B",
+    lastName: "Smith",
+    suffix: "",
+    email: "asdasd@asdawd.com",
+    rank: "Corporal",
+    course: "Information Technology",
+    trainingYear: "2022",
+  },
+  {
+    serialNumber: "O-009",
+    firstName: "Jane",
+    middleInitial: "B",
+    lastName: "Smith",
+    suffix: "",
+    email: "asdasd@asdawd.com",
+    rank: "Corporal",
+    course: "Information Technology",
+    trainingYear: "2022",
+  },
+  {
+    serialNumber: "O-010",
+    firstName: "Jane",
+    middleInitial: "B",
+    lastName: "Smith",
+    suffix: "",
+    email: "asdasd@asdawd.com",
+    rank: "Corporal",
+    course: "Information Technology",
+    trainingYear: "2022",
+  },
+  {
+    serialNumber: "O-011",
+    firstName: "Jane",
+    middleInitial: "B",
+    lastName: "Smith",
+    suffix: "",
+    email: "asdasd@asdawd.com",
+    rank: "Corporal",
+    course: "Information Technology",
+    trainingYear: "2022",
+  },
+  {
+    serialNumber: "O-012",
+    firstName: "Jane",
+    middleInitial: "B",
+    lastName: "Smith",
+    suffix: "",
+    email: "asdasd@asdawd.com",
+    rank: "Corporal",
+    course: "Information Technology",
+    trainingYear: "2022",
   },
 ];
 
 export default function UserManagementPage() {
-  const [openStudentDialog, setOpenStudentDialog] = useState(false);
-  const [openInstructorDialog, setOpenInstructorDialog] = useState(false);
-  const [openAdminDialog, setOpenAdminDialog] = useState(false);
-  const [allUsersData, setAllUsersData] = useState<AllUsersType[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [active, setActive] = useState<"student" | "instructor" | "admin">(
-    "student"
-  );
-
-  async function loadData() {
-    try {
-      const response = await fetchUsers();
-
-      if (response.ok) {
-        setAllUsersData(response.data);
-      } else {
-        setError(response.message);
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      setError("An unexpected error occurred while getting data.");
-    } finally {
-      setLoading(false);
-    }
-  }
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
-    loadData();
-  }, []);
+    if (page % 5 === 0 && page !== 0) {
+      alert("Fetch next page");
+    }
+  }, [page]);
 
   return (
-    <>
-      {error ? (
-        <ErrorMessage error={error} />
-      ) : (
-        <>
-          {/* Header */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              {roles.map(({ key, label }) => (
-                <Button
-                  key={key}
-                  variant={active === key ? "default" : "ghost"}
-                  onClick={() => setActive(key as typeof active)}
-                >
-                  {label}
-                </Button>
-              ))}
-            </div>
-            {active === "student" && (
-              <Dialog
-                open={openStudentDialog}
-                onOpenChange={setOpenStudentDialog}
-              >
-                <DialogTrigger asChild>
-                  <Button>
-                    <Plus /> Add student
-                  </Button>
-                </DialogTrigger>
-                <StudentForm
-                  mode="add"
-                  refreshUsers={loadData}
-                  setFormOpen={setOpenStudentDialog}
-                />
-              </Dialog>
-            )}
-            {active === "instructor" && (
-              <Dialog
-                open={openInstructorDialog}
-                onOpenChange={setOpenInstructorDialog}
-              >
-                <DialogTrigger asChild>
-                  <Button>
-                    <Plus /> Add instructor
-                  </Button>
-                </DialogTrigger>
-                <InstructorForm
-                  mode="add"
-                  refreshUsers={loadData}
-                  setFormOpen={setOpenInstructorDialog}
-                />
-              </Dialog>
-            )}
-            {active === "admin" && (
-              <Dialog open={openAdminDialog} onOpenChange={setOpenAdminDialog}>
-                <DialogTrigger asChild>
-                  <Button>
-                    <Plus /> Add admin
-                  </Button>
-                </DialogTrigger>
-                <AdminForm
-                  mode="add"
-                  refreshUsers={loadData}
-                  setFormOpen={setOpenAdminDialog}
-                />
-              </Dialog>
-            )}
-          </div>
-
-          {/* Main content */}
-          {loading ? (
-            <Loader />
-          ) : (
-            <div className="container mx-auto">
-              {active === "student" && (
-                <StudentsDataTable
-                  columns={studentsColumns(loadData)}
-                  data={allUsersData
-                    .filter((user) => user.role === "STUDENT" && user.student)
-                    .map((user) => ({
-                      id: user.id,
-                      serialNumber: user.student?.serialNumber ?? "",
-                      firstName: user.firstName,
-                      middleInitial: user.middleInitial ?? "",
-                      lastName: user.lastName,
-                      suffix: user.suffix ?? "",
-                      trainingPeriod: user.training_periods?.name ?? "",
-                      trainingPeriodId: user.training_periods?.id ?? 0,
-                      email: user.email,
-                      rank: user.student?.rank ?? "",
-                      afos: user.student?.afos ?? "",
-                      course: user.student?.course ?? "",
-                    }))}
-                />
-              )}
-              {active === "instructor" && (
-                <InstructorsDataTable
-                  columns={instructorsColumns(loadData)}
-                  data={allUsersData
-                    .filter((user) => user.role === "INSTRUCTOR")
-                    .map((user) => ({
-                      id: user.id,
-                      firstName: user.firstName,
-                      middleInitial: user.middleInitial ?? undefined,
-                      lastName: user.lastName,
-                      suffix: user.suffix ?? undefined,
-                      email: user.email,
-                      assignedSubject:
-                        user.subjects
-                          ?.map((subject) => subject.code)
-                          .join(", ") || "None",
-                    }))}
-                />
-              )}
-              {active === "admin" && (
-                <AdminsDataTable
-                  columns={adminsColumns(loadData)}
-                  data={allUsersData
-                    .filter((user) => user.role === "ADMIN")
-                    .map((user) => ({
-                      id: user.id,
-                      firstName: user.firstName,
-                      middleInitial: user.middleInitial ?? undefined,
-                      lastName: user.lastName,
-                      suffix: user.suffix ?? undefined,
-                      email: user.email,
-                    }))}
-                />
-              )}
-            </div>
-          )}
-        </>
-      )}
-    </>
+    <div>
+      <DataTable
+        columns={studentColumns}
+        data={data}
+        page={page}
+        setPage={setPage}
+      />
+    </div>
   );
 }
