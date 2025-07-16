@@ -109,7 +109,9 @@ export function CourseFormContent({
             name="code"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Code</FormLabel>
+                <FormLabel>
+                  Code<span className="text-destructive">*</span>
+                </FormLabel>
                 <FormControl>
                   <Input
                     {...field}
@@ -128,7 +130,9 @@ export function CourseFormContent({
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Name</FormLabel>
+                <FormLabel>
+                  Name<span className="text-destructive">*</span>
+                </FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
@@ -141,7 +145,9 @@ export function CourseFormContent({
             name="level"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Level</FormLabel>
+                <FormLabel>
+                  Level<span className="text-destructive">*</span>
+                </FormLabel>
                 <Select value={field.value} onValueChange={field.onChange}>
                   <FormControl>
                     <SelectTrigger className="w-full">
