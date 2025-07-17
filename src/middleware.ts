@@ -49,6 +49,7 @@ export default async function middleware(request: NextRequest) {
   // Only fetch firstLogin if user is authenticated
   try {
     const response = await fetchFirstLogin(token?.id as string);
+    console.log("first login:", response.ok && response.firstLogin);
     if (response.ok && response.firstLogin && pathname !== "/change-password") {
       console.log("Redirecting to change password page");
       return NextResponse.redirect(new URL("/change-password", request.url));
