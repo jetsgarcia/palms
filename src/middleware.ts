@@ -50,6 +50,7 @@ export default async function middleware(request: NextRequest) {
   try {
     const response = await fetchFirstLogin(token?.id as string);
     if (response.ok && response.firstLogin && pathname !== "/change-password") {
+      console.log("Redirecting to change password page");
       return NextResponse.redirect(new URL("/change-password", request.url));
     }
   } catch (error) {
