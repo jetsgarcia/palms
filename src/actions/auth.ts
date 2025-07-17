@@ -45,7 +45,6 @@ export async function login(input: unknown): Promise<LoginResponse> {
           return { ok: false, message: "Something went wrong" };
       }
     }
-    console.log("login:", error);
     return { ok: false, message: "An unexpected error occurred" };
   }
 }
@@ -73,8 +72,6 @@ export async function fetchFirstLogin(
     }
 
     const data = await response.json();
-    console.log(data);
-    console.log("userid in server action:", userId);
 
     if (!data.user) {
       return { ok: false, message: "User not found" };
