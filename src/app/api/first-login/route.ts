@@ -10,6 +10,8 @@ export async function POST(req: NextRequest) {
       select: { firstLogin: true },
     });
 
+    console.log("user id:", userId);
+
     return Response.json({ user });
   } catch (error) {
     return Response.json(
