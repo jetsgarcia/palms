@@ -74,6 +74,7 @@ export async function fetchFirstLogin(
 
     const data = await response.json();
     console.log(data);
+    console.log("userid in server action:", userId);
 
     if (!data.user) {
       return { ok: false, message: "User not found" };
