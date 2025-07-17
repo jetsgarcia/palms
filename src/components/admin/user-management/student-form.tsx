@@ -41,10 +41,26 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 interface StudentFormProps {
+  mode: "create" | "edit";
   setOpenDialog: (open: boolean) => void;
+  initialData?: {
+    serialNumber: string;
+    firstName: string;
+    middleInitial?: string;
+    lastName: string;
+    suffix?: string;
+    email: string;
+    rank: string;
+    course: string;
+    courseCode: string;
+  };
 }
 
-export function StudentForm({ setOpenDialog }: StudentFormProps) {
+export function StudentForm({
+  mode,
+  setOpenDialog,
+  initialData,
+}: StudentFormProps) {
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [open, setOpen] = useState(false);
@@ -53,13 +69,14 @@ export function StudentForm({ setOpenDialog }: StudentFormProps) {
   const form = useForm<z.infer<typeof studentRegisterFormSchema>>({
     resolver: zodResolver(studentRegisterFormSchema),
     defaultValues: {
-      serialNumber: "",
-      firstName: "",
-      middleInitial: "",
-      lastName: "",
-      suffix: "",
-      rank: "",
-      email: "",
+      serialNumber: initialData?.serialNumber || "",
+      firstName: initialData?.firstName || "",
+      middleInitial: initialData?.middleInitial || "",
+      lastName: initialData?.lastName || "",
+      suffix: initialData?.suffix || "",
+      rank: initialData?.rank || "",
+      email: initialData?.email || "",
+      course: initialData?.courseCode || "",
     },
   });
 
@@ -67,20 +84,30 @@ export function StudentForm({ setOpenDialog }: StudentFormProps) {
     setIsSubmitting(true);
 
     try {
-      const response = await createStudent(values);
+      let response;
 
-      if (response.ok) {
-        toast.success("Student registered successfully");
+      if (mode === "create") {
+        response = await createStudent(values);
+      } else if (mode === "edit") {
+        // response = await;
+      }
+
+      if (response && response.ok) {
+        toast.success(
+          `Student ${mode === "create" ? "registered" : "updated"} successfully`
+        );
         form.reset();
         setIsSubmitting(false);
         setOpenDialog(false);
       } else {
-        toast.error(response.message);
+        toast.error(response && response.message);
         setIsSubmitting(false);
       }
     } catch (error) {
       console.error("Error creating student:", error);
-      toast.error("An error occurred while registering the student");
+      toast.error(
+        `An error occurred while ${mode === "create" ? "registering" : "updating"} the student`
+      );
       setIsSubmitting(false);
     }
   }
@@ -111,9 +138,13 @@ export function StudentForm({ setOpenDialog }: StudentFormProps) {
   return (
     <DialogContent>
       <DialogHeader>
-        <DialogTitle>Register student</DialogTitle>
+        <DialogTitle>
+          {mode === "create" ? "Register" : "Edit"} student
+        </DialogTitle>
         <DialogDescription>
-          Fill out the form below to register a new student
+          {mode === "create"
+            ? "Fill out the form below to register a new student"
+            : "Update the student details below"}
         </DialogDescription>
       </DialogHeader>
       {loading ? (

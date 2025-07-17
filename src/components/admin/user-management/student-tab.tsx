@@ -86,6 +86,7 @@ export default function StudentTab() {
             rank: student.student.rank,
             course: student.student.courses.name,
             trainingYear: student.student.courses.training_periods.name,
+            courseCode: student.student.courses.code,
           }))}
           page={page}
           setPage={setPage}

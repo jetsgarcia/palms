@@ -24,7 +24,7 @@ export const courseColumns: ColumnDef<courses>[] = [
       return (
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="icon">
-            <Edit />
+            <Edit /> {course.name}
           </Button>
           <Button variant="ghost" size="icon">
             <Trash2 />

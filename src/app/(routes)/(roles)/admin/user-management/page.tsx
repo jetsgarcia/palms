@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronDown, Filter, Plus } from "lucide-react";
 import { StudentForm } from "@/components/admin/user-management/student-form";
 import StudentTab from "@/components/admin/user-management/student-tab";
@@ -14,6 +14,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export default function UserManagementPage() {
+  useEffect(() => {
+    console.log("User Management Page Loaded");
+  }, []);
+
   const [openAddStudentDialog, setOpenAddStudentDialog] = useState(false);
   const [selectedTab, setSelectedTab] = useState<
     "Student" | "Instructor" | "Admin"
@@ -34,7 +38,10 @@ export default function UserManagementPage() {
                 <Plus /> Add {selectedTab.toLowerCase()}
               </Button>
             </DialogTrigger>
-            <StudentForm setOpenDialog={setOpenAddStudentDialog} />
+            <StudentForm
+              mode="create"
+              setOpenDialog={setOpenAddStudentDialog}
+            />
           </Dialog>
         </div>
       </div>

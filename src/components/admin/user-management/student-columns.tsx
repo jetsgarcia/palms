@@ -1,6 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
+import { EditStudentButton } from "./edit-student-button";
 
-export type Student = {
+type Student = {
   serialNumber: string;
   firstName: string;
   middleInitial?: string;
@@ -10,6 +11,7 @@ export type Student = {
   rank: string;
   course: string;
   trainingYear: string;
+  courseCode: string;
 };
 
 export const studentColumns: ColumnDef<Student>[] = [
@@ -48,5 +50,13 @@ export const studentColumns: ColumnDef<Student>[] = [
   {
     accessorKey: "trainingYear",
     header: "Training Year",
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => (
+      <div>
+        <EditStudentButton initialData={row.original} />
+      </div>
+    ),
   },
 ];

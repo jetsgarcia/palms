@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "../../ui/dialog";
 import TrainingPeriodForm from "./training-period-form";
 import { useContext, useState } from "react";
-import { FormContext } from "@/app/(routes)/(roles)/admin/training-period/page";
 import z from "zod";
 import { trainingPeriodFormSchema } from "@/schemas/trainingPeriodForm";
 import {
@@ -20,6 +19,7 @@ import {
 } from "../../ui/alert-dialog";
 import { deleteTrainingPeriod } from "@/actions/trainingPeriod";
 import { toast } from "sonner";
+import { FormContext } from "@/context/FormContext";
 
 interface MoreActionsButtonProps {
   initialData: z.infer<typeof trainingPeriodFormSchema>;

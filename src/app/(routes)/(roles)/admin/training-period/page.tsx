@@ -1,7 +1,7 @@
 "use client";
 
 import { Plus } from "lucide-react";
-import { createContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { readTrainingPeriods } from "@/actions/trainingPeriod";
 import { training_periods } from "@prisma/client";
 import { Button } from "@/components/ui/button";
@@ -10,16 +10,7 @@ import Loader from "@/components/loader";
 import ErrorMessage from "@/components/errorMessage";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import TrainingPeriodForm from "@/components/admin/training-period/training-period-form";
-
-type FormContextType = {
-  loadTrainingPeriods: () => Promise<void>;
-};
-
-const defaultFormContext: FormContextType = {
-  loadTrainingPeriods: async () => {},
-};
-
-export const FormContext = createContext<FormContextType>(defaultFormContext);
+import { FormContext } from "@/context/FormContext";
 
 export default function TrainingPeriodPage() {
   const [openDialog, setOpenDialog] = useState(false);
