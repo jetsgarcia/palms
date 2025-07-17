@@ -67,6 +67,8 @@ export async function fetchFirstLogin(
       }
     );
 
+    console.log("fetchFirstLogin api response:", response.statusText);
+
     if (!response.ok) {
       console.error("Failed to fetch first login status:", response.statusText);
       return { ok: false, message: "Failed to fetch first login status" };
