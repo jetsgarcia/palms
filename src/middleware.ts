@@ -59,6 +59,8 @@ export default async function middleware(request: NextRequest) {
     console.error(error);
   }
 
+  console.log("firstLogin:", firstLogin);
+
   // Redirect users to change password if it's their first login
   if (firstLogin && pathname !== "/change-password") {
     return NextResponse.redirect(new URL("/change-password", request.url));
