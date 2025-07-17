@@ -23,13 +23,13 @@ export async function createStudent(
   }
 
   const {
-    firstName,
-    lastName,
-    middleInitial,
-    suffix,
-    email,
     serialNumber,
     rank,
+    firstName,
+    middleInitial,
+    lastName,
+    suffix,
+    email,
     course,
   } = parsed.data;
 
