@@ -51,7 +51,9 @@ export default async function middleware(request: NextRequest) {
   try {
     const response = await fetchFirstLogin(token?.id as string);
     if (response.ok) {
-      firstLogin = response.firstLogin;
+      firstLogin = true;
+    } else {
+      firstLogin = false;
     }
   } catch (error) {
     console.error(error);
